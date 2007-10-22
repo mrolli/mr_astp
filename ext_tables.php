@@ -9,7 +9,7 @@ $TCA["tx_mrastp_person"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'sortby' => 'sorting',	
+		'default_sortby' => 'name',	
 		'delete' => 'deleted',	
 		'enablecolumns' => array (		
 			'disabled' => 'hidden',	
@@ -31,7 +31,7 @@ $TCA["tx_mrastp_canton"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'sortby' => 'sorting',	
+		'default_sortby' => 'abbrevation',	
 		'delete' => 'deleted',	
 		'enablecolumns' => array (		
 			'disabled' => 'hidden',	
@@ -53,7 +53,7 @@ $TCA["tx_mrastp_section"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'sortby' => 'sorting',	
+		'default_sortby' => 'abbrevation',	
 		'delete' => 'deleted',	
 		'enablecolumns' => array (		
 			'disabled' => 'hidden',	
@@ -97,7 +97,7 @@ $TCA["tx_mrastp_workaddress"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'sortby' => 'sorting',	
+		'default_sortby' => 'city',	
 		'delete' => 'deleted',	
 		'enablecolumns' => array (		
 			'disabled' => 'hidden',	
@@ -115,11 +115,11 @@ $TCA["tx_mrastp_workaddress"] = array (
 $TCA["tx_mrastp_group_cat"] = array (
         "ctrl" => array (
                 'title'     => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_group_cat',
-                'label'     => 'name',
+                'label'     => 'label_de',
                 'tstamp'    => 'tstamp',
                 'crdate'    => 'crdate',
                 'cruser_id' => 'cruser_id',
-                'sortby' => 'sorting',
+                'default_sortby' => 'label_de',
                 'delete' => 'deleted',
                 'enablecolumns' => array (
                         'disabled' => 'hidden',
@@ -130,18 +130,18 @@ $TCA["tx_mrastp_group_cat"] = array (
                 'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_group_cat.gif',
         ),
         "feInterface" => array (
-                "fe_admin_fieldList" => "hidden, starttime, endtime, name",
+                "fe_admin_fieldList" => "hidden, starttime, endtime, label_de, label_fr, label_en",
         )
 );
 
 $TCA["tx_mrastp_group"] = array (
         "ctrl" => array (
                 'title'     => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_group',
-                'label'     => 'name',
+                'label'     => 'label_de',
                 'tstamp'    => 'tstamp',
                 'crdate'    => 'crdate',
                 'cruser_id' => 'cruser_id',
-                'sortby' => 'sorting',
+                'default_sortby' => 'label_de',
                 'delete' => 'deleted',
                 'enablecolumns' => array (
                         'disabled' => 'hidden',
@@ -152,7 +152,19 @@ $TCA["tx_mrastp_group"] = array (
                 'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_group.gif',
         ),
         "feInterface" => array (
-                "fe_admin_fieldList" => "hidden, starttime, endtime, name, cat_id",
+                "fe_admin_fieldList" => "hidden, starttime, endtime, label_de, label_fr, label_en, cat_id",
         )
 );
+
+$TCA["tx_mrastp_persons_groups_rel"] = array(
+        "ctrl" => array (
+                'title'     => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_persons_groups_rel',
+                'label'     => 'groupid',
+		'label_alt' => 'personid',
+                'label_alt_force' => 1,
+                'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
+                'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_group.gif',
+        ),
+);
+
 ?>

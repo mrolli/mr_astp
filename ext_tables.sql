@@ -30,7 +30,7 @@ CREATE TABLE tx_mrastp_person (
 	status int(11) DEFAULT '0' NOT NULL,
 	entry_date int(11) DEFAULT '0' NOT NULL,
 	workaddress blob NOT NULL,
-	groups blob NOT NULL,
+	groups int(11) NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -102,8 +102,8 @@ CREATE TABLE tx_mrastp_state (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	starttime int(11) DEFAULT '0' NOT NULL,
 	endtime int(11) DEFAULT '0' NOT NULL,
-	abbrevation char(2) DEFAULT '' NOT NULL,
-	label_de tinytext NOT NULL,
+	abbrevation char(10) DEFAULT '' NOT NULL,
+	label_de varchar(255) DEFAULT '' NOT NULL,
 	label_fr varchar(255) DEFAULT '' NOT NULL,
 	label_en varchar(255) DEFAULT '' NOT NULL,
 	
@@ -118,7 +118,8 @@ CREATE TABLE tx_mrastp_state (
 #
 CREATE TABLE tx_mrastp_workaddress (
 	uid int(11) NOT NULL auto_increment,
-	pid int(11) DEFAULT '0' NOT NULL,
+	parentid int(11) DEFAULT '0' NOT NULL,
+        parenttable VARCHAR(255) DEFAULT '' NOT NULL,
 	tstamp int(11) DEFAULT '0' NOT NULL,
 	crdate int(11) DEFAULT '0' NOT NULL,
 	cruser_id int(11) DEFAULT '0' NOT NULL,
@@ -137,13 +138,14 @@ CREATE TABLE tx_mrastp_workaddress (
 	country_id int(11) DEFAULT '0' NOT NULL,
 	canton_id blob NOT NULL,
 	phone varchar(20) DEFAULT '' NOT NULL,
+        mobile varchar(20) DEFAULT '' NOT NULL,
 	fax varchar(20) DEFAULT '' NOT NULL,
 	email varchar(255) DEFAULT '' NOT NULL,
 	audience varchar(255) DEFAULT '' NOT NULL,
 	services varchar(255) DEFAULT '' NOT NULL,
 	languages varchar(255) DEFAULT '' NOT NULL,
 	website varchar(255) DEFAULT '' NOT NULL,
-	starofwork int(11) DEFAULT '0' NOT NULL,
+	startofwork int(11) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -165,8 +167,11 @@ CREATE TABLE tx_mrastp_group (
         hidden tinyint(4) DEFAULT '0' NOT NULL,
         starttime int(11) DEFAULT '0' NOT NULL,
         endtime int(11) DEFAULT '0' NOT NULL,
-        name varchar(255) DEFAULT '' NOT NULL,
+        label_de varchar(255) DEFAULT '' NOT NULL,
+	label_fr varchar(255) DEFAULT '' NOT NULL,
+	label_en varchar(255) DEFAULT '' NOT NULL,
 	cat_id int(11) DEFAULT '0' NOT NULL,
+        persons int(11) DEFAULT '0' NOT NULL,
 
         PRIMARY KEY (uid),
         KEY parent (pid)
@@ -188,7 +193,33 @@ CREATE TABLE tx_mrastp_group_cat (
         hidden tinyint(4) DEFAULT '0' NOT NULL,
         starttime int(11) DEFAULT '0' NOT NULL,
         endtime int(11) DEFAULT '0' NOT NULL,
-        name varchar(255) DEFAULT '' NOT NULL,
+        label_de varchar(255) DEFAULT '' NOT NULL,
+	label_fr varchar(255) DEFAULT '' NOT NULL,
+	label_en varchar(255) DEFAULT '' NOT NULL,
+
+        PRIMARY KEY (uid),
+        KEY parent (pid)
+);
+
+
+
+#
+# Table structure for table 'tx_mrastp_persons_groups_rel'
+#
+CREATE TABLE tx_mrastp_persons_groups_rel (
+        uid int(11) NOT NULL auto_increment,
+        pid int(11) DEFAULT '0' NOT NULL,
+        tstamp int(11) DEFAULT '0' NOT NULL,
+        crdate int(11) DEFAULT '0' NOT NULL,
+        cruser_id int(11) DEFAULT '0' NOT NULL,
+        deleted tinyint(4) DEFAULT '0' NOT NULL,
+        hidden tinyint(4) DEFAULT '0' NOT NULL,
+        personid int(11) DEFAULT '0' NOT NULL,
+        groupid int(11) DEFAULT '0' NOT NULL,
+        personsort int(10) DEFAULT '0' NOT NULL,
+        groupsort int(10) DEFAULT '0' NOT NULL,
+        funktion VARCHAR(255) DEFAULT '' NOT NULL,
+        canton_id int(11) DEFAULT '0' NOT NULL,
 
         PRIMARY KEY (uid),
         KEY parent (pid)
