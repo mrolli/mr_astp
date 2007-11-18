@@ -209,11 +209,6 @@ CREATE TABLE tx_mrastp_group_cat (
 CREATE TABLE tx_mrastp_persons_groups_rel (
         uid int(11) NOT NULL auto_increment,
         pid int(11) DEFAULT '0' NOT NULL,
-        tstamp int(11) DEFAULT '0' NOT NULL,
-        crdate int(11) DEFAULT '0' NOT NULL,
-        cruser_id int(11) DEFAULT '0' NOT NULL,
-        deleted tinyint(4) DEFAULT '0' NOT NULL,
-        hidden tinyint(4) DEFAULT '0' NOT NULL,
         personid int(11) DEFAULT '0' NOT NULL,
         groupid int(11) DEFAULT '0' NOT NULL,
         personsort int(10) DEFAULT '0' NOT NULL,
