@@ -6,6 +6,7 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+			<label index="tt_content.list_type_pi1">Adressliste</label>
 			<label index="tx_mrastp_common.label_de">German Label</label>
                         <label index="tx_mrastp_common.label_fr">French Label</label>
                         <label index="tx_mrastp_common.label_en">English Label</label>
@@ -69,7 +70,8 @@
 			<label index="tx_mrastp_group.cat_id">Group Category</label>
                         <label index="tx_mrastp_persons_groups_rel.personid">Member</label>
 			<label index="tx_mrastp_persons_groups_rel.groupid">Work Group</label>
-                        <label index="tx_mrastp_persons_groups_rel.funktion">Function</label>
+                        <label index="tx_mrastp_persons_groups_rel.funktion_de">Function (de)</label>
+			<label index="tx_mrastp_persons_groups_rel.funktion_fr">Function (fr)</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="tx_mrastp_person">astp Personne</label>
@@ -126,7 +128,8 @@
 			<label index="tx_mrastp_workaddress.startofwork">Entrée travail</label>
                         <label index="tx_mrastp_persons_groups_rel.personid">Membre</label>
                         <label index="tx_mrastp_persons_groups_rel.groupid">Groupe de travail</label>
-                        <label index="tx_mrastp_persons_groups_rel.funktion">Fonction</label>
+                        <label index="tx_mrastp_persons_groups_rel.funktion_de">Fonction (de)</label>
+			<label index="tx_mrastp_persons_groups_rel.funktion_fr">Fonction (fr)</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_mrastp_person">astp Person</label>
@@ -183,7 +186,8 @@
 			<label index="tx_mrastp_workaddress.startofwork">Arbeitsbeginn</label>
                         <label index="tx_mrastp_persons_groups_rel.personid">Mitglied</label>
                         <label index="tx_mrastp_persons_groups_rel.groupid">Arbeitsgruppe</label>
-                        <label index="tx_mrastp_persons_groups_rel.funktion">Funktion</label>
+			<label index="tx_mrastp_persons_groups_rel.funktion_de">Funktion (de)</label>
+                        <label index="tx_mrastp_persons_groups_rel.funktion_fr">Funktion (fr)</label>
 		</languageKey>
 	</data>
 </T3locallang>

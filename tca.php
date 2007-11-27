@@ -241,8 +241,8 @@ $TCA["tx_mrastp_person"] = array (
 			"config" => Array (
 				"type" => "inline",
 				"foreign_table" => "tx_mrastp_workaddress",
-                                //"foreign_field" => "parentid",
-                                //"foreign_table_field" => "parenttable",
+                                "foreign_field" => "parentuid",
+                                "foreign_table_field" => "parenttable",
 				"minitems" => 0,
 				"maxitems" => 10,
 				"appearance" => Array (
@@ -376,7 +376,7 @@ $TCA["tx_mrastp_canton"] = array (
 $TCA["tx_mrastp_section"] = array (
 	"ctrl" => $TCA["tx_mrastp_section"]["ctrl"],
 	"interface" => array (
-		"showRecordFieldList" => "hidden,starttime,endtime,abbrevation,label_de,label_fr,label_en"
+		"showRecordFieldList" => "hidden,starttime,endtime,abbrevation,label_de,label_fr"
 	),
 	"feInterface" => $TCA["tx_mrastp_section"]["feInterface"],
 	"columns" => array (
@@ -444,18 +444,9 @@ $TCA["tx_mrastp_section"] = array (
 				"eval" => "required,trim",
 			)
 		),
-		"label_en" => Array (		
-			"exclude" => 1,		
-			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_common.label_en",		
-			"config" => Array (
-				"type" => "input",	
-				"size" => "30",	
-				"eval" => "required,trim",
-			)
-		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "hidden;;1;;1-1-1, abbrevation, label_de, label_fr, label_en")
+		"0" => array("showitem" => "hidden;;1;;1-1-1, abbrevation, label_de, label_fr")
 	),
 	"palettes" => array (
 		"1" => array("showitem" => "starttime, endtime")
@@ -467,7 +458,7 @@ $TCA["tx_mrastp_section"] = array (
 $TCA["tx_mrastp_state"] = array (
 	"ctrl" => $TCA["tx_mrastp_state"]["ctrl"],
 	"interface" => array (
-		"showRecordFieldList" => "hidden,starttime,endtime,abbrevation,label_de,label_fr,label_en"
+		"showRecordFieldList" => "hidden,starttime,endtime,abbrevation,label_de,label_fr"
 	),
 	"feInterface" => $TCA["tx_mrastp_state"]["feInterface"],
 	"columns" => array (
@@ -534,17 +525,9 @@ $TCA["tx_mrastp_state"] = array (
 				"size" => "30",	
 			)
 		),
-		"label_en" => Array (		
-			"exclude" => 1,		
-			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_common.label_en",		
-			"config" => Array (
-				"type" => "input",	
-				"size" => "30",	
-			)
-		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "hidden;;1;;1-1-1, abbrevation, label_de, label_fr, label_en")
+		"0" => array("showitem" => "hidden;;1;;1-1-1, abbrevation, label_de, label_fr")
 	),
 	"palettes" => array (
 		"1" => array("showitem" => "starttime, endtime")
@@ -781,7 +764,7 @@ $TCA["tx_mrastp_workaddress"] = array (
 $TCA["tx_mrastp_group_cat"] = array (
         "ctrl" => $TCA["tx_mrastp_group_cat"]["ctrl"],
         "interface" => array (
-                "showRecordFieldList" => "hidden,starttime,endtime,label_de, label_fr, label_en"
+                "showRecordFieldList" => "hidden,starttime,endtime,label_de, label_fr"
         ),
         "feInterface" => $TCA["tx_mrastp_group_cat"]["feInterface"],
         "columns" => array (
@@ -841,19 +824,9 @@ $TCA["tx_mrastp_group_cat"] = array (
                                 "eval" => "required,trim",
                         ),
                 ),
-                "label_en" => Array (
-                        "exclude" => 1,
-                        "label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_common.label_en",
-                        "config" => Array (
-                                "type" => "input",
-                                "size" => "30",
-                                "max" => "50",
-                                "eval" => "required,trim",
-                        ),
-                ),
         ),
         "types" => array (
-                "0" => array("showitem" => "hidden;;1;;1-1-1, label_de, label_fr, label_en")
+                "0" => array("showitem" => "hidden;;1;;1-1-1, label_de, label_fr")
         ),
         "palettes" => array (
                 "1" => array("showitem" => "starttime, endtime")
@@ -863,7 +836,7 @@ $TCA["tx_mrastp_group_cat"] = array (
 $TCA["tx_mrastp_group"] = array (
         "ctrl" => $TCA["tx_mrastp_group"]["ctrl"],
         "interface" => array (
-                "showRecordFieldList" => "hidden,starttime,endtime,label_de, label_fr, label_en,cat_id"
+                "showRecordFieldList" => "hidden,starttime,endtime,label_de, label_fr,cat_id"
         ),
         "feInterface" => $TCA["tx_mrastp_group"]["feInterface"],
         "columns" => array (
@@ -923,16 +896,6 @@ $TCA["tx_mrastp_group"] = array (
                                 "eval" => "required,trim",
                         )
                 ),
-                "label_en" => Array (
-                        "exclude" => 1,
-                        "label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_common.label_en",
-                        "config" => Array (
-                                "type" => "input",
-                                "size" => "30",
-                                "max" => "50",
-                                "eval" => "required,trim",
-                        )
-                ),
                 "cat_id" => Array (
                         "exclude" => 1,
                         "label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_group.cat_id",
@@ -964,7 +927,7 @@ $TCA["tx_mrastp_group"] = array (
                 ),
         ),
         "types" => array (
-                "0" => array("showitem" => "hidden;;1;;1-1-1, label_de, label_fr, label_en, cat_id, persons")
+                "0" => array("showitem" => "hidden;;1;;1-1-1, label_de, label_fr, cat_id, persons")
         ),
         "palettes" => array (
                 "1" => array("showitem" => "starttime, endtime")
@@ -1000,9 +963,18 @@ $TCA["tx_mrastp_persons_groups_rel"] = array (
                                 "type" => "passthrough",
                         )
                 ),
-                "funktion" => Array (
+                "funktion_de" => Array (
                         "exclude" => 1,
-                        "label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_persons_groups_rel.funktion",
+                        "label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_persons_groups_rel.funktion_de",
+                        "config" => Array (
+                                "type" => "input",
+                                "size" => "30",
+                                "eval" => "trim",
+                        )
+                ),
+                "funktion_fr" => Array (
+                        "exclude" => 1,
+                        "label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_persons_groups_rel.funktion_fr",
                         "config" => Array (
                                 "type" => "input",
                                 "size" => "30",

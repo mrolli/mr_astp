@@ -80,7 +80,6 @@ CREATE TABLE tx_mrastp_section (
 	abbrevation char(2) DEFAULT '' NOT NULL,
 	label_de varchar(255) DEFAULT '' NOT NULL,
 	label_fr varchar(255) DEFAULT '' NOT NULL,
-	label_en varchar(255) DEFAULT '' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -105,7 +104,6 @@ CREATE TABLE tx_mrastp_state (
 	abbrevation char(10) DEFAULT '' NOT NULL,
 	label_de varchar(255) DEFAULT '' NOT NULL,
 	label_fr varchar(255) DEFAULT '' NOT NULL,
-	label_en varchar(255) DEFAULT '' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -118,7 +116,7 @@ CREATE TABLE tx_mrastp_state (
 #
 CREATE TABLE tx_mrastp_workaddress (
 	uid int(11) NOT NULL auto_increment,
-	parentid int(11) DEFAULT '0' NOT NULL,
+	parentuid int(11) DEFAULT '0' NOT NULL,
         parenttable VARCHAR(255) DEFAULT '' NOT NULL,
 	tstamp int(11) DEFAULT '0' NOT NULL,
 	crdate int(11) DEFAULT '0' NOT NULL,
@@ -169,7 +167,6 @@ CREATE TABLE tx_mrastp_group (
         endtime int(11) DEFAULT '0' NOT NULL,
         label_de varchar(255) DEFAULT '' NOT NULL,
 	label_fr varchar(255) DEFAULT '' NOT NULL,
-	label_en varchar(255) DEFAULT '' NOT NULL,
 	cat_id int(11) DEFAULT '0' NOT NULL,
         persons int(11) DEFAULT '0' NOT NULL,
 
@@ -195,7 +192,6 @@ CREATE TABLE tx_mrastp_group_cat (
         endtime int(11) DEFAULT '0' NOT NULL,
         label_de varchar(255) DEFAULT '' NOT NULL,
 	label_fr varchar(255) DEFAULT '' NOT NULL,
-	label_en varchar(255) DEFAULT '' NOT NULL,
 
         PRIMARY KEY (uid),
         KEY parent (pid)
@@ -213,7 +209,8 @@ CREATE TABLE tx_mrastp_persons_groups_rel (
         groupid int(11) DEFAULT '0' NOT NULL,
         personsort int(10) DEFAULT '0' NOT NULL,
         groupsort int(10) DEFAULT '0' NOT NULL,
-        funktion VARCHAR(255) DEFAULT '' NOT NULL,
+        funktion_de VARCHAR(255) DEFAULT '' NOT NULL,
+	funktion_fr VARCHAR(255) DEFAULT '' NOT NULL,
         canton_id int(11) DEFAULT '0' NOT NULL,
 
         PRIMARY KEY (uid),

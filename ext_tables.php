@@ -1,5 +1,10 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
+
+if (TYPO3_MODE == 'BE') {
+        t3lib_extMgm::addModule('web','mrastpM1','',t3lib_extMgm::extPath($_EXTKEY).'mod1/');
+}
+
 $TCA["tx_mrastp_person"] = array (
 	"ctrl" => array (
 		'title'     => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person',		
@@ -166,5 +171,12 @@ $TCA["tx_mrastp_persons_groups_rel"] = array(
                 'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_group.gif',
         ),
 );
+
+// add FlexForm field to tt_content
+$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1']='pi_flexform';
+// add flexform definition
+t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:mr_astp/pi1/flexform_ds.xml');
+
+t3lib_extMgm::addPlugin(array('LLL:EXT:mr_astp/locallang_db.xml:tt_content.list_type_pi1', $_EXTKEY.'_pi1'));
 
 ?>
