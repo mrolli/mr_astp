@@ -6,13 +6,13 @@
 		<sDEF>
 			<ROOT>
 				<TCEforms>
-					<sheetTitle>LLL:EXT:mr_astp/locallang.xml:mr_astp.pi_flexform.sheet_general</sheetTitle>
+					<sheetTitle>LLL:EXT:mr_astp/pi1/locallang.xml:mr_astp.pi_flexform.sheet_general</sheetTitle>
 				</TCEforms>
 				<type>array</type>
 				<el>
 					<what_to_display>
 						<TCEforms>
-							<label>LLL:EXT:mr_astp/locallang.xml:mr_astp.pi_flexform.what_to_display</label>
+							<label>LLL:EXT:mr_astp/pi1/locallang.xml:mr_astp.pi_flexform.what_to_display</label>
 							<config>
 								<type>select</type>
 								<items type="array">
@@ -20,39 +20,29 @@
 										<numIndex index="0">Adressliste</numIndex>
 										<numIndex index="1">addresslist</numIndex>
 									</numIndex>
+                                                                        <numIndex index="1" type="array">
+                                                                                <numIndex index="0">Mitgliederliste</numIndex>
+                                                                                <numIndex index="1">memberlist</numIndex>
+                                                                        </numIndex>
 								</items>
 								<maxitems>10</maxitems>
 								<size>5</size>
 								<multiple>0</multiple>
-								<selectedListStyle>width:150px</selectedListStyle>
-								<itemListStyle>width:150px</itemListStyle>
 							</config>
 						</TCEforms>
 					</what_to_display>
 					<addresslist>
                                                 <TCEforms>
-                                                        <label>LLL:EXT:mr_astp/locallang.xml:mr_astp.pi_flexform.addresslist</label>
+                                                        <label>LLL:EXT:mr_astp/pi1/locallang.xml:mr_astp.pi_flexform.addresslists</label>
                                                         <config>
                                                                 <type>select</type>
-                                                                <items type="array">
-                                                                        <numIndex index="0" type="array">
-                                                                                <numIndex index="0">Zentralvorstand</numIndex>
-                                                                                <numIndex index="1">zentralvorstand</numIndex>
-                                                                        </numIndex>
-                                                                        <numIndex index="1" type="array">
-                                                                                <numIndex index="0">Websitegruppe</numIndex>
-                                                                                <numIndex index="1">websitegruppe</numIndex>
-                                                                        </numIndex>
-                                                                        <numIndex index="2" type="array">
-                                                                                <numIndex index="0">Krankenkassenkommission</numIndex>
-                                                                                <numIndex index="1">kkkommission</numIndex>
-                                                                        </numIndex>
-                                                                </items>
+								<foreign_table>tx_mrastp_group</foreign_table>
+								<foreign_table_where>
+									AND 1=1 ORDER BY label_de
+								</foreign_table_where>
                                                                 <maxitems>50</maxitems>
                                                                 <size>10</size>
                                                                 <multiple>1</multiple>
-                                                                <selectedListStyle>width:150px</selectedListStyle>
-                                                                <itemListStyle>width:150px</itemListStyle>
                                                         </config>
                                                 </TCEforms>
 					</addresslist>

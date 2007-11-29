@@ -2,15 +2,31 @@
 <T3locallang>
 	<meta type="array">
 		<type>module</type>
-		<description>Language labels for plugin &quot;tx_mrastp_pi1&quot;</description>
+		<description>Language labels for extension 'mr_astp'</description>
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index=""></label>
-		</languageKey>
-		<languageKey index="de" type="array">
+			<label index="plugin_name.pi1">ASTP Address lists</label>
+			<label index="pi1_plus_wiz_description">(Description)</label>
+			<label index="mr_astp.pi_flexform.sheet_general">General Settings</label>
+            		<label index="mr_astp.pi_flexform.what_to_display">What to display?</label>
+			<label index="mr_astp.pi_flexform.addresslists">Address lists</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
-	   </languageKey>
+			<label index="plugin_name.pi1">ASTP Listes d'addresses</label>
+			<label index="pi1_title">Offres d'Emploi</label>
+			<label index="pi1_plus_wiz_description">(Déscription)</label>
+			<label index="mr_astp.pi_flexform.sheet_general">General</label>
+            		<label index="mr_astp.pi_flexform.what_to_display">Quoi montrer? </label>
+			<label index="mr_astp.pi_flexform.addresslists">Listes d'addresses</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="plugin_name.pi1">ASTP Adresslisten</label>
+			<label index="pi1_title">Stellenangebote</label>
+			<label index="pi1_plus_wiz_description">(Beschreibung)</label>
+			<label index="mr_astp.pi_flexform.sheet_general">Allgemeines</label>
+            		<label index="mr_astp.pi_flexform.what_to_display">Was angezeigen?</label>
+			<label index="mr_astp.pi_flexform.addresslists">Adresslisten</label>
+		</languageKey>
 	</data>
 </T3locallang>
