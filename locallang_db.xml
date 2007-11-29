@@ -6,7 +6,6 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="tt_content.list_type_pi1">Adressliste</label>
 			<label index="tx_mrastp_common.label_de">German Label</label>
                         <label index="tx_mrastp_common.label_fr">French Label</label>
                         <label index="tx_mrastp_common.label_en">English Label</label>

@@ -72,8 +72,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
 					$this->MOD_MENU = Array (
 						'function' => Array (
 							'1' => $LANG->getLL('members'),
-							'2' => $LANG->getLL('reports'),
-							'3' => $LANG->getLL('backups'),
+							'2' => $LANG->getLL('groups'),
+							'3' => $LANG->getLL('reports'),
+							'4' => $LANG->getLL('backups'),
 						)
 					);
 					parent::menuConfig();
@@ -170,11 +171,14 @@ class  mr_astp_module1 extends t3lib_SCbase {
 						case 1:
 							$this->content.=$this->doc->section($LANG->getLL('members_view') . ':', $this->createMembresView(), 0, 1);
 						break;
-						case 2:
+                                                case 2:
+                                                        $this->content.=$this->doc->section($LANG->getLL('groups_view') . ':', $this->createGroupsView(), 0, 1);
+                                                break;
+						case 3:
 							$content='<div align=center><strong>Menu item #2...</strong></div>';
 							$this->content.=$this->doc->section('Message #2:',$content,0,1);
 						break;
-						case 3:
+						case 4:
 							$content='<div align=center><strong>Menu item #3...</strong></div>';
 							$this->content.=$this->doc->section('Message #3:',$content,0,1);
 						break;
@@ -192,6 +196,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
 				 */
 				function createMembresView() {
 					global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+					$userlang = $BE_USER->lang;
+
 					$content = $this->helperMembersAlphabet();
 
 					$where = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? ' name like \'' . t3lib_div::_GET('show') . '%\'' : '1=1';
@@ -215,6 +221,40 @@ class  mr_astp_module1 extends t3lib_SCbase {
 					$content.= '</table>';
 					return '<p>' . $content . '</p>';
 				}
+
+				/**
+				 * Generates Groups View
+				 */
+				function createGroupsView() {
+                                        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+					switch($BE_USER->uc['lang']) {
+						case 'fr':
+							$label = 'label_fr';
+							break;
+						default:
+							$label = 'label_de';
+					}
+
+                                        $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_group');
+
+                                        $result = $TYPO3_DB->exec_SELECTquery(
+                                                'uid, label_de, label_fr, persons',
+                                                'tx_mrastp_group',
+                                                $where,
+                                                'label_de'
+                                                );
+                                        $content.= '<table style="border-collapse: collapse; margin: 10px 5px;"><td></td><td><b>Gruppe</b></td><td><b>Mitglieder</b></td>';
+                                        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+                                                $params='&edit[tx_mrastp_group]['.$row['uid'].']=edit';
+                                                $content.= '<tr><td><a href="#" onclick="'.
+                                                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
+                                                $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"').' title="'.$LANG->getLL('edit',1).'" class="absmiddle" alt="" /></a></td>';
+                                                $content.= '<td>' . $row[$label] . '</td>';
+                                                $content.='<td align="center">' . $row['persons'] . '</td></tr>';
+                                        }
+                                        $content.= '</table>';
+                                        return '<p>' . $content . '</p>';
+                                }
 
 				function helperMembersAlphabet() {
 					$items = array('alle', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');

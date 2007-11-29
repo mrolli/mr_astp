@@ -8,23 +8,29 @@
 		<languageKey index="default" type="array">
 			<label index="title">ASTP Database</label>
 			<label index="members">Members</label>
+			<label index="groups">Groups</label>
 			<label index="reports">Reports</label>
 			<label index="backups">Backup</label>
-			<label index="members_view">Mitgliederverzeichnis</label>
+			<label index="members_view">Member Directory</label>
+			<label index="groups_view">Group Directory</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="title">ASTP database</label>
                         <label index="members">Membres</label>
+			<label index="groups">Groupes</label>
                         <label index="reports">Rapports</label>
                         <label index="backups">Backup</label>
-                        <label index="members_view">Mitgliederverzeichnis</label>
+                        <label index="members_view">Liste de membres</label>
+			<label index="groups_view">Liste de groupes</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">ASTP Datenbank</label>
                         <label index="members">Mitglieder</label>
+			<label index="groups">Gruppen</label>
                         <label index="reports">Listen</label>
                         <label index="backups">Backups</label>
                         <label index="members_view">Mitgliederverzeichnis</label>
+			<label index="groups_view">Gruppenverzeichnis</label>
 		</languageKey>
 	</data>
 </T3locallang>

@@ -176,7 +176,7 @@ $TCA["tx_mrastp_persons_groups_rel"] = array(
 $TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1']='pi_flexform';
 // add flexform definition
 t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:mr_astp/pi1/flexform_ds.xml');
-
-t3lib_extMgm::addPlugin(array('LLL:EXT:mr_astp/locallang_db.xml:tt_content.list_type_pi1', $_EXTKEY.'_pi1'));
+// add frontend plugins
+t3lib_extMgm::addPlugin(array('LLL:EXT:' . $_EXTKEY . '/pi1/locallang.xml:plugin_name.pi1', $_EXTKEY.'_pi1'));
 
 ?>

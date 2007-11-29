@@ -259,7 +259,7 @@ $TCA["tx_mrastp_person"] = array (
                                 "foreign_table" => "tx_mrastp_persons_groups_rel",
                                 "foreign_field" => "personid",
 				"foreign_unique" => "groupid",
-				"foreign_default_sortby" => "tx_mrastp_person.name",
+				/*"foreign_default_sortby" => "tx_mrastp_person.name",*/
                                 "foreign_label" => "groupid",
                                 "minitems" => 0,
                                 "maxitems" => 20,
@@ -998,7 +998,7 @@ $TCA["tx_mrastp_persons_groups_rel"] = array (
                 ),
 	),
         "types" => array (
-                "0" => array("showitem" => "hidden;;1;;1-1-1, personid, groupid, personsort, groupsort, funktion, canton_id")
+                "0" => array("showitem" => "hidden;;1;;1-1-1, personid, groupid, personsort, groupsort, funktion_de, funktion_fr, canton_id")
         ),
         "palettes" => array (
                 "1" => array("showitem" => "starttime, endtime")

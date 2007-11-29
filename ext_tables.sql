@@ -116,6 +116,7 @@ CREATE TABLE tx_mrastp_state (
 #
 CREATE TABLE tx_mrastp_workaddress (
 	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
 	parentuid int(11) DEFAULT '0' NOT NULL,
         parenttable VARCHAR(255) DEFAULT '' NOT NULL,
 	tstamp int(11) DEFAULT '0' NOT NULL,
