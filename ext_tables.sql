@@ -31,9 +31,11 @@ CREATE TABLE tx_mrastp_person (
 	entry_date int(11) DEFAULT '0' NOT NULL,
 	workaddress blob NOT NULL,
 	groups int(11) NOT NULL,
+	feuser_id int(11) NOT NULL,
 	
 	PRIMARY KEY (uid),
-	KEY parent (pid)
+	KEY parent (pid),
+	KEY feuser (feuser_id)
 );
 
 

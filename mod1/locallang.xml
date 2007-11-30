@@ -6,31 +6,34 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="title">ASTP Database</label>
+			<label index="title">astp Database</label>
 			<label index="members">Members</label>
 			<label index="groups">Groups</label>
 			<label index="reports">Reports</label>
 			<label index="backups">Backup</label>
 			<label index="members_view">Member Directory</label>
 			<label index="groups_view">Group Directory</label>
+			<label index="lists_view">Downloadable Lists</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
-			<label index="title">ASTP database</label>
+			<label index="title">astp database</label>
                         <label index="members">Membres</label>
 			<label index="groups">Groupes</label>
                         <label index="reports">Rapports</label>
                         <label index="backups">Backup</label>
                         <label index="members_view">Liste de membres</label>
 			<label index="groups_view">Liste de groupes</label>
+			<label index="lists_view">Listes pour télécharger</label>
 		</languageKey>
 		<languageKey index="de" type="array">
-			<label index="title">ASTP Datenbank</label>
+			<label index="title">astp Datenbank</label>
                         <label index="members">Mitglieder</label>
 			<label index="groups">Gruppen</label>
                         <label index="reports">Listen</label>
                         <label index="backups">Backups</label>
                         <label index="members_view">Mitgliederverzeichnis</label>
 			<label index="groups_view">Gruppenverzeichnis</label>
+			<label index="lists_view">Downloadbare Listen</label>
 		</languageKey>
 	</data>
 </T3locallang>

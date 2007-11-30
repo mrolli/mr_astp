@@ -37,7 +37,7 @@ $BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users
 
 
 /**
- * Module 'ASTP Database' for the 'mr_astp' extension.
+ * Module 'astp Database' for the 'mr_astp' extension.
  *
  * @author	 <>
  * @package	TYPO3
@@ -91,6 +91,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
 					// Access check!
 					// The page will show only if there is a valid page and if this page may be viewed by the user
+					$this->id = 95;
 					$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
 					$access = is_array($this->pageinfo) ? 1 : 0;
 
@@ -175,8 +176,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                                         $this->content.=$this->doc->section($LANG->getLL('groups_view') . ':', $this->createGroupsView(), 0, 1);
                                                 break;
 						case 3:
-							$content='<div align=center><strong>Menu item #2...</strong></div>';
-							$this->content.=$this->doc->section('Message #2:',$content,0,1);
+							$this->content.=$this->doc->section($LANG->getLL('lists_view') . ':', $this->createListsView(), 0, 1);
 						break;
 						case 4:
 							$content='<div align=center><strong>Menu item #3...</strong></div>';
@@ -255,6 +255,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                         $content.= '</table>';
                                         return '<p>' . $content . '</p>';
                                 }
+
+				function createListsView() {
+					return 'Test';
+				}
 
 				function helperMembersAlphabet() {
 					$items = array('alle', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');

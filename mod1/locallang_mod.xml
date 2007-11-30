@@ -6,19 +6,19 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="mlang_tabs_tab">ASTP Database</label>
-			<label index="mlang_labels_tabdescr">ASTP Database of Members and Report Generator</label>
-			<label index="mlang_labels_tablabel">ASTP Database of members</label>
+			<label index="mlang_tabs_tab">astp Database</label>
+			<label index="mlang_labels_tabdescr">astp Database of Members and Report Generator</label>
+			<label index="mlang_labels_tablabel">astp Database of members</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
-			<label index="mlang_tabs_tab">ASTP database</label>
-			<label index="mlang_labels_tabdescr">ASTP liste de membres et generateur de report</label>
-			<label index="mlang_labels_tablabel">ASTP list de membres</label>
+			<label index="mlang_tabs_tab">astp database</label>
+			<label index="mlang_labels_tabdescr">astp liste de membres et generateur de report</label>
+			<label index="mlang_labels_tablabel">astp list de membres</label>
 		</languageKey>
 		<languageKey index="de" type="array">
-			<label index="mlang_tabs_tab">ASTP Datenbank</label>
-			<label index="mlang_labels_tabdescr">ASTP Mitgliederverzeichnis und Report Generator</label>
-			<label index="mlang_labels_tablabel">ASTP Mitgliederdatenbank</label>
+			<label index="mlang_tabs_tab">astp Datenbank</label>
+			<label index="mlang_labels_tabdescr">astp Mitgliederverzeichnis und Report Generator</label>
+			<label index="mlang_labels_tablabel">astp Mitgliederdatenbank</label>
 		</languageKey>
 	</data>
 </T3locallang>

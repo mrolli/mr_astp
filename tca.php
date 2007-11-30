@@ -4,7 +4,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 $TCA["tx_mrastp_person"] = array (
 	"ctrl" => $TCA["tx_mrastp_person"]["ctrl"],
 	"interface" => array (
-		"showRecordFieldList" => "hidden,starttime,endtime,salutation,firstname,name,street,compl,zip,city,canton_id,country_id,phone,mobile,fax,email,lang,section_id,status,entry_date,workaddress,groups"
+		"showRecordFieldList" => "hidden,starttime,endtime,salutation,firstname,name,street,compl,zip,city,canton_id,country_id,phone,mobile,fax,email,lang,section_id,status,entry_date,workaddress,groups,feuser_id"
 	),
 	"feInterface" => $TCA["tx_mrastp_person"]["feInterface"],
 	"columns" => array (
@@ -259,7 +259,6 @@ $TCA["tx_mrastp_person"] = array (
                                 "foreign_table" => "tx_mrastp_persons_groups_rel",
                                 "foreign_field" => "personid",
 				"foreign_unique" => "groupid",
-				/*"foreign_default_sortby" => "tx_mrastp_person.name",*/
                                 "foreign_label" => "groupid",
                                 "minitems" => 0,
                                 "maxitems" => 20,
@@ -271,9 +270,23 @@ $TCA["tx_mrastp_person"] = array (
                                 ),
                         )
                 ),
+                "feuser_id" => Array (
+                        "exclude" => 1,
+                        "label" => "LLL:EXT:cms/locallang_tca.php:fe_users",
+                        "config" => Array (
+                                "type" => "inline",
+                                "foreign_table" => "fe_users",
+                                "minitems" => 0,
+                                "maxitems" => 1,
+                                "appearance" => Array (
+                                        "expandSingle" => 1,
+                                        "useSortable" => 0,
+                                ),
+                        )
+                ),
 	),
 	"types" => array (
-		"0" => array("showitem" => "hidden;;1;;1-1-1, salutation, firstname, name, street, compl, zip, city, canton_id, country_id, phone, mobile, fax, email, lang, section_id, status, entry_date, workaddress, groups")
+		"0" => array("showitem" => "hidden;;1;;1-1-1, salutation, firstname, name, street, compl, zip, city, canton_id, country_id, phone, mobile, fax, email, lang, section_id, status, entry_date, workaddress, groups, feuser_id")
 	),
 	"palettes" => array (
 		"1" => array("showitem" => "starttime, endtime")
