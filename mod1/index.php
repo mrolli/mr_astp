@@ -91,7 +91,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
 					// Access check!
 					// The page will show only if there is a valid page and if this page may be viewed by the user
-					$this->id = 95;
+					$this->id = 100;
 					$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
 					$access = is_array($this->pageinfo) ? 1 : 0;
 
@@ -264,7 +264,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 					$items = array('alle', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 					$links = array();
 					foreach ($items as $item) {
-					    $links[] = '<a href="' . substr(PATH_thisScript, strlen(PATH_typo3_mod)) . '?show=' . $item . '">' . $item . '</a>';
+					    $links[] = '<a href="/' . PATH_typo3_mod . '?show=' . $item . '">' . $item . '</a>';
 					}
 					return '<div style="width: 60%; margin: 10px 5px">' . implode(' | ', $links) . '</div>';
 				}
