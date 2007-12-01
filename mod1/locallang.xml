@@ -14,6 +14,7 @@
 			<label index="members_view">Member Directory</label>
 			<label index="groups_view">Group Directory</label>
 			<label index="lists_view">Downloadable Lists</label>
+			<label index="new_record">Create new record</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="title">astp database</label>
@@ -24,6 +25,7 @@
                         <label index="members_view">Liste de membres</label>
 			<label index="groups_view">Liste de groupes</label>
 			<label index="lists_view">Listes pour télécharger</label>
+			<label index="new_record">Créer un nouvel enregistrement</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">astp Datenbank</label>
@@ -34,6 +36,7 @@
                         <label index="members_view">Mitgliederverzeichnis</label>
 			<label index="groups_view">Gruppenverzeichnis</label>
 			<label index="lists_view">Downloadbare Listen</label>
+			<label index="new_record">Neuen Datensatz erstellen</label>
 		</languageKey>
 	</data>
 </T3locallang>

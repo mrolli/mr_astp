@@ -91,7 +91,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
 					// Access check!
 					// The page will show only if there is a valid page and if this page may be viewed by the user
-					$this->id = 100;
+					$this->id = 100100100100100100100100100100;
 					$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
 					$access = is_array($this->pageinfo) ? 1 : 0;
 
@@ -198,7 +198,11 @@ class  mr_astp_module1 extends t3lib_SCbase {
 					global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 					$userlang = $BE_USER->lang;
 
-					$content = $this->helperMembersAlphabet();
+					$params='&edit[tx_mrastp_person][100]=new';
+					$content = '<a href="#" onclick="'.
+							htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
+					$content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
+					$content.= $this->helperMembersAlphabet();
 
 					$where = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? ' name like \'' . t3lib_div::_GET('show') . '%\'' : '1=1';
 					$where.= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
@@ -227,6 +231,12 @@ class  mr_astp_module1 extends t3lib_SCbase {
 				 */
 				function createGroupsView() {
                                         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+
+                                        $params='&edit[tx_mrastp_group][100]=new';
+                                        $content = '<a href="#" onclick="'.
+                                                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
+                                        $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
+
 					switch($BE_USER->uc['lang']) {
 						case 'fr':
 							$label = 'label_fr';
