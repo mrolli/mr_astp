@@ -15,6 +15,11 @@
 			<label index="groups_view">Group Directory</label>
 			<label index="lists_view">Downloadable Lists</label>
 			<label index="new_record">Create new record</label>
+			<label index="members_found">Members found</label>
+			<label index="lists">Lists</label>
+			<label index="view">View</label>
+			<label index="download">Download</label>
+			<label index="group_comm">Working Groups, committees</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="title">astp database</label>
@@ -26,6 +31,11 @@
 			<label index="groups_view">Liste de groupes</label>
 			<label index="lists_view">Listes pour télécharger</label>
 			<label index="new_record">Créer un nouvel enregistrement</label>
+			<label index="members_found">Membres trouvés</label>
+                        <label index="lists">Listes</label>
+                        <label index="view">Regarder</label>
+                        <label index="download">Télécharger</label>
+                        <label index="group_comm">Groups travail, commission, ...</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">astp Datenbank</label>
@@ -37,6 +47,11 @@
 			<label index="groups_view">Gruppenverzeichnis</label>
 			<label index="lists_view">Downloadbare Listen</label>
 			<label index="new_record">Neuen Datensatz erstellen</label>
+			<label index="members_found">Gefundene Mitglieder</label>
+                        <label index="lists">Listen</label>
+                        <label index="view">Anschauen</label>
+                        <label index="download">Herunterladen</label>
+                        <label index="group_comm">Arbeitsgruppen, Kommissionen, ...</label>
 		</languageKey>
 	</data>
 </T3locallang>
