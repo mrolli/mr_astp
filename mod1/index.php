@@ -275,6 +275,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
 					$content = '';
 
+					$content .= $this->getOthersForListView();
+					$content .= $this->getAuditvalForListView)();
 					$content .= $this->getGroupsForListView();
 					$content .= $this->getCantonsForListView();
                                         return '<p>' . $content . '</p>';
@@ -306,7 +308,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
                                                 $content.= '<tr><td>' . $row[$label] . '</td>';
                                                 $content.='<td align="center">';
-						$params='&edit[tx_mrastp_group]['.$row['uid'].']=edit';
+						$params='&show[tx_mrastp_group]['.$row['uid'].']=show';
                                                 $content.= '<a href="#" onclick="'.
                                                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
                                                         $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" /></a>';
@@ -325,6 +327,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                         switch($BE_USER->uc['lang']) {
 						case 'en':
 							$label = 'label_en';
+							break;
                                                 case 'fr':
                                                         $label = 'label_fr';
                                                         break; 
@@ -343,7 +346,32 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                                 );
                                         $content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
                                         $content.='<tr><td colspan="3"><b>' . $LANG->getLL('canton_list') . '</b></td></tr>';
-                                        $conetnt.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';                                        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+                                        $conetnt.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
+                                        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+                                                $content.= '<tr><td>' . $row[$label] . '</td>';
+                                                $content.='<td align="center">';
+						$params='&show[tx_mrastp_canton]['.$row['uid'].']=show';
+						$content.='<a href="#" onclick=".	
+                                                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
+                                                        $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />';
+                                                $content.= '</td>';
+                                                $content.='<td align="center">';
+                                                        $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />';
+                                                $content.= '</td></tr>';
+                                        }
+                                        $content.= '</table>';
+                                        return $content;
+				}
+
+				function getOthersForListView() {
+					$other_lists = array(
+							array('id' => 1, 'andere', 'autres'),
+							array('id' => 2, 'Selbstis√√ndige TheraputInnen', 'Selbstst√§ndige TherapetInnen'),
+					);
+					$content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
+                                        $content.='<tr><td colspan="3"><b>' . $LANG->getLL('other_lists') . '</b></td></tr>';
+                                        $conetnt.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
+                                        foreach($other_lists as $key => $list) 
                                                 $content.= '<tr><td>' . $row[$label] . '</td>';
                                                 $content.='<td align="center">';
                                                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
@@ -355,6 +383,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                         }
                                         $content.= '</table>';
                                         return $content;
+				}
+
+				function getAuditvalForListsView() {
 				}
 
 				function renderHtmlList($rows, $fields, $heading) {
