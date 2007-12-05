@@ -51,6 +51,21 @@ $TCA["tx_mrastp_canton"] = array (
 	)
 );
 
+$TCA['tx_mrastp_country'] = array(
+        'ctrl' => array(
+                'label' => 'cn_short_en',
+                'label_alt' => 'cn_short_en,cn_iso_2',
+                'adminOnly' => 1,
+                'default_sortby' => 'ORDER BY cn_short_en',
+                'title' => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_country',
+                'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
+                'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_country.gif'
+        ),
+        'interface' => array(
+                'showRecordFieldList' => 'cn_iso_2,cn_iso_3,cn_short_en,cn_short_de,cn_short_fr'
+        )
+);
+
 $TCA["tx_mrastp_section"] = array (
 	"ctrl" => array (
 		'title'     => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_section',		

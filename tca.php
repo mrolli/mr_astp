@@ -135,8 +135,8 @@ $TCA["tx_mrastp_person"] = array (
 				"items" => Array (
 					Array("",0),
 				),
-				"foreign_table" => "static_countries",	
-				"foreign_table_where" => "AND static_countries.pid=###SITEROOT### ORDER BY static_countries.uid",	
+				"foreign_table" => "tx_mrastp_country",	
+				"foreign_table_where" => "AND tx_mrastp_country.pid=###CURRENT_PID### ORDER BY tx_mrastp_country.uid",
 				"size" => 1,	
 				"minitems" => 0,
 				"maxitems" => 1,
@@ -382,6 +382,85 @@ $TCA["tx_mrastp_canton"] = array (
 	"palettes" => array (
 		"1" => array("showitem" => "starttime, endtime")
 	)
+);
+
+
+
+$TCA['tx_mrastp_country'] = array(
+        'ctrl' => $TCA['tx_mrastp_country']['ctrl'],
+        'interface' => array(
+                'showRecordFieldList' => 'cn_iso_2,cn_iso_3,cn_short_en,cn_short_de,cn_short_fr'
+        ),
+        'columns' => array(
+                'cn_iso_2' => array(
+                        'label' => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_country.cn_iso_2',
+                        'exclude' => '0',
+                        'config' => array(
+                                'type' => 'input',
+                                'size' => '4',
+                                'max' => '2',
+                                'eval' => '',
+                                'default' => ''
+                        )
+                ),
+                'cn_iso_3' => array(
+                        'label' => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_country.cn_iso_3',
+                        'exclude' => '0',
+                        'config' => array(
+                                'type' => 'input',
+                                'size' => '5',
+                                'max' => '3',
+                                'eval' => '',
+                                'default' => ''
+                        )
+                ),
+                'cn_short_en' => array(
+                        'label' => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_country.cn_short_en',
+                        'exclude' => '0',
+                        'config' => array(
+                                'type' => 'input',
+                                'size' => '25',
+                                'max' => '50',
+                                'eval' => 'trim',
+                                'default' => '',
+                                '_is_string' => '1'
+                        )
+                ),
+                'cn_short_de' => array(
+                        'label' => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_country.cn_short_de',
+                        'exclude' => '0',
+                        'config' => array(
+                                'type' => 'input',
+                                'size' => '25',
+                                'max' => '50',
+                                'eval' => 'trim',
+                                'default' => '',
+                                '_is_string' => '1'
+                        )
+                ),
+                'cn_short_fr' => array(
+                        'label' => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_country.cn_short_fr',
+                        'exclude' => '0',
+                        'config' => array(
+                                'type' => 'input',
+                                'size' => '25',
+                                'max' => '50',
+                                'eval' => 'trim',
+                                'default' => '',
+                                '_is_string' => '1'
+                        )
+                ),
+	),
+        'types' => array(
+                '1' => array(
+                        'showitem' => 'cn_short_en,cn_short_de,cn_short_fr,--palette--;;1;;'
+                )
+        ),
+        'palettes'      => array(
+                '1' => array(
+                        'showitem' => 'cn_iso_2,cn_iso_3', 'canNotCollapse' => '1'
+                ),
+        )
 );
 
 

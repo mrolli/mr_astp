@@ -66,6 +66,23 @@ CREATE TABLE tx_mrastp_canton (
 
 
 #
+# Table structure for table 'tx_mrastp_country'
+#
+CREATE TABLE tx_mrastp_country (
+  uid int(11) unsigned DEFAULT '0' NOT NULL auto_increment,
+  pid int(11) unsigned DEFAULT '0' NOT NULL,
+  cn_iso_2 char(2) DEFAULT '' NOT NULL,
+  cn_iso_3 char(3) DEFAULT '' NOT NULL,
+  cn_short_en varchar(50) DEFAULT '' NOT NULL,
+  cn_short_de varchar(50) DEFAULT '' NOT NULL,
+  cn_short_fr varchar(50) DEFAULT '' NOT NULL,
+  PRIMARY KEY (uid),
+  UNIQUE uid (uid)
+);
+
+
+
+#
 # Table structure for table 'tx_mrastp_section'
 #
 CREATE TABLE tx_mrastp_section (
