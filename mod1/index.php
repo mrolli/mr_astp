@@ -276,7 +276,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 					$content = '';
 
 					$content .= $this->getOthersForListView();
-					$content .= $this->getAuditvalForListView)();
+					$content .= $this->getAuditvalForListView();
 					$content .= $this->getGroupsForListView();
 					$content .= $this->getCantonsForListView();
                                         return '<p>' . $content . '</p>';
@@ -351,7 +351,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                                 $content.= '<tr><td>' . $row[$label] . '</td>';
                                                 $content.='<td align="center">';
 						$params='&show[tx_mrastp_canton]['.$row['uid'].']=show';
-						$content.='<a href="#" onclick=".	
+						$content.='<a href="#" onclick="'.	
                                                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
                                                         $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />';
                                                 $content.= '</td>';
@@ -364,9 +364,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
 				}
 
 				function getOthersForListView() {
+/*
 					$other_lists = array(
 							array('id' => 1, 'andere', 'autres'),
-							array('id' => 2, 'SelbstisÃÃndige TheraputInnen', 'SelbststÃ¤ndige TherapetInnen'),
+							array('id' => 2, 'Selbstisändige TheraputInnen', 'Selbstständige TherapeutInnen'),
 					);
 					$content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
                                         $content.='<tr><td colspan="3"><b>' . $LANG->getLL('other_lists') . '</b></td></tr>';
@@ -375,17 +376,18 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                                 $content.= '<tr><td>' . $row[$label] . '</td>';
                                                 $content.='<td align="center">';
                                                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
-                                                        $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />';
+                                                $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />';
                                                 $content.= '</td>';
                                                 $content.='<td align="center">';
-                                                        $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />';
+                                                $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />';
                                                 $content.= '</td></tr>';
                                         }
                                         $content.= '</table>';
                                         return $content;
+*/
 				}
 
-				function getAuditvalForListsView() {
+				function getAuditvalForListView() {
 				}
 
 				function renderHtmlList($rows, $fields, $heading) {
