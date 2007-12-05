@@ -23,7 +23,7 @@
 ***************************************************************/
 
 
-	// DEFAULT initialization of a module [BEGIN]
+// DEFAULT initialization of a module [BEGIN]
 unset($MCONF);
 require_once('conf.php');
 require_once($BACK_PATH.'init.php');
@@ -32,203 +32,213 @@ require_once($BACK_PATH.'template.php');
 $LANG->includeLLFile('EXT:mr_astp/mod1/locallang.xml');
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
 $BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users has no permission for entry.
-	// DEFAULT initialization of a module [END]
+// DEFAULT initialization of a module [END]
 
 
 
 /**
  * Module 'astp Database' for the 'mr_astp' extension.
  *
- * @author	 <>
+ * @author	Michael Rolli <michael@rollis.ch>
  * @package	TYPO3
  * @subpackage	mr_astp
  */
 class  mr_astp_module1 extends t3lib_SCbase {
-				var $pageinfo;
+    var $pageinfo;
 
-				/**
-				 * Initializes the Module
-				 * @return	void
-				 */
-				function init()	{
-					global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+    /**
+     * Initializes the Module
+     * @return	void
+     */
+    function init()	{
+        global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
 
-					parent::init();
+        $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);
+        $this->id = $this->conf['pid_astp'];
+        parent::init();
 
-					/*
-					if (t3lib_div::_GP('clear_all_cache'))	{
-						$this->include_once[] = PATH_t3lib.'class.t3lib_tcemain.php';
-					}
-					*/
-				}
+        /*
+        if (t3lib_div::_GP('clear_all_cache'))	{
+            $this->include_once[] = PATH_t3lib.'class.t3lib_tcemain.php';
+        }
+        */
+    }
 
-				/**
-				 * Adds items to the ->MOD_MENU array. Used for the function menu selector.
-				 *
-				 * @return	void
-				 */
-				function menuConfig()	{
-					global $LANG;
-					$this->MOD_MENU = Array (
-						'function' => Array (
-							'1' => $LANG->getLL('members'),
-							'2' => $LANG->getLL('groups'),
-							'3' => $LANG->getLL('reports'),
-							'4' => $LANG->getLL('backups'),
-						)
-					);
-					parent::menuConfig();
-				}
+    /**
+     * Adds items to the ->MOD_MENU array. Used for the function menu selector.
+     *
+     * @return	void
+     */
+    function menuConfig()	{
+        global $LANG;
+        $this->MOD_MENU = array (
+                            'function' => array (
+                                             '1' => $LANG->getLL('members'),
+                                             '2' => $LANG->getLL('groups'),
+                                             '3' => $LANG->getLL('reports'),
+                                             '4' => $LANG->getLL('backups'),
+                                          ),
+                          );
+        parent::menuConfig();
+    }
 
-				/**
-				 * Main function of the module. Write the content to $this->content
-				 * If you chose "web" as main module, you will need to consider the $this->id parameter which will contain the uid-number of the page clicked in the page tree
-				 *
-				 * @return	[type]		...
-				 */
-				function main()	{
-					global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+    /**
+     * Main function of the module. Write the content to $this->content
+     * If you chose "web" as main module, you will need to consider the $this->id parameter which will contain the uid-number of the page clicked in the page tree
+     *
+     * @return	void
+     */
+    function main()	{
+        global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
 
-					// Access check!
-					// The page will show only if there is a valid page and if this page may be viewed by the user
-					$this->id = 100;
-					$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
-					$access = is_array($this->pageinfo) ? 1 : 0;
+        // Access check!
+        // The page will show only if there is a valid page and if this page may be viewed by the user
+        $this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
+        $access = is_array($this->pageinfo) ? 1 : 0;
 
-					if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id))	{
+        if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id))	{
 
-							// Draw the header.
-						$this->doc = t3lib_div::makeInstance('mediumDoc');
-						$this->doc->backPath = $BACK_PATH;
-						$this->doc->form='<form action="" method="POST">';
+            // Draw the header.
+            $this->doc = t3lib_div::makeInstance('mediumDoc');
+            $this->doc->backPath = $BACK_PATH;
+            $this->doc->form='<form action="" method="POST">';
 
-							// JavaScript
-						$this->doc->JScode = '
-							<script language="javascript" type="text/javascript">
-								script_ended = 0;
-								function jumpToUrl(URL)	{
-									document.location = URL;
-								}
-							</script>
-						';
-						$this->doc->postCode='
-							<script language="javascript" type="text/javascript">
-								script_ended = 1;
-								if (top.fsMod) top.fsMod.recentIds["web"] = 0;
-							</script>
-						';
+            // JavaScript
+            $this->doc->JScode = '
+                            <script language="javascript" type="text/javascript">
+                                script_ended = 0;
+                                function jumpToUrl(URL)	{
+                                    document.location = URL;
+                                }
+                            </script>';
+            $this->doc->postCode='
+                            <script language="javascript" type="text/javascript">
+                                script_ended = 1;
+                                if (top.fsMod) top.fsMod.recentIds["web"] = 0;
+                            </script>';
 
-						$headerSection = $this->doc->getHeader('pages',$this->pageinfo,$this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.t3lib_div::fixed_lgd_pre($this->pageinfo['_thePath'],50);
+            $headerSection = $this->doc->getHeader('pages',$this->pageinfo,$this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.t3lib_div::fixed_lgd_pre($this->pageinfo['_thePath'],50);
 
-						$this->content.=$this->doc->startPage($LANG->getLL('title'));
-						$this->content.=$this->doc->header($LANG->getLL('title'));
-						$this->content.=$this->doc->spacer(5);
-						$this->content.=$this->doc->section('',$this->doc->funcMenu($headerSection,t3lib_BEfunc::getFuncMenu($this->id,'SET[function]',$this->MOD_SETTINGS['function'],$this->MOD_MENU['function'])));
-						$this->content.=$this->doc->divider(5);
+            $this->content .= $this->doc->startPage($LANG->getLL('title'));
+            $this->content .= $this->doc->header($LANG->getLL('title'));
+            $this->content .= $this->doc->spacer(5);
+            $this->content .= $this->doc->section('',$this->doc->funcMenu($headerSection,t3lib_BEfunc::getFuncMenu($this->id,'SET[function]',$this->MOD_SETTINGS['function'],$this->MOD_MENU['function'])));
+            $this->content .= $this->doc->divider(5);
 
+            // Render content:
+            $this->moduleContent();
 
-						// Render content:
-						$this->moduleContent();
+            // ShortCut
+            if ($BE_USER->mayMakeShortcut())	{
+                $this->content .= $this->doc->spacer(20).$this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
+            }
 
+            $this->content .= $this->doc->spacer(10);
 
-						// ShortCut
-						if ($BE_USER->mayMakeShortcut())	{
-							$this->content.=$this->doc->spacer(20).$this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
-						}
+        } else {
+            // If no access or if ID == zero
+            $this->doc = t3lib_div::makeInstance('mediumDoc');
+            $this->doc->backPath = $BACK_PATH;
 
-						$this->content.=$this->doc->spacer(10);
-					} else {
-							// If no access or if ID == zero
+            $this->content .= $this->doc->startPage($LANG->getLL('title'));
+            $this->content .= $this->doc->header($LANG->getLL('title'));
+            $this->content .= $this->doc->spacer(5);
+            $this->content .= $this->doc->spacer(10);
+        }
+    }
 
-						$this->doc = t3lib_div::makeInstance('mediumDoc');
-						$this->doc->backPath = $BACK_PATH;
+    /**
+     * Prints out the module HTML
+     *
+     * @return	void
+     */
+    function printContent()	{
+        $this->content .= $this->doc->endPage();
+        echo $this->content;
+    }
 
-						$this->content.=$this->doc->startPage($LANG->getLL('title'));
-						$this->content.=$this->doc->header($LANG->getLL('title'));
-						$this->content.=$this->doc->spacer(5);
-						$this->content.=$this->doc->spacer(10);
-					}
-				}
+    /**
+     * Generates the module content
+     *
+     * @return	void
+     */
+    function moduleContent()	{
+        global $LANG;
+        switch((string)$this->MOD_SETTINGS['function'])	{
+            case 1:
+                $this->content.=$this->doc->section($LANG->getLL('members_view') . ':', $this->createMemberView(), 0, 1);
+                break;
+            case 2:
+                $this->content.=$this->doc->section($LANG->getLL('groups_view') . ':', $this->createGroupView(), 0, 1);
+                break;
+            case 3:
+                $this->content.=$this->doc->section($LANG->getLL('lists_view') . ':', $this->createListView(), 0, 1);
+                break;
+            case 4:
+                $this->content.=$this->doc->section($LANG->getLL('lists_view') . ':', $this->createBackupView(), 0, 1);
+                /*
+                $content='<div align=center><strong>Menu item #3...</strong></div>';
+                $this->content.=$this->doc->section('Message #3:',$content,0,1);
+                */
+                break;
+        }
+        /*
+        $this->content.= '<hr /><br />This is the GET/POST vars sent to the script:<br />'
+                       . 'GET:'.t3lib_div::view_array($_GET).'<br />'
+                       . 'POST:'.t3lib_div::view_array($_POST) . '<br />' . t3lib_div::debug($this->conf);
+        */
+    }
 
-				/**
-				 * Prints out the module HTML
-				 *
-				 * @return	void
-				 */
-				function printContent()	{
+    /**
+     * Generates Member View
+     *
+     * @return	void
+     */
+    function createMemberView() {
+        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+        $userlang = $BE_USER->lang;
+        $TYPO3_DB->debugOutput = TRUE;
 
-					$this->content.=$this->doc->endPage();
-					echo $this->content;
-				}
+        $params='&edit[tx_mrastp_person][' . $this->id . ']=new';
+        $content = '<a href="#" onclick="'.
+                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
+        $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
+        $content.= $this->helperMembersAlphabet();
 
-				/**
-				 * Generates the module content
-				 *
-				 * @return	void
-				 */
-				function moduleContent()	{
-					global $LANG;
-					switch((string)$this->MOD_SETTINGS['function'])	{
-						case 1:
-							$this->content.=$this->doc->section($LANG->getLL('members_view') . ':', $this->createMembresView(), 0, 1);
-						break;
-                                                case 2:
-                                                        $this->content.=$this->doc->section($LANG->getLL('groups_view') . ':', $this->createGroupsView(), 0, 1);
-                                                break;
-						case 3:
-							$this->content.=$this->doc->section($LANG->getLL('lists_view') . ':', $this->createListsView(), 0, 1);
-						break;
-						case 4:
-							$content='<div align=center><strong>Menu item #3...</strong></div>';
-							$this->content.=$this->doc->section('Message #3:',$content,0,1);
-						break;
-					}
-/*
-					$this->content.= '<hr />
-                                                                <br />This is the GET/POST vars sent to the script:<br />'.
-                                                                'GET:'.t3lib_div::view_array($_GET).'<br />'.
-                                                                'POST:'.t3lib_div::view_array($_POST) . '<br />' . t3lib_div::debug($this->conf);
-*/
-				}
+        $where = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? ' name like \'' . t3lib_div::_GET('show') . '%\'' : '1=1';
+        $where.= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
 
-				/**
-				 * Generates Members View
-				 */
-				function createMembresView() {
-					global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-					$userlang = $BE_USER->lang;
-					$TYPO3_DB->debugOutput = TRUE;
+        $result = $TYPO3_DB->exec_SELECTquery(
+                                                'uid, firstname, name, zip, city',
+                                                'tx_mrastp_person',
+                                                $where,
+                                                '',
+                                                'name'
+                                             );
+        $num_rows = $TYPO3_DB->sql_num_rows($result);
 
-					$params='&edit[tx_mrastp_person][100]=new';
-					$content = '<a href="#" onclick="'.
-							htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
-					$content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
-					$content.= $this->helperMembersAlphabet();
+        $tableRows = array();
+        $tableRows[] = array('',
+                             '<b>' . $LANG->getLL('lastname') . ', ' . $LANG->getLL('firstname') . '</b>',
+                             '<b>' . $LANG->getLL('zip') . ' ' . $LANG->getLL('city') . '</b>',
+                            );
+        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+            $params='&edit[tx_mrastp_person]['.$row['uid'].']=edit';
+            $tableRows[] = array('<a href="#" onclick="' .
+                                     htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')) . '">' .
+                                     '<img' . t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"') . ' title="' . $LANG->getLL('edit',1) . '" class="absmiddle" alt="" /></a>',
+                                 $row['name'] . ', ' . $row['firstname'],
+                                 $row['zip'] . ' ' . $row['city'],
+                                 );
+        }
 
-					$where = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? ' name like \'' . t3lib_div::_GET('show') . '%\'' : '1=1';
-					$where.= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
+        // assemble output
+        $content.= '<p><b>' . $LANG->getLL('members_found') . ': ' . $num_rows . '</b><br />';
+        $content.= $this->doc->table($tableRows);
+        $content.= '</p>';
 
-                        		$result = $TYPO3_DB->exec_SELECTquery(
-                                		'uid, firstname, name, zip, city',
-                                		'tx_mrastp_person',
-                                		$where,
-						'',
-                                		'name'
-                        			);
-					$num_rows = $TYPO3_DB->sql_num_rows($result);
-					$content.= '<p><b>' . $LANG->getLL('members_found') . ': ' . $num_rows . '</b></p>';
-					$content.= '<table style="border-collapse: collapse; margin: 10px 5px;"><td></td><td><b>Name, Vorname</b></td><td><b>PLZ Ort</b></td>';
-					while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-						$params='&edit[tx_mrastp_person]['.$row['uid'].']=edit'; 
-						$content.= '<tr><td><a href="#" onclick="'. 
-            						htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">'; 
-            					$content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"').' title="'.$LANG->getLL('edit',1).'" class="absmiddle" alt="" /></a></td>';
-						$content.= '<td>' . $row['name'] . ', ' . $row['firstname'] . '</td>';
-						$content.='<td>' . $row['zip'] . ' ' . $row['city'] . '</td></tr>';
-					}
-					$content.= '</table>';
-					return '<p>' . $content . '</p>';
-				}
+        return $content;
+    }
 
 				/**
 				 * Generates Groups View
@@ -236,7 +246,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 				function createGroupsView() {
                                         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
-                                        $params='&edit[tx_mrastp_group][100]=new';
+                                        $params='&edit[tx_mrastp_group][' . $his->id . ']=new';
                                         $content = '<a href="#" onclick="'.
                                                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
                                         $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
@@ -299,7 +309,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                                 'uid, label_de, label_fr',
                                                 'tx_mrastp_group',
                                                 $where,
-						'', 
+						'',
                                                 $label
                                                 );
                                         $content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
@@ -330,7 +340,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 							break;
                                                 case 'fr':
                                                         $label = 'label_fr';
-                                                        break; 
+                                                        break;
                                                 default:
                                                         $label = 'label_de';
                                         }
@@ -351,7 +361,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                                 $content.= '<tr><td>' . $row[$label] . '</td>';
                                                 $content.='<td align="center">';
 						$params='&show[tx_mrastp_canton]['.$row['uid'].']=show';
-						$content.='<a href="#" onclick="'.	
+						$content.='<a href="#" onclick="'.
                                                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
                                                         $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />';
                                                 $content.= '</td>';
@@ -367,12 +377,12 @@ class  mr_astp_module1 extends t3lib_SCbase {
 /*
 					$other_lists = array(
 							array('id' => 1, 'andere', 'autres'),
-							array('id' => 2, 'Selbstisändige TheraputInnen', 'Selbstständige TherapeutInnen'),
+							array('id' => 2, 'Selbstisï¿½ndige TheraputInnen', 'Selbststï¿½ndige TherapeutInnen'),
 					);
 					$content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
                                         $content.='<tr><td colspan="3"><b>' . $LANG->getLL('other_lists') . '</b></td></tr>';
                                         $conetnt.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
-                                        foreach($other_lists as $key => $list) 
+                                        foreach($other_lists as $key => $list)
                                                 $content.= '<tr><td>' . $row[$label] . '</td>';
                                                 $content.='<td align="center">';
                                                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';

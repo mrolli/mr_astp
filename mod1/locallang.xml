@@ -1,57 +1,63 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3locallang>
-	<meta type="array">
-		<type>module</type>
-		<description>Language labels for module &quot;web_mrastpM1&quot;</description>
-	</meta>
-	<data type="array">
-		<languageKey index="default" type="array">
-			<label index="title">astp Database</label>
-			<label index="members">Members</label>
-			<label index="groups">Groups</label>
-			<label index="reports">Reports</label>
-			<label index="backups">Backup</label>
-			<label index="members_view">Member Directory</label>
-			<label index="groups_view">Group Directory</label>
-			<label index="lists_view">Downloadable Lists</label>
-			<label index="new_record">Create new record</label>
-			<label index="members_found">Members found</label>
-			<label index="lists">Lists</label>
-			<label index="view">View</label>
-			<label index="download">Download</label>
-			<label index="group_comm">Working Groups, committees</label>
-		</languageKey>
-		<languageKey index="fr" type="array">
-			<label index="title">astp database</label>
-                        <label index="members">Membres</label>
-			<label index="groups">Groupes</label>
-                        <label index="reports">Rapports</label>
-                        <label index="backups">Backup</label>
-                        <label index="members_view">Liste de membres</label>
-			<label index="groups_view">Liste de groupes</label>
-			<label index="lists_view">Listes pour télécharger</label>
-			<label index="new_record">Créer un nouvel enregistrement</label>
-			<label index="members_found">Membres trouvés</label>
-                        <label index="lists">Listes</label>
-                        <label index="view">Regarder</label>
-                        <label index="download">Télécharger</label>
-                        <label index="group_comm">Groups travail, commission, ...</label>
-		</languageKey>
-		<languageKey index="de" type="array">
-			<label index="title">astp Datenbank</label>
-                        <label index="members">Mitglieder</label>
-			<label index="groups">Gruppen</label>
-                        <label index="reports">Listen</label>
-                        <label index="backups">Backups</label>
-                        <label index="members_view">Mitgliederverzeichnis</label>
-			<label index="groups_view">Gruppenverzeichnis</label>
-			<label index="lists_view">Downloadbare Listen</label>
-			<label index="new_record">Neuen Datensatz erstellen</label>
-			<label index="members_found">Gefundene Mitglieder</label>
-                        <label index="lists">Listen</label>
-                        <label index="view">Anschauen</label>
-                        <label index="download">Herunterladen</label>
-                        <label index="group_comm">Arbeitsgruppen, Kommissionen, ...</label>
-		</languageKey>
-	</data>
+    <meta type="array">
+        <type>module</type>
+        <description>Language labels for module &quot;web_mrastpM1&quot;</description>
+    </meta>
+    <data type="array">
+        <languageKey index="default" type="array">
+            <label index="title">astp Database</label>
+            <label index="members">Members</label>
+            <label index="groups">Groups</label>
+            <label index="reports">Reports</label>
+            <label index="backups">Backup</label>
+            <label index="members_view">Member Directory</label>
+            <label index="groups_view">Group Directory</label>
+            <label index="lists_view">Downloadable Lists</label>
+            <label index="new_record">Create new record</label>
+            <label index="members_found">Members found</label>
+            <label index="lists">Lists</label>
+            <label index="view">View</label>
+            <label index="download">Download</label>
+            <label index="group_comm">Working Groups, Committees</label>
+            <label index="firstname">Firstname</label>
+            <label index="lastname">Name</label>
+        </languageKey>
+        <languageKey index="fr" type="array">
+            <label index="title">astp database</label>
+            <label index="members">Membres</label>
+            <label index="groups">Groupes</label>
+            <label index="reports">Rapports</label>
+            <label index="backups">Backup</label>
+            <label index="members_view">Liste de membres</label>
+            <label index="groups_view">Liste de groupes</label>
+            <label index="lists_view">Listes pour télécharger</label>
+            <label index="new_record">Créer un nouvel enregistrement</label>
+            <label index="members_found">Membres trouvés</label>
+            <label index="lists">Listes</label>
+            <label index="view">Regarder</label>
+            <label index="download">Télécharger</label>
+            <label index="group_comm">Groups travail, commission, ...</label>
+            <label index="firstname">Prénom</label>
+            <label index="lastname">Nom</label>
+        </languageKey>
+        <languageKey index="de" type="array">
+            <label index="title">astp Datenbank</label>
+            <label index="members">Mitglieder</label>
+            <label index="groups">Gruppen</label>
+            <label index="reports">Listen</label>
+            <label index="backups">Backups</label>
+            <label index="members_view">Mitgliederverzeichnis</label>
+            <label index="groups_view">Gruppenverzeichnis</label>
+            <label index="lists_view">Downloadbare Listen</label>
+            <label index="new_record">Neuen Datensatz erstellen</label>
+            <label index="members_found">Gefundene Mitglieder</label>
+            <label index="lists">Listen</label>
+            <label index="view">Anschauen</label>
+            <label index="download">Herunterladen</label>
+            <label index="group_comm">Arbeitsgruppen, Kommissionen, ...</label>
+            <label index="firstname">Vorname</label>
+            <label index="lastname">Name</label>
+        </languageKey>
+    </data>
 </T3locallang>
