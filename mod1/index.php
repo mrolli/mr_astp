@@ -303,7 +303,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         return $content;
     }
 
-				function createListsView() {
+				function createListView() {
                                         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
 					$content = '';
