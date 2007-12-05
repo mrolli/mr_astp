@@ -261,7 +261,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
     /**
      * Generates Groups View
      */
-    function createGroupsView() {
+    function createGroupView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
         $params='&edit[tx_mrastp_group][' . $his->id . ']=new';
