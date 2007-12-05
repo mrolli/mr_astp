@@ -219,7 +219,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
         $content.= $this->helperMembersAlphabet();
 
-        $where = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? ' name like \'' . t3lib_div::_GET('show') . '%\'' : '1=1';
+        $where = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? " name like '" . t3lib_div::_GET('show') . "%'" : '1=1';
         $where.= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
 
         $result = $TYPO3_DB->exec_SELECTquery(
@@ -233,10 +233,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
         $tableRows = array();
         $tableRows[] = array('',
-                             '<b>' . $LANG->getLL('lastname') . '</b>',
+                             '<b>' . $LANG->getLL('lastname') .  '</b>',
                              '<b>' . $LANG->getLL('firstname') . '</b>',
-                             '<b>' . $LANG->getLL('zip') . '</b>',
-                             '<b>' . $LANG->getLL('city') . '</b>',
+                             '<b>' . $LANG->getLL('zip') .       '</b>',
+                             '<b>' . $LANG->getLL('city') .      '</b>',
                             );
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $params='&edit[tx_mrastp_person]['.$row['uid'].']=edit';
@@ -244,9 +244,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                      htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')) . '">' .
                                      '<img' . t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"') . ' title="' . $LANG->getLL('edit',1) . '" class="absmiddle" alt="" /></a>',
                                  $row['name'],
-				 $row['firstname'],
+                                 $row['firstname'],
                                  $row['zip'],
-				 $row['city'],
+                                 $row['city'],
                                  );
         }
 
@@ -258,45 +258,50 @@ class  mr_astp_module1 extends t3lib_SCbase {
         return $content;
     }
 
-				/**
-				 * Generates Groups View
-				 */
-				function createGroupsView() {
-                                        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+    /**
+     * Generates Groups View
+     */
+    function createGroupsView() {
+        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
-                                        $params='&edit[tx_mrastp_group][' . $his->id . ']=new';
-                                        $content = '<a href="#" onclick="'.
-                                                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
-                                        $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
+        $params='&edit[tx_mrastp_group][' . $his->id . ']=new';
+        $content = '<a href="#" onclick="'.
+                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
+        $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
 
-					switch($BE_USER->uc['lang']) {
-						case 'fr':
-							$label = 'label_fr';
-							break;
-						default:
-							$label = 'label_de';
-					}
+        switch($BE_USER->uc['lang']) {
+            case 'fr':
+                $label = 'label_fr';
+                break;
+            default:
+                $label = 'label_de';
+        }
 
-                                        $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_group');
+        $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_group');
 
-                                        $result = $TYPO3_DB->exec_SELECTquery(
-                                                'uid, label_de, label_fr, persons',
-                                                'tx_mrastp_group',
-                                                $where,
-						$label
-                                                );
-                                        $content.= '<table style="border-collapse: collapse; margin: 10px 5px;"><td></td><td><b>Gruppe</b></td><td><b>Mitglieder</b></td>';
-                                        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-                                                $params='&edit[tx_mrastp_group]['.$row['uid'].']=edit';
-                                                $content.= '<tr><td><a href="#" onclick="'.
-                                                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
-                                                $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"').' title="'.$LANG->getLL('edit',1).'" class="absmiddle" alt="" /></a></td>';
-                                                $content.= '<td>' . $row[$label] . '</td>';
-                                                $content.='<td align="center">' . $row['persons'] . '</td></tr>';
-                                        }
-                                        $content.= '</table>';
-                                        return '<p>' . $content . '</p>';
-                                }
+        $result = $TYPO3_DB->exec_SELECTquery(
+                                              'uid, label_de, label_fr, persons',
+                                              'tx_mrastp_group',
+                                              $where,
+                                              $label
+                                             );
+        $tableRows = array();
+        $tableRows[] = array('',
+                             '<b>' . $LANG->getLL('group')   . '</b>',
+                             '<b>' . $LANG->getLL('members') . '</b>',
+                            );
+        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+            $params='&edit[tx_mrastp_group]['.$row['uid'].']=edit';
+            $tableRows[] = array('<a href="#" onclick="'.
+                                     htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">' .
+                                     '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"').' title="'.$LANG->getLL('edit',1).'" class="absmiddle" alt="" /></a>',
+                                 $row[$label],
+                                 $row['persons'],
+                                );
+        }
+        $content.= '<p>' . $this->doc->table($tableRows, $this->tableLayout['zebra']) . '</p>';
+        return $content;
+    }
 
 				function createListsView() {
                                         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
