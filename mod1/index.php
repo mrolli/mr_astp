@@ -55,6 +55,20 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
         $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);
         $this->id = $this->conf['pid_astp'];
+
+        $this->tableLayout = array();
+        $this->tableLayout['zebra'] = array('table'      => array('<table style="border-collapse: collapse; margin: 10px 5px; padding: 3px; border: 1px solid #666666;">', '</table'),
+                                            'defRowOdd'  => array('tr' => array('<tr style="background: #dddddd">', '</tr>'),
+                                                                  'defCol' => array('<td>', '</td>'),
+                                                                 ),
+                                            'defRowEven' => array('tr' => array('<tr>', '</tr>'),
+                                                                  'defCol' => array('<td>', '</td>'),
+                                                                 ),
+                                            0            => array('tr' => array('<tr style="background: #dddddd">', '</tr>'),
+                                                                  'defCol' => array('<th>', '</th>'),
+                                                                 ),
+                                           );
+
         parent::init();
 
         /*
@@ -234,7 +248,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
         // assemble output
         $content.= '<p><b>' . $LANG->getLL('members_found') . ': ' . $num_rows . '</b><br />';
-        $content.= $this->doc->table($tableRows);
+        $content.= $this->doc->table($tableRows, $this->tableLayout['zebra']);
         $content.= '</p>';
 
         return $content;
