@@ -57,15 +57,15 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $this->id = $this->conf['pid_astp'];
 
         $this->tableLayout = array();
-        $this->tableLayout['zebra'] = array('table'      => array('<table style="border-collapse: collapse; margin: 10px 5px; padding: 3px; border: 1px solid #666666;">', '</table'),
+        $this->tableLayout['zebra'] = array('table'      => array('<table style="width: 100%; border-collapse: collapse; margin: 10px 5px; border: 1px solid #666666;">', '</table'),
                                             'defRowOdd'  => array('tr' => array('<tr style="background: #dddddd">', '</tr>'),
-                                                                  'defCol' => array('<td>', '</td>'),
+                                                                  'defCol' => array('<td style="padding: 3px">', '</td>'),
                                                                  ),
                                             'defRowEven' => array('tr' => array('<tr>', '</tr>'),
-                                                                  'defCol' => array('<td>', '</td>'),
+                                                                  'defCol' => array('<td style="padding: 3px">', '</td>'),
                                                                  ),
                                             0            => array('tr' => array('<tr style="background: #dddddd">', '</tr>'),
-                                                                  'defCol' => array('<th>', '</th>'),
+                                                                  'defCol' => array('<td style="padding: 3px; font-weight: bold; border-bottom: 1px solid #666666;">', '</td>'),
                                                                  ),
                                            );
 
@@ -233,16 +233,20 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
         $tableRows = array();
         $tableRows[] = array('',
-                             '<b>' . $LANG->getLL('lastname') . ', ' . $LANG->getLL('firstname') . '</b>',
-                             '<b>' . $LANG->getLL('zip') . ' ' . $LANG->getLL('city') . '</b>',
+                             '<b>' . $LANG->getLL('lastname') . '</b>',
+                             '<b>' . $LANG->getLL('firstname') . '</b>',
+                             '<b>' . $LANG->getLL('zip') . '</b>',
+                             '<b>' . $LANG->getLL('city') . '</b>',
                             );
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $params='&edit[tx_mrastp_person]['.$row['uid'].']=edit';
             $tableRows[] = array('<a href="#" onclick="' .
                                      htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')) . '">' .
                                      '<img' . t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"') . ' title="' . $LANG->getLL('edit',1) . '" class="absmiddle" alt="" /></a>',
-                                 $row['name'] . ', ' . $row['firstname'],
-                                 $row['zip'] . ' ' . $row['city'],
+                                 $row['name'],
+				 $row['firstname'],
+                                 $row['zip'],
+				 $row['city'],
                                  );
         }
 
