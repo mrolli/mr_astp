@@ -22,6 +22,8 @@
             <label index="group_comm">Working Groups, Committees</label>
             <label index="firstname">Firstname</label>
             <label index="lastname">Name</label>
+            <label index="zip">Zip</label>
+            <label index="city">City</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="title">astp database</label>
@@ -40,6 +42,8 @@
             <label index="group_comm">Groups travail, commission, ...</label>
             <label index="firstname">Prénom</label>
             <label index="lastname">Nom</label>
+            <label index="zip">NLA</label>
+            <label index="city">Lieu</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="title">astp Datenbank</label>
@@ -58,6 +62,8 @@
             <label index="group_comm">Arbeitsgruppen, Kommissionen, ...</label>
             <label index="firstname">Vorname</label>
             <label index="lastname">Name</label>
+            <label index="zip">PLZ</label>
+            <label index="city">Stadt</label>
         </languageKey>
     </data>
 </T3locallang>
