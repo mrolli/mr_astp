@@ -190,6 +190,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
                 $this->content.=$this->doc->section($LANG->getLL('lists_view') . ':', $this->createListView(), 0, 1);
                 break;
             case 4:
+                $this->content.=$this->doc->section($LANG->getLL('custom_reports') . ':', $this->createCustomReportsView(), 0, 1);
+                break;
+            case 5:
                 $this->content.=$this->doc->section($LANG->getLL('lists_view') . ':', $this->createBackupView(), 0, 1);
                 /*
                 $content='<div align=center><strong>Menu item #3...</strong></div>';
@@ -342,11 +345,18 @@ class  mr_astp_module1 extends t3lib_SCbase {
         return $content;
     }
 
+    function createCustomReportsView() {
+        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+
+        $content = $this->getReportGeneratorForm();
+        return $content;
+    }
+
     /**
      * Get array of all groups available
      */
     function getGroupsArray() {
-        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
         // define statement parts
         $select = 'uid, label_de, label_fr';
@@ -433,6 +443,52 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	}
 
 	function renderCsvList($rows, $fields, $heading) {
+	}
+
+	function getReportGeneratorForm() {
+	    global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+
+        $content = '<form action="" method="post" enctype="multipart/form-data">';
+        $content = '<fieldset><legend>' . $LANG->getLL('filters') . '</legend>';
+        $content.= $this->getSelectOfTable('canton');
+
+
+
+        $content.= '</fieldset></form>';
+        return $content;
+	}
+
+	function getSelectOfTable($table) {
+	    global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+	    $userLang = $BE_USER->uc['lang'];
+	    switch($userLang) {
+	        case 'en':
+	            $label = 'label_en';
+	            if($table != 'canton') {
+	                $label = 'label_de';
+	            }
+	            break;
+	        case 'fr':
+	            $label = 'label_fr';
+	            break;
+	        default:
+	            $label = 'label_de';
+	            break;
+	    }
+
+        $select = 'uid, ' . $label;
+        $from = 'tx_mrastp_' . $table;
+        $where = '1=1' . t3lib_BEfunc::deleteClause($from);
+	    $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, '', $label);
+
+	    $output = '<label for="section">' . $LANG->getLL('LLL:EXT:mr_astp/locallang_db.xml:' . $from) . '</label>';
+	    $output.= '<select name="section" multiple="multiple">';
+	    $output.= '<option value="0"></option>';
+	    while($row = $result->fetch_assoc()) {
+	        $output.= '<option value="' . $row['uid'] . '">' . $row['label'] . '</option>';
+	    }
+	    $output.= '</select>';
+	    return $output;
 	}
 
 	function helperMembersAlphabet() {
