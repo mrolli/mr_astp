@@ -278,10 +278,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
         // ordering depends on backend user's selected language
         switch($BE_USER->uc['lang']) {
             case 'fr':
-                $orderBy = 'label_fr';
+                $orderBy = $label = 'label_fr';
                 break;
             default:
-                $orderBy = 'label_de';
+                $orderBy = $label = 'label_de';
         }
 
 
@@ -305,38 +305,36 @@ class  mr_astp_module1 extends t3lib_SCbase {
         return $content;
     }
 
-    function createListsView() {
+    function createListView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
-        if(isset(t3lib_div::_GP('list_action')) && isset(t3lib_div::_GP('list_action'))) {
+	$action = t3lib_div::_GP('list_action');
+        if($action) {
             $this->action = t3lib_div::_GP('list_action');
             $this->list = t3lib_div::_GP('list');
             $this->processList();
         }
 
-        $tableRows = $this->array();
+        $tableRows = array();
 
         array_merge($tableRows, $this->getGroupsArray());
         array_merge($tableRows, $this->getCantonsArray());
         // other additional lists
-        $tableRows[] = array(
+        /*$tableRows[] = array(
                              'diverse' => array(
                                                 'Therapiestellen'
                                                ),
                              );
-
         $content = '';
 
         $content .= $this->getOthersForListView();
         $content .= $this->getAuditvalForListView();
-        $content .= $this->getGroupsForListView();
-        $content .= $this->getCantonsForListView();
-
-        $content.= '<p>' . $this->doc->table($tableRows, $this->tableLayout['zebra']) . '</p>';
+	*/
+        $content.= '<p>' . $this->doc->table($this->getGroupsArray(), $this->tableLayout['zebra']) . '</p>';
         return $content;
     }
 
-    function getGroupsForListView() {
+    function getGroupsArray() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
         switch($BE_USER->uc['lang']) {
@@ -371,7 +369,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         return $tableRows;
     }
 
-	function getCantonsForListView() {
+	function getCantonsArray() {
                             global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
                             switch($BE_USER->uc['lang']) {
@@ -410,7 +408,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                     $content.= '</td></tr>';
                             }
                             $content.= '</table>';
-                            return $content;
+                            return array();
 	}
 
 	function getOthersForListView() {
