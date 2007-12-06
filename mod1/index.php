@@ -323,15 +323,22 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
         $tableRows = array_merge($tableRows, $this->getGroupsArray());
         $tableRows = array_merge($tableRows, $this->getCantonsArray());
+*/
         // other additional lists
-        $tableRows[] = array('IV-Liste',
+        $miscLists   = array();
+        $miscLists[] = array('<b>' . $LANG->getLL('lists') . '</b>',
+                             '<b>' . $LANG->getLL('show') . '</b>',
+                             '<b>' . $LANG->getLL('download') . '</b>'
+                            );
+        $miscLists[] = array('IV-Liste',
                              '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />',
                              '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />',
-                             );
-*/
+                            );
+
         $content = '';
         $content.= $this->doc->section($LANG->getLL('group_comm'), $this->doc->table($this->getGroupsArray(), $this->tableLayout['zebra']), 0, 1);
         $content.= $this->doc->section($LANG->getLL('catons'), $this->doc->table($this->getCantonsArray(), $this->tableLayout['zebra']), 0, 1);
+        $content.= $this->doc->section($LANG->getLL('misc_lists'), $this->doc->table($miscLists, $this->tableLayout['zebra']), 0, 1);
         return $content;
     }
 

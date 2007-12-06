@@ -25,6 +25,7 @@
             <label index="group_comm">Working Groups, Committees</label>
             <label index="canton">Canton</label>
             <label index="cantons">Cantons</label>
+            <label index="misc_lists">Miscellanious Lists</label>
             <label index="firstname">Firstname</label>
             <label index="lastname">Name</label>
             <label index="zip">Zip</label>
@@ -50,6 +51,7 @@
             <label index="group_comm">Groups travail, commission, ...</label>
             <label index="canton">Canton</label>
             <label index="cantons">Cantons</label>
+            <label index="misc_lists">Lists divers</label>
             <label index="firstname">Prénom</label>
             <label index="lastname">Nom</label>
             <label index="zip">NLA</label>
@@ -75,6 +77,7 @@
             <label index="group_comm">Arbeitsgruppen, Kommissionen, ...</label>
             <label index="canton">Kanton</label>
             <label index="cantons">Kantone</label>
+            <label index="misc_lists">Diverse Listen</label>
             <label index="firstname">Vorname</label>
             <label index="lastname">Name</label>
             <label index="zip">PLZ</label>
