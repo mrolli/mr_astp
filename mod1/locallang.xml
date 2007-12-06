@@ -25,7 +25,7 @@
             <label index="group_comm">Working Groups, Committees</label>
             <label index="canton">Canton</label>
             <label index="cantons">Cantons</label>
-            <label index="misc_lists">Miscellanious Lists</label>
+            <label index="misc_lists">Miscellaneous Lists</label>
             <label index="firstname">Firstname</label>
             <label index="lastname">Name</label>
             <label index="zip">Zip</label>
