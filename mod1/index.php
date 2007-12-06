@@ -336,9 +336,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
                             );
 
         $content = '';
-        $content.= $this->doc->section($LANG->getLL('group_comm'), $this->doc->table($this->getGroupsArray(), $this->tableLayout['zebra']), 0, 1);
-        $content.= $this->doc->section($LANG->getLL('cantons'), $this->doc->table($this->getCantonsArray(), $this->tableLayout['zebra']), 0, 1);
-        $content.= $this->doc->section($LANG->getLL('misc_lists'), $this->doc->table($miscLists, $this->tableLayout['zebra']), 0, 1);
+        $content.= $this->doc->section($LANG->getLL('group_comm'), $this->doc->table($this->getGroupsArray(), $this->tableLayout['zebra']), 1, 0);
+        $content.= $this->doc->section($LANG->getLL('cantons'), $this->doc->table($this->getCantonsArray(), $this->tableLayout['zebra']), 1, 0);
+        $content.= $this->doc->section($LANG->getLL('misc_lists'), $this->doc->table($miscLists, $this->tableLayout['zebra']), 1, 0);
         return $content;
     }
 
