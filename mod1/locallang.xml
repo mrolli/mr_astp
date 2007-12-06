@@ -23,6 +23,8 @@
             <label index="view">View</label>
             <label index="download">Download</label>
             <label index="group_comm">Working Groups, Committees</label>
+            <label index="canton">Canton</label>
+            <label index="cantons">Cantons</label>
             <label index="firstname">Firstname</label>
             <label index="lastname">Name</label>
             <label index="zip">Zip</label>
@@ -46,6 +48,8 @@
             <label index="view">Regarder</label>
             <label index="download">Télécharger</label>
             <label index="group_comm">Groups travail, commission, ...</label>
+            <label index="canton">Canton</label>
+            <label index="cantons">Cantons</label>
             <label index="firstname">Prénom</label>
             <label index="lastname">Nom</label>
             <label index="zip">NLA</label>
@@ -69,6 +73,8 @@
             <label index="view">Anschauen</label>
             <label index="download">Herunterladen</label>
             <label index="group_comm">Arbeitsgruppen, Kommissionen, ...</label>
+            <label index="canton">Kanton</label>
+            <label index="cantons">Kantone</label>
             <label index="firstname">Vorname</label>
             <label index="lastname">Name</label>
             <label index="zip">PLZ</label>

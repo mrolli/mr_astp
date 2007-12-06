@@ -398,7 +398,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
 
         $tableRows = array();
-        $tableRows[] = array('<b>' . $LANG->getLL('canton_list') . '</b>',
+        $tableRows[] = array('<b>' . $LANG->getLL('cantons') . '</b>',
                              '',
                              '',
                             );
