@@ -138,6 +138,12 @@
 			<label index="tx_mrastp_workaddress.languages">Langues</label>
 			<label index="tx_mrastp_workaddress.website">Site de Web</label>
 			<label index="tx_mrastp_workaddress.startofwork">Entrée travail</label>
+            <label index="tx_mrastp_group_cat">astp Group Categories</label>
+            <label index="tx_mrastp_group_cat.nmae">Category Name</label>
+            <label index="tx_mrastp_group">astp Groups</label>
+            <label index="tx_mrastp_group.name">Group name</label>
+            <label index="tx_mrastp_group.persons">Members</label>
+            <label index="tx_mrastp_group.cat_id">Group Category</label>
 			<label index="tx_mrastp_persons_groups_rel">Relation Membre/Groupe</label>
                         <label index="tx_mrastp_persons_groups_rel.personid">Membre</label>
                         <label index="tx_mrastp_persons_groups_rel.groupid">Groupe de travail</label>
@@ -203,6 +209,12 @@
 			<label index="tx_mrastp_workaddress.languages">Sprachen</label>
 			<label index="tx_mrastp_workaddress.website">Website</label>
 			<label index="tx_mrastp_workaddress.startofwork">Arbeitsbeginn</label>
+            <label index="tx_mrastp_group_cat">astp Group Categories</label>
+            <label index="tx_mrastp_group_cat.nmae">Category Name</label>
+            <label index="tx_mrastp_group">astp Gruppe</label>
+            <label index="tx_mrastp_group.name">Gruppenname</label>
+            <label index="tx_mrastp_group.persons">Gruppenmitglieder</label>
+            <label index="tx_mrastp_group.cat_id">Gruppenkategorie</label>
 			<label index="tx_mrastp_persons_groups_rel">Person/Gruppen-Relation</label>
                         <label index="tx_mrastp_persons_groups_rel.personid">Mitglied</label>
                         <label index="tx_mrastp_persons_groups_rel.groupid">Arbeitsgruppe</label>
