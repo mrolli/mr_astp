@@ -311,13 +311,14 @@ class  mr_astp_module1 extends t3lib_SCbase {
     function createListView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
-	$action = t3lib_div::_GP('list_action');
+        $action = t3lib_div::_GP('list_action');
         if($action) {
             $this->action = t3lib_div::_GP('list_action');
             $this->list = t3lib_div::_GP('list');
             $this->processList();
         }
 
+/*
         $tableRows = array();
 
         $tableRows = array_merge($tableRows, $this->getGroupsArray());
@@ -327,8 +328,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
                              '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />',
                              '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />',
                              );
-
-        $content.= '<p>' . $this->doc->table($tableRows, $this->tableLayout['zebra']) . '</p>';
+*/
+        $content = '';
+        $content.= $this->doc->section($LANG->getLL('group_comm'), $this->doc->table($this->getGroupsArray(), $this->tableLayout['zebra']), 0, 1);
+        $content.= $tihs->doc->section($LANG->getLL('catons'), $this->doc->table($this->getCantonsArray(), $this->tableLayout['zebra']), 0, 1);
         return $content;
     }
 
@@ -359,10 +362,12 @@ class  mr_astp_module1 extends t3lib_SCbase {
                              '<b>' . $LANG->getLL('show') . '</b>',
                              '<b>' . $LANG->getLL('download') . '</b>'
                             );
+        /*
         $tableRows[] = array('<b>' . $LANG->getLL('group_comm') .  '</b>',
                              '',
                              '',
                             );
+        */
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $tableRows[] = array($row[$label],
                                  '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />',
@@ -397,11 +402,17 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
         $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
 
-        $tableRows = array();
+        $tableRows   = array();
+        $tableRows[] = array('<b>' . $LANG->getLL('lists') . '</b>',
+                             '<b>' . $LANG->getLL('show') . '</b>',
+                             '<b>' . $LANG->getLL('download') . '</b>'
+                            );
+        /*
         $tableRows[] = array('<b>' . $LANG->getLL('cantons') . '</b>',
                              '',
                              '',
                             );
+        */
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $tableRows[] = array($row[$label],
                                  '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />',
