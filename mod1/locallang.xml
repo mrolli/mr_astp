@@ -29,8 +29,8 @@
             <label index="city">City</label>
         </languageKey>
         <languageKey index="fr" type="array">
-            <label index="show">Présenter</label>
-            <label index="download">Télécharger</label>
+            <label index="show">Pr√©senter</label>
+            <label index="download">T√©l√©charger</label>
             <label index="title">astp database</label>
             <label index="members">Membres</label>
             <label index="group">Groupe</label>
