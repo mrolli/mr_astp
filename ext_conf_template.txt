@@ -1,0 +1,5 @@
+# cat=basic; type=int+; label=Pid of astp Database Page.
+pid_astp = 100
+
+# cat=basic/enalbe; type=bool; label=Enable debugging output.
+debug = 0

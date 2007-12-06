@@ -51,10 +51,11 @@ class  mr_astp_module1 extends t3lib_SCbase {
      * @return	void
      */
     function init()	{
-        global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+        global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA,$CLIENT, $TYPO3_CONF_VARS;
 
         $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);
         $this->id = $this->conf['pid_astp'];
+        $TYPO3_DB->debugOutput = $this->conf['debug'];
 
         $this->tableLayout = array();
         $this->tableLayout['zebra'] = array('table'      => array('<table style="width: 100%; border-collapse: collapse; margin: 10px 5px; border: 1px solid #666666;">', '</table'),
@@ -211,7 +212,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
     function createMemberView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
         $userlang = $BE_USER->lang;
-        $TYPO3_DB->debugOutput = TRUE;
+
 
         $params='&edit[tx_mrastp_person][' . $this->id . ']=new';
         $content = '<a href="#" onclick="'.
@@ -219,16 +220,16 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
         $content.= $this->helperMembersAlphabet();
 
-        $where = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? " name like '" . t3lib_div::_GET('show') . "%'" : '1=1';
-        $where.= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
+        // define statement parts
+        $select  = 'uid, firstname, name, zip, city';
+        $from    = 'tx_mrastp_person';
+        $where   = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? " name like '" . t3lib_div::_GET('show') . "%'" : '1=1';
+        $where  .= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
+        $groupBy = '';
+        $orderBy = 'name';
 
-        $result = $TYPO3_DB->exec_SELECTquery(
-                                                'uid, firstname, name, zip, city',
-                                                'tx_mrastp_person',
-                                                $where,
-                                                '',
-                                                'name'
-                                             );
+        // query database, get number of rows and fill in an array
+        $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
         $num_rows = $TYPO3_DB->sql_num_rows($result);
 
         $tableRows = array();
@@ -269,22 +270,23 @@ class  mr_astp_module1 extends t3lib_SCbase {
                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
         $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
 
+        // define statement parts
+        $select  = 'uid, label_de, label_fr, persons';
+        $from    = 'tx_mrastp_group';
+        $where  .= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_group');
+        $groupBy = '';
+        // ordering depends on backend user's selected language
         switch($BE_USER->uc['lang']) {
             case 'fr':
-                $label = 'label_fr';
+                $orderBy = 'label_fr';
                 break;
             default:
-                $label = 'label_de';
+                $orderBy = 'label_de';
         }
 
-        $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_group');
 
-        $result = $TYPO3_DB->exec_SELECTquery(
-                                              'uid, label_de, label_fr, persons',
-                                              'tx_mrastp_group',
-                                              $where,
-                                              $label
-                                             );
+        $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
+
         $tableRows = array();
         $tableRows[] = array('',
                              '<b>' . $LANG->getLL('group')   . '</b>',
@@ -303,56 +305,72 @@ class  mr_astp_module1 extends t3lib_SCbase {
         return $content;
     }
 
-				function createListView() {
-                                        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+    function createListsView() {
+        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
-					$content = '';
+        if(isset(t3lib_div::_GP('list_action')) && isset(t3lib_div::_GP('list_action'))) {
+            $this->action = t3lib_div::_GP('list_action');
+            $this->list = t3lib_div::_GP('list');
+            $this->processList();
+        }
 
-					$content .= $this->getOthersForListView();
-					$content .= $this->getAuditvalForListView();
-					$content .= $this->getGroupsForListView();
-					$content .= $this->getCantonsForListView();
-                                        return '<p>' . $content . '</p>';
-				}
+        $tableRows = $this->array();
 
-				function getGroupsForListView() {
-					global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+        array_merge($tableRows, $this->getGroupsArray());
+        array_merge($tableRows, $this->getCantonsArray());
+        // other additional lists
+        $tableRows[] = array(
+                             'diverse' => array(
+                                                'Therapiestellen'
+                                               ),
+                             );
 
-                                        switch($BE_USER->uc['lang']) {
-                                                case 'fr':
-                                                        $label = 'label_fr';
-                                                        break;
-                                                default:
-                                                        $label = 'label_de';
-                                        }
+        $content = '';
 
-                                        $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_group');
+        $content .= $this->getOthersForListView();
+        $content .= $this->getAuditvalForListView();
+        $content .= $this->getGroupsForListView();
+        $content .= $this->getCantonsForListView();
 
-                                        $result = $TYPO3_DB->exec_SELECTquery(
-                                                'uid, label_de, label_fr',
-                                                'tx_mrastp_group',
-                                                $where,
-						'',
-                                                $label
-                                                );
-                                        $content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
-                                        $content.='<tr><td colspan="3"><b>' . $LANG->getLL('group_comm') . '</b></td></tr>';
-                                        $conetnt.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
-                                        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-                                                $content.= '<tr><td>' . $row[$label] . '</td>';
-                                                $content.='<td align="center">';
-						$params='&show[tx_mrastp_group]['.$row['uid'].']=show';
-                                                $content.= '<a href="#" onclick="'.
-                                                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
-                                                        $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" /></a>';
-                                                $content.= '</td>';
-                                                $content.='<td align="center">';
-                                                        $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />';
-                                                $content.= '</td></tr>';
-                                        }
-                                        $content.= '</table>';
-					return $content;
-				}
+        $content.= '<p>' . $this->doc->table($tableRows, $this->tableLayout['zebra']) . '</p>';
+        return $content;
+    }
+
+    function getGroupsForListView() {
+        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+
+        switch($BE_USER->uc['lang']) {
+            case 'fr':
+                $label = 'label_fr';
+                break;
+            default:
+                $label = 'label_de';
+        }
+
+        $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_group');
+
+        $result = $TYPO3_DB->exec_SELECTquery('uid, label_de, label_fr',
+                                              'tx_mrastp_group',
+                                              $where,
+                                              '',
+                                              $label
+                                             );
+
+        $content.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
+        $tableRows[] = array('',
+                             '<b>' . $LANG->getLL('lastname') .  '</b>',
+                             '<b>' . $LANG->getLL('firstname') . '</b>',
+                             '<b>' . $LANG->getLL('zip') .       '</b>',
+                             '<b>' . $LANG->getLL('city') .      '</b>',
+                            );
+    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+            $params='&show[tx_mrastp_group]['.$row['uid'].']=show';
+            $tableRows[] = array(
+                                 '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />',
+                                 '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />',
+                                );
+    }
+}
 
 				function getCantonsForListView() {
                                         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
@@ -449,13 +467,4 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mr_astp
 
 
 // Make instance:
-$SOBE = t3lib_div::makeInstance('mr_astp_module1');
-$SOBE->init();
-
-// Include files?
-foreach($SOBE->include_once as $INC_FILE)	include_once($INC_FILE);
-
-$SOBE->main();
-$SOBE->printContent();
-
-?>
+$SOBE = t3lib_div::makeInstance('mr_a
