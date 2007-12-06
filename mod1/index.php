@@ -56,6 +56,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);
         $this->id = $this->conf['pid_astp'];
         $TYPO3_DB->debugOutput = $this->conf['debug'];
+        $this->dbLang = t3lib_div::readLLfile(t3lib_extMgm::extPath('mr_astp').'locallang_db.php',$BE_USER->uc['lang']);
 
         $this->tableLayout = array();
         $this->tableLayout['zebra'] = array('table'      => array('<table style="width: 100%; border-collapse: collapse; margin: 10px 5px; border: 1px solid #666666;">', '</table'),
@@ -449,8 +450,15 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
         $content = '<form action="" method="post" enctype="multipart/form-data">';
-        $content = '<fieldset><legend>' . $LANG->getLL('filters') . '</legend>';
-        $content.= $this->getSelectOfTable('canton');
+        $content.= '<fieldset><legend>' . $LANG->getLL('filters') . '</legend>';
+        $content.= '<table>';
+        $content.= '<tr><td><label for="city">' . $this->dbLang[$BE_USER->uc['lang']]['tx_mrastp_person.city'] . ': </label></td>';
+        $content.= '<td><input id="city" name="city" value="" /></td></tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('canton') . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('state') . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('section') . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('group') . '</tr>';
+        $content.= '</table>';
 
 
 
@@ -476,18 +484,18 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	            break;
 	    }
 
-        $select = 'uid, ' . $label;
+        $select = 'uid, ' . $label . ' as label';
         $from = 'tx_mrastp_' . $table;
         $where = '1=1' . t3lib_BEfunc::deleteClause($from);
 	    $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, '', $label);
 
-	    $output = '<label for="section">' . $LANG->getLL('LLL:EXT:mr_astp/locallang_db.xml:' . $from) . '</label>';
-	    $output.= '<select name="section" multiple="multiple">';
+	    $output = '<td><label for="section">' . $this->dbLang[$BE_USER->uc['lang']][$from] . ': </label></td>';
+	    $output.= '<td><select id="section" name="section" size="1">'; // multiple="multiple">';
 	    $output.= '<option value="0"></option>';
-	    while($row = $result->fetch_assoc()) {
+	    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
 	        $output.= '<option value="' . $row['uid'] . '">' . $row['label'] . '</option>';
 	    }
-	    $output.= '</select>';
+	    $output.= '</select></td>';
 	    return $output;
 	}
 
