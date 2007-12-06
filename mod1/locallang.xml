@@ -6,6 +6,8 @@
     </meta>
     <data type="array">
         <languageKey index="default" type="array">
+            <label index="show">Show</label>
+            <label index="download">Download</label>
             <label index="title">astp Database</label>
             <label index="members">Members</label>
             <label index="group">Group</label>
@@ -27,6 +29,8 @@
             <label index="city">City</label>
         </languageKey>
         <languageKey index="fr" type="array">
+            <label index="show">Présenter</label>
+            <label index="download">Télécharger</label>
             <label index="title">astp database</label>
             <label index="members">Membres</label>
             <label index="group">Groupe</label>
@@ -48,6 +52,8 @@
             <label index="city">Lieu</label>
         </languageKey>
         <languageKey index="de" type="array">
+            <label index="show">Anzeigen</label>
+            <label index="download">Download</label>
             <label index="title">astp Datenbank</label>
             <label index="members">Mitglieder</label>
             <label index="group">Gruppe</label>
