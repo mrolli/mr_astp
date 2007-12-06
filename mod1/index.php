@@ -355,107 +355,106 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                               '',
                                               $label
                                              );
-
-        $content.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
+        $tableRows = array();
         $tableRows[] = array('',
-                             '<b>' . $LANG->getLL('lastname') .  '</b>',
-                             '<b>' . $LANG->getLL('firstname') . '</b>',
-                             '<b>' . $LANG->getLL('zip') .       '</b>',
-                             '<b>' . $LANG->getLL('city') .      '</b>',
+                             '<b>' . $LANG->getLL('group_comm') .  '</b>',
+                             '',
+                             '',
                             );
-    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $params='&show[tx_mrastp_group]['.$row['uid'].']=show';
-            $tableRows[] = array(
+            $tableRows[] = array($row[$label],
                                  '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />',
                                  '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />',
                                 );
+        }
+        return $tableRows;
     }
-}
 
-				function getCantonsForListView() {
-                                        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+	function getCantonsForListView() {
+                            global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
-                                        switch($BE_USER->uc['lang']) {
-						case 'en':
-							$label = 'label_en';
-							break;
-                                                case 'fr':
-                                                        $label = 'label_fr';
-                                                        break;
-                                                default:
-                                                        $label = 'label_de';
-                                        }
+                            switch($BE_USER->uc['lang']) {
+			case 'en':
+				$label = 'label_en';
+				break;
+                                    case 'fr':
+                                            $label = 'label_fr';
+                                            break;
+                                    default:
+                                            $label = 'label_de';
+                            }
 
-                                        $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_canton');
+                            $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_canton');
 
-                                        $result = $TYPO3_DB->exec_SELECTquery(
-                                                'uid, label_de, label_fr, label_en',
-                                                'tx_mrastp_canton',
-                                                $where,
-						'',
-                                                $label
-                                                );
-                                        $content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
-                                        $content.='<tr><td colspan="3"><b>' . $LANG->getLL('canton_list') . '</b></td></tr>';
-                                        $conetnt.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
-                                        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-                                                $content.= '<tr><td>' . $row[$label] . '</td>';
-                                                $content.='<td align="center">';
-						$params='&show[tx_mrastp_canton]['.$row['uid'].']=show';
-						$content.='<a href="#" onclick="'.
-                                                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
-                                                        $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />';
-                                                $content.= '</td>';
-                                                $content.='<td align="center">';
-                                                        $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />';
-                                                $content.= '</td></tr>';
-                                        }
-                                        $content.= '</table>';
-                                        return $content;
-				}
+                            $result = $TYPO3_DB->exec_SELECTquery(
+                                    'uid, label_de, label_fr, label_en',
+                                    'tx_mrastp_canton',
+                                    $where,
+			'',
+                                    $label
+                                    );
+                            $content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
+                            $content.='<tr><td colspan="3"><b>' . $LANG->getLL('canton_list') . '</b></td></tr>';
+                            $conetnt.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
+                            while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+                                    $content.= '<tr><td>' . $row[$label] . '</td>';
+                                    $content.='<td align="center">';
+			$params='&show[tx_mrastp_canton]['.$row['uid'].']=show';
+			$content.='<a href="#" onclick="'.
+                                            htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
+                                            $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />';
+                                    $content.= '</td>';
+                                    $content.='<td align="center">';
+                                            $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />';
+                                    $content.= '</td></tr>';
+                            }
+                            $content.= '</table>';
+                            return $content;
+	}
 
-				function getOthersForListView() {
+	function getOthersForListView() {
 /*
-					$other_lists = array(
-							array('id' => 1, 'andere', 'autres'),
-							array('id' => 2, 'Selbstis�ndige TheraputInnen', 'Selbstst�ndige TherapeutInnen'),
-					);
-					$content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
-                                        $content.='<tr><td colspan="3"><b>' . $LANG->getLL('other_lists') . '</b></td></tr>';
-                                        $conetnt.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
-                                        foreach($other_lists as $key => $list)
-                                                $content.= '<tr><td>' . $row[$label] . '</td>';
-                                                $content.='<td align="center">';
-                                                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
-                                                $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />';
-                                                $content.= '</td>';
-                                                $content.='<td align="center">';
-                                                $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />';
-                                                $content.= '</td></tr>';
-                                        }
-                                        $content.= '</table>';
-                                        return $content;
+		$other_lists = array(
+				array('id' => 1, 'andere', 'autres'),
+				array('id' => 2, 'Selbstis�ndige TheraputInnen', 'Selbstst�ndige TherapeutInnen'),
+		);
+		$content.= '<table style="border-collapse: collapse; margin: 10px 5px;">';
+                            $content.='<tr><td colspan="3"><b>' . $LANG->getLL('other_lists') . '</b></td></tr>';
+                            $conetnt.='<tr><td><b>' . $LANG->getLL('lists') . '</b></td><td><b>' . $LANG->getLL('view') . '</b></td><td><b>' . $LANG->getLL('download') . '</b></td></tr>';
+                            foreach($other_lists as $key => $list)
+                                    $content.= '<tr><td>' . $row[$label] . '</td>';
+                                    $content.='<td align="center">';
+                                            htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
+                                    $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />';
+                                    $content.= '</td>';
+                                    $content.='<td align="center">';
+                                    $content.= '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />';
+                                    $content.= '</td></tr>';
+                            }
+                            $content.= '</table>';
+                            return $content;
 */
-				}
+	}
 
-				function getAuditvalForListView() {
-				}
+	function getAuditvalForListView() {
+	}
 
-				function renderHtmlList($rows, $fields, $heading) {
-				}
+	function renderHtmlList($rows, $fields, $heading) {
+	}
 
-				function renderCsvList($rows, $fields, $heading) {
-				}
+	function renderCsvList($rows, $fields, $heading) {
+	}
 
-				function helperMembersAlphabet() {
-					$items = array('alle', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
-					$links = array();
-					foreach ($items as $item) {
-					    $links[] = '<a href="/' . PATH_typo3_mod . '?show=' . $item . '">' . $item . '</a>';
-					}
-					return '<div style="width: 60%; margin: 10px 5px">' . implode(' | ', $links) . '</div>';
-				}
-			}
+	function helperMembersAlphabet() {
+		$items = array('alle', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+		$links = array();
+		foreach ($items as $item) {
+		    $links[] = '<a href="/' . PATH_typo3_mod . '?show=' . $item . '">' . $item . '</a>';
+		}
+		return '<div style="width: 60%; margin: 10px 5px">' . implode(' | ', $links) . '</div>';
+	}
+}
 
 
 
@@ -465,6 +464,12 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mr_astp
 
 
 
-
 // Make instance:
-$SOBE = t3lib_div::makeInstance('mr_a
+$SOBE = t3lib_div::makeInstance('mr_astp_module1');
+$SOBE->init();
+
+// Include files?
+foreach($SOBE->include_once as $INC_FILE) include_once($INC_FILE);
+
+$SOBE->main();
+$SOBE->printContent();
