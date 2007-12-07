@@ -540,7 +540,7 @@ t3lib_div::debug($_POST);
 	    $output.= '<td><select id="' . $table . '" name="' . $table . '" size="1">'; // multiple="multiple">';
 	    $output.= '<option value="0"></option>';
 	    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-	        $output.= '<option value="' . $row['uid'] . '" selected="selcted">' . $row['label'] . '</option>';
+	        $output.= '<option value="' . $row['uid'] . '">' . $row['label'] . '</option>';
 	    }
 	    $output.= '</select></td>';
 	    return $output;
