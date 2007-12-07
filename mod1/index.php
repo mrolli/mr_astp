@@ -504,6 +504,8 @@ t3lib_div::debug($_POST);
         $content.= '<tr>' . $this->getSelectOfTable('section', 'tx_mrastp_person.section_id') . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('group', 'tx_mrastp_persons_groups_rel.groupid') . '</tr>';
         $content.= '</table>';
+        $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'firstname');
+        $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'name');
         $content.= '</fieldset><fieldset><legend>' . $LANG->getLL('output_params') . '</legend>';
         $content.= '<label>' . $LANG->getLL('output_format') . '</label><br />';
         $content.= '<input type="radio" id="html" name="format" value="html" /><label for="html">' . $LANG->getLL('output_format_html') . '</label>';
@@ -546,6 +548,15 @@ t3lib_div::debug($_POST);
 	    }
 	    $output.= '</select></td>';
 	    return $output;
+	}
+
+	function generateFieldSwitch($table, $field) {
+	    $xhtml = '<label>' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables'][$table], $field) . '</label><br />';
+	    $xhtml.= '<input type="radio" id="' . $table . '.' . $field . '" name="' . $table . '.' . $field . '" value="1" selected="selected"/>';
+	    $xhtml.= '<label for="' . $table . '.' . $field . '">' . $LANG->getLL('yes') . '</label>';
+        $xhtml.= '<input type="radio" id="' . $table . '.' . $field . '" name="' . $table . '.' . $field . '" value="0" />';
+        $xhtml.= '<label for="' . $table . '.' . $field . '">' . $LANG->getLL('no') . '</label>';
+        return '<p>' . $xhtml . '</p>';
 	}
 
 	function generateReport($filters=false, $selects=false) {
