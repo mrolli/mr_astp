@@ -103,7 +103,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                              '1' => $LANG->getLL('members'),
                                              '2' => $LANG->getLL('groups'),
                                              '3' => $LANG->getLL('reports'),
-                                             '4' => $LANG->getLL('backups'),
+                                             '4' => $LANG->getLL('custom_reports'),
+                                             '5' => $LANG->getLL('backups'),
                                           ),
                           );
         parent::menuConfig();
@@ -360,6 +361,37 @@ class  mr_astp_module1 extends t3lib_SCbase {
     function createCustomReportsView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
+        if(count($_POST) > 0) {
+            $post = t3lib_div::_POST();
+            $filters = array();
+            $selects = array();
+            foreach ($post as $field => $value) {
+                switch($field) {
+                    case 'submit':
+                        break;
+                    case 'canton':
+                    case 'lang':
+                    case 'employment':
+                    case 'section':
+                    case 'group':
+                    case 'city':
+                        $filters[$field] = $value;
+                        break;
+                    default:
+                        $selects[$field] = $value;
+                }
+            }
+            if(isset($post['format'])) {
+                switch($post['format']) {
+                    case 'html':
+                        return $this->renderHtmlList($post);
+                    case 'xls':
+                        $content = $this->renderCsvList($post);
+                        $this->sendFile($content, 'application/vnd-ms-excel');
+                }
+            }
+
+        }
         $content = $this->getReportGeneratorForm();
         return $content;
     }
@@ -472,8 +504,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= '</table>';
         $content.= '</fieldset><fieldset><legend>' . $LANG->getLL('output_params') . '</legend>';
         $content.= '<label>' . $LANG->getLL('output_format') . '</label><br />';
-        $content.= '<input type="radio" id="html" name="format"><label for="html">' . $LANG->getLL('output_format_html') . '</label>';
-        $content.= '<input type="radio" id="pdf" name="format"><label for="pdf">' . $LANG->getLL('output_format_pdf') . '</label>';
+        $content.= '<input type="radio" id="html" name="format" value="html" /><label for="html">' . $LANG->getLL('output_format_html') . '</label>';
+        $content.= '<input type="radio" id="xls" name="format" value="xls" /><label for="xls">' . $LANG->getLL('output_format_xls') . '</label>';
         $content.= '</fieldset>';
         $content.= '<input type="submit" name="submit" value="' . $LANG->getLL('form_generate') . '" />';
         $content.= '<input type="reset" name="reset" value="' . $LANG->getLL('form_reset') . '" />';
@@ -508,7 +540,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    $output.= '<td><select id="section" name="section" size="1">'; // multiple="multiple">';
 	    $output.= '<option value="0"></option>';
 	    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-	        $output.= '<option value="' . $row['uid'] . '">' . $row['label'] . '</option>';
+	        $output.= '<option value="' . $row['uid'] . '" selected="selcted">' . $row['label'] . '</option>';
 	    }
 	    $output.= '</select></td>';
 	    return $output;
@@ -535,6 +567,11 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    $llParts = explode(':', $llPointer);
 	    $label = $llParts[3];
 	    return $this->db['locallang_db'][$lang][$label];
+	}
+
+	function sendFile($content, $type) {
+	    echo $content;
+	    exit;
 	}
 }
 

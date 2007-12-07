@@ -35,7 +35,7 @@
             <label index="output_params">Output Parameters</label>
             <label index="output_format">Format</label>
             <label index="output_format_html">HTML</label>
-            <label index="output_format_pdf">PDF</label>
+            <label index="output_format_xls">Excel</label>
             <label index="form_generate">Generate</label>
             <label index="form_reset">Reset</label>
         </languageKey>
@@ -69,7 +69,7 @@
             <label index="output_params">Paramètres output</label>
             <label index="output_format">Format</label>
             <label index="output_format_html">HTML</label>
-            <label index="output_format_pdf">PDF</label>
+            <label index="output_format_xls">Excel</label>
             <label index="form_generate">Créer</label>
             <label index="form_reset">Reset</label>
         </languageKey>
@@ -103,7 +103,7 @@
             <label index="output_params">Ausgabeoptionen</label>
             <label index="output_format">Format</label>
             <label index="output_format_html">HTML</label>
-            <label index="output_format_pdf">PDF</label>
+            <label index="output_format_xls">Excel</label>
             <label index="form_generate">Generieren</label>
             <label index="form_reset">Reset</label>
         </languageKey>
