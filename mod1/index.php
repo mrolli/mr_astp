@@ -470,10 +470,14 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= '<tr>' . $this->getSelectOfTable('section') . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('group') . '</tr>';
         $content.= '</table>';
-
-
-
-        $content.= '</fieldset></form>';
+        $content.= '</fieldset><fieldset><legend>' . $LANG->getLL('output_params') . '</legend>';
+        $content.= '<label>' . $LANG->getLL('output_format') . '</label><br />';
+        $content.= '<input type="radio" id="html" name="format"><label for="html">' . $LANG->getLL('output_format_html') . '</label>';
+        $content.= '<input type="radio" id="pdf" name="format"><label for="pdf">' . $LANG->getLL('output_format_pdf') . '</label>';
+        $content.= '</fieldset>';
+        $content.= '<input type="submit" name="submit" value="' . $LANG->getLL('form_generate') . '" />';
+        $content.= '<input type="reset" name="reset" value="' . $LANG->getLL('form_reset') . '" />';
+        $content.= '</form>';
         return $content;
 	}
 

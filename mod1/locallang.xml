@@ -32,6 +32,12 @@
             <label index="lastname">Name</label>
             <label index="zip">Zip</label>
             <label index="city">City</label>
+            <label index="output_params">Output Parameters</label>
+            <label index="output_format">Format</label>
+            <label index="output_format_html">HTML</label>
+            <label index="output_format_pdf">PDF</label>
+            <label index="form_generate">Generate</label>
+            <label index="form_reset">Reset</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="show">Présenter</label>
@@ -60,6 +66,12 @@
             <label index="lastname">Nom</label>
             <label index="zip">NLA</label>
             <label index="city">Lieu</label>
+            <label index="output_params">Paramètres output</label>
+            <label index="output_format">Format</label>
+            <label index="output_format_html">HTML</label>
+            <label index="output_format_pdf">PDF</label>
+            <label index="form_generate">Créer</label>
+            <label index="form_reset">Reset</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="show">Anzeigen</label>
@@ -88,6 +100,12 @@
             <label index="lastname">Name</label>
             <label index="zip">PLZ</label>
             <label index="city">Stadt</label>
+            <label index="output_params">Ausgabeoptionen</label>
+            <label index="output_format">Format</label>
+            <label index="output_format_html">HTML</label>
+            <label index="output_format_pdf">PDF</label>
+            <label index="form_generate">Generieren</label>
+            <label index="form_reset">Reset</label>
         </languageKey>
     </data>
 </T3locallang>
