@@ -575,6 +575,7 @@ t3lib_div::debug($_POST);
             list($table, $column) = explode('.', $field);
             if(in_array($table, $this->db['tables'])) {
                 $fromTables[] = $table;
+                $where .= $this->getRelationWhere($table);
                 if(is_array($this->db['tca'][$table]['columns'][$column])) {
                     if(!empty($value) && $value > 0) {
                         $where.= strlen($where) == 0 ? $field . "='" . $value . "'" : ' AND ' . $field . "='" . $value . "'";
@@ -587,7 +588,26 @@ t3lib_div::debug($_POST);
                 $select.= strlen($select) == 0 ? $field : ', ' . $field;
             }
         }
-        echo 'SELECT ' . $select . ' FROM ' . implode(', ', $fromTables) . ' WHERE ' . $where;
+        echo 'SELECT ' . $select . ' FROM ' . implode(', ', array_unique($fromTables)) . ' WHERE ' . $where;
+	}
+
+	function getRelationWhere($table) {
+	    switch($table) {
+	        case 'tx_mrastp_caton':
+	            return ' AND tx_mrastp_person.canton_id = tx_mrastp_canton.uid';
+	            break;
+	        case 'tx_mrastp_state':
+	            return ' AND tx_mrastp_person.state = tx_mrastp_state.uid';
+	            break;
+	        case 'tx_mrastp_section':
+	            return ' AND tx_mrastp_person.section_id = tx_mrastp_section.uid';
+	            break;
+	        case 'tx_mrastp_country':
+	            return ' AND tx_mrastp_person.country_id = tx_mrastp_country.uid';
+	            break;
+	        default:
+	            return '';
+	    }
 	}
 
 	function helperMembersAlphabet() {
