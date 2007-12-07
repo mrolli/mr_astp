@@ -38,6 +38,10 @@
             <label index="output_format_xls">Excel</label>
             <label index="form_generate">Generate</label>
             <label index="form_reset">Reset</label>
+            <label index="yes">Yes</label>
+            <label index="no">No</label>
+            <label index="output_fields">Output Fields</label>
+            <label index="output_others">Others</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="show">Présenter</label>
@@ -72,6 +76,10 @@
             <label index="output_format_xls">Excel</label>
             <label index="form_generate">Créer</label>
             <label index="form_reset">Reset</label>
+            <label index="yes">Oui</label>
+            <label index="no">Non</label>
+            <label index="output_fields">Blocs d'output</label>
+            <label index="output_others">Autres</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="show">Anzeigen</label>
@@ -106,6 +114,10 @@
             <label index="output_format_xls">Excel</label>
             <label index="form_generate">Generieren</label>
             <label index="form_reset">Reset</label>
+            <label index="yes">Ja</label>
+            <label index="no">Nein</label>
+            <label index="output_fields">Ausgabefelder</label>
+            <label index="output_others">Andere</label>
         </languageKey>
     </data>
 </T3locallang>

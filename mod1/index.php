@@ -366,17 +366,19 @@ t3lib_div::debug($_POST);
             $filters = array();
             $selects = array();
             foreach ($post as $field => $value) {
+                $field = $this->fkDecode($field);
                 switch($field) {
                     case 'format':
                     case 'submit':
+                    case 'SET':
                         break;
-                    case 'canton_id':
-                    case 'lang':
-                    case 'status':
-                    case 'employment':
-                    case 'section_id':
-                    case 'group_id':
-                    case 'city':
+                    case 'tx_mrastp_person.canton_id':
+                    case 'tx_mrastp_person.lang':
+                    case 'tx_mrastp_person.status':
+                    case 'tx_mrastp_workaddress.employment':
+                    case 'tx_mrastp_person.section_id':
+                    case 'tx_mrastp_persons_groups_rel.group_id':
+                    case 'tx_mrastp_person.city':
                         $filters[$field] = $value;
                         break;
                     default:
@@ -495,21 +497,24 @@ t3lib_div::debug($_POST);
 	    global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
         $content = '<form action="" method="post" enctype="multipart/form-data">';
-        $content.= '<fieldset><legend>' . $LANG->getLL('filters') . '</legend>';
+        $content.= '<fieldset><legend><b>' . $LANG->getLL('filters') . '</b></legend>';
         $content.= '<table>';
         $content.= '<tr><td><label for="city">' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables']['person'], 'city') . ': </label></td>';
-        $content.= '<td><input id="city" name="tx_mrastp_person.city" value="" /></td></tr>';
+        $content.= '<td><input id="city" name="tx_mrastp_person|city" value="" /></td></tr>';
         $content.= '<tr>' . $this->getSelectOfTable('canton', 'tx_mrastp_person.canton_id') . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('state', 'tx_mrastp_person.state') . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('section', 'tx_mrastp_person.section_id') . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('group', 'tx_mrastp_persons_groups_rel.groupid') . '</tr>';
         $content.= '</table>';
+        $content.= '</fieldset><fieldset style="margin-top: 10px"><legend><b>' . $LANG->getLL('output_params') . '</b></legend>';
+        $content.= '<fieldset><legend>' . $LANG->getLL('output_fields') . '</legend><table>';
         $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'firstname');
         $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'name');
-        $content.= '</fieldset><fieldset><legend>' . $LANG->getLL('output_params') . '</legend>';
-        $content.= '<label>' . $LANG->getLL('output_format') . '</label><br />';
-        $content.= '<input type="radio" id="html" name="format" value="html" /><label for="html">' . $LANG->getLL('output_format_html') . '</label>';
-        $content.= '<input type="radio" id="xls" name="format" value="xls" /><label for="xls">' . $LANG->getLL('output_format_xls') . '</label>';
+        $content.= '</table></fieldset>';
+        $content.= '<fieldset><legend>' . $LANG->getLL('output_others') . '</legend>';
+        $content.= '<table><tr><td><label>' . $LANG->getLL('output_format') . '</label></td>';
+        $content.= '<td><input type="radio" id="html" name="format" value="html" /><label for="html">' . $LANG->getLL('output_format_html') . '</label></td>';
+        $content.= '<td><input type="radio" id="xls" name="format" value="xls" /><label for="xls">' . $LANG->getLL('output_format_xls') . '</label></td></tr></table>';
         $content.= '</fieldset>';
         $content.= '<input type="submit" name="submit" value="' . $LANG->getLL('form_generate') . '" />';
         $content.= '<input type="reset" name="reset" value="' . $LANG->getLL('form_reset') . '" />';
@@ -541,7 +546,7 @@ t3lib_div::debug($_POST);
 	    $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, '', $label);
 
 	    $output = '<td><label for="' . $table . '">' . $this->getDbLL($BE_USER->uc['lang'], $from) . ': </label></td>';
-	    $output.= '<td><select id="' . $table . '" name="' . $fkField . '" size="1">'; // multiple="multiple">';
+	    $output.= '<td><select id="' . $table . '" name="' . $this->fkEncode($fkField) . '" size="1">'; // multiple="multiple">';
 	    $output.= '<option value="0"></option>';
 	    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
 	        $output.= '<option value="' . $row['uid'] . '">' . $row['label'] . '</option>';
@@ -551,33 +556,38 @@ t3lib_div::debug($_POST);
 	}
 
 	function generateFieldSwitch($table, $field) {
-	    $xhtml = '<label>' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables'][$table], $field) . '</label><br />';
-	    $xhtml.= '<input type="radio" id="' . $table . '.' . $field . '" name="' . $table . '.' . $field . '" value="1" selected="selected"/>';
-	    $xhtml.= '<label for="' . $table . '.' . $field . '">' . $LANG->getLL('yes') . '</label>';
-        $xhtml.= '<input type="radio" id="' . $table . '.' . $field . '" name="' . $table . '.' . $field . '" value="0" />';
-        $xhtml.= '<label for="' . $table . '.' . $field . '">' . $LANG->getLL('no') . '</label>';
-        return '<p>' . $xhtml . '</p>';
+        global $LANG, $BE_USER;
+
+        $field = $this->fkEncode($field);
+	    $xhtml.= '<tr><td><label>' . $this->getDbLL($BE_USER->uc['lang'], $table, $field) . '</label></td>';
+	    $xhtml.= '<td><input type="radio" id="' . $table . '|' . $field . '" name="' . $table . '|' . $field . '" value="1" checked="checked"/>';
+	    $xhtml.= '<label for="' . $table . '|' . $field . '">' . $LANG->getLL('yes') . '</label></td>';
+        $xhtml.= '<td><input type="radio" id="' . $table . '|' . $field . '" name="' . $table . '|' . $field . '" value="0" /> ';
+        $xhtml.= '<label for="' . $table . '|' . $field . '">' . $LANG->getLL('no') . '</label></td></tr>';
+        return $xhtml;
 	}
 
-	function generateReport($filters=false, $selects=false) {
+	function generateReport($selects=false, $filters=false) {
         $select = $from = $where = $groupBy = $orderBy = $limit = '';
         $fromTables = array();
 
         foreach ($filters as $field => $value) {
-            list($table, $field) = explode('.', $field);
-            if(!in_array($table, $fromTables)) {
+            list($table, $column) = explode('.', $field);
+            if(in_array($table, $this->db['tables'])) {
                 $fromTables[] = $table;
-            }
-            if(is_array($this->db['tca'][$table]['columns'][$field])) {
-                $where.= strlen($where) == 0 ? $field . "'" . $value . "'" : ' AND ' . $field . "'" . $value . "'";
+                if(is_array($this->db['tca'][$table]['columns'][$column])) {
+                    if(!empty($value) && $value > 0) {
+                        $where.= strlen($where) == 0 ? $field . "='" . $value . "'" : ' AND ' . $field . "='" . $value . "'";
+                    }
+                }
             }
         }
         foreach ($selects as $field => $value) {
-            if($value == 1) {
+            if((int) $value == 1) {
                 $select.= strlen($select) == 0 ? $field : ', ' . $field;
             }
         }
-        echo $select . ' FROM ' . implode(',', $fromTables) . ' ' . $where;
+        echo 'SELECT ' . $select . ' FROM ' . implode(', ', $fromTables) . ' WHERE ' . $where;
 	}
 
 	function helperMembersAlphabet() {
@@ -607,6 +617,14 @@ t3lib_div::debug($_POST);
 	    echo $content;
 	    exit;
 	}
+
+    function fkEncode($string) {
+        return str_replace('.', '|', $string);
+    }
+
+    function fkDecode($string) {
+        return str_replace('|', '.', $string);
+    }
 }
 
 
