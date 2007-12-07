@@ -513,7 +513,7 @@ t3lib_div::debug($_POST);
         $content.= '</table></fieldset>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_others') . '</legend>';
         $content.= '<table><tr><td><label>' . $LANG->getLL('output_format') . '</label></td>';
-        $content.= '<td><input type="radio" id="html" name="format" value="html" /><label for="html">' . $LANG->getLL('output_format_html') . '</label></td>';
+        $content.= '<td><input type="radio" id="html" name="format" value="html" /><label for="html" checked="checked">' . $LANG->getLL('output_format_html') . '</label></td>';
         $content.= '<td><input type="radio" id="xls" name="format" value="xls" /><label for="xls">' . $LANG->getLL('output_format_xls') . '</label></td></tr></table>';
         $content.= '</fieldset>';
         $content.= '<input type="submit" name="submit" value="' . $LANG->getLL('form_generate') . '" />';
