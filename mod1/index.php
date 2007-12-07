@@ -367,13 +367,15 @@ t3lib_div::debug($_POST);
             $selects = array();
             foreach ($post as $field => $value) {
                 switch($field) {
+                    case 'format':
                     case 'submit':
                         break;
-                    case 'canton':
+                    case 'canton_id':
                     case 'lang':
+                    case 'status':
                     case 'employment':
-                    case 'section':
-                    case 'group':
+                    case 'section_id':
+                    case 'group_id':
                     case 'city':
                         $filters[$field] = $value;
                         break;
@@ -384,9 +386,9 @@ t3lib_div::debug($_POST);
             if(isset($post['format'])) {
                 switch($post['format']) {
                     case 'html':
-                        return $this->renderHtmlList($post);
+                        return $this->renderHtmlList($this->generateReport($selects, $filters));
                     case 'xls':
-                        $content = $this->renderCsvList($post);
+                        $content = $this->renderCsvList($this->generateReport($selects, $filters));
                         $this->sendFile($content, 'application/vnd-ms-excel');
                 }
             }
@@ -496,11 +498,11 @@ t3lib_div::debug($_POST);
         $content.= '<fieldset><legend>' . $LANG->getLL('filters') . '</legend>';
         $content.= '<table>';
         $content.= '<tr><td><label for="city">' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables']['person'], 'city') . ': </label></td>';
-        $content.= '<td><input id="city" name="city" value="" /></td></tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('canton') . '</tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('state') . '</tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('section') . '</tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('group') . '</tr>';
+        $content.= '<td><input id="city" name="tx_mrastp_person.city" value="" /></td></tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('canton', 'tx_mrastp_person.canton_id') . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('state', 'tx_mrastp_person.state') . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('section', 'tx_mrastp_person.section_id') . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('group', 'tx_mrastp_persons_groups_rel.groupid') . '</tr>';
         $content.= '</table>';
         $content.= '</fieldset><fieldset><legend>' . $LANG->getLL('output_params') . '</legend>';
         $content.= '<label>' . $LANG->getLL('output_format') . '</label><br />';
@@ -513,7 +515,7 @@ t3lib_div::debug($_POST);
         return $content;
 	}
 
-	function getSelectOfTable($table) {
+	function getSelectOfTable($table, $fkField) {
 	    global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 	    $userLang = $BE_USER->uc['lang'];
 	    switch($userLang) {
@@ -537,13 +539,34 @@ t3lib_div::debug($_POST);
 	    $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, '', $label);
 
 	    $output = '<td><label for="' . $table . '">' . $this->getDbLL($BE_USER->uc['lang'], $from) . ': </label></td>';
-	    $output.= '<td><select id="' . $table . '" name="' . $table . '" size="1">'; // multiple="multiple">';
+	    $output.= '<td><select id="' . $table . '" name="' . $fkField . '" size="1">'; // multiple="multiple">';
 	    $output.= '<option value="0"></option>';
 	    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
 	        $output.= '<option value="' . $row['uid'] . '">' . $row['label'] . '</option>';
 	    }
 	    $output.= '</select></td>';
 	    return $output;
+	}
+
+	function generateReport($filters=false, $selects=false) {
+        $select = $from = $where = $groupBy = $orderBy = $limit = '';
+        $fromTables = array();
+
+        foreach ($filters as $field => $value) {
+            list($table, $field) = explode('.', $field);
+            if(!in_array($table, $fromTables)) {
+                $fromTables[] = $table;
+            }
+            if(is_array($this->db['tca'][$table]['columns'][$field])) {
+                $where.= strlen($where) == 0 ? $field . "'" . $value . "'" : ' AND ' . $field . "'" . $value . "'";
+            }
+        }
+        foreach ($selects as $field => $value) {
+            if($value == 1) {
+                $select.= strlen($select) == 0 ? $field : ', ' . $field;
+            }
+        }
+        echo $select . ' FROM ' . implode(',', $fromTables) . ' ' . $where;
 	}
 
 	function helperMembersAlphabet() {
