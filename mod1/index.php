@@ -360,7 +360,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
     function createCustomReportsView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-
+t3lib_div::debug($_POST);
         if(count($_POST) > 0) {
             $post = t3lib_div::_POST();
             $filters = array();
@@ -536,8 +536,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $where = '1=1' . t3lib_BEfunc::deleteClause($from);
 	    $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, '', $label);
 
-	    $output = '<td><label for="section">' . $this->getDbLL($BE_USER->uc['lang'], $from) . ': </label></td>';
-	    $output.= '<td><select id="section" name="section" size="1">'; // multiple="multiple">';
+	    $output = '<td><label for="' . $table . '">' . $this->getDbLL($BE_USER->uc['lang'], $from) . ': </label></td>';
+	    $output.= '<td><select id="' . $table . '" name="' . $table . '" size="1">'; // multiple="multiple">';
 	    $output.= '<option value="0"></option>';
 	    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
 	        $output.= '<option value="' . $row['uid'] . '" selected="selcted">' . $row['label'] . '</option>';
