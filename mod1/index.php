@@ -55,8 +55,20 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
         $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);
         $this->id = $this->conf['pid_astp'];
+        $this->extKey = 'mr_astp';
+        $this->db['locallan_db'] = t3lib_div::readLLfile(t3lib_extMgm::extPath($this->extKey).'locallang_db.php',$BE_USER->uc['lang']);
+        $this->db['prefix'] = 'tx_mrastp_';
+        $this->db['locallang'] = t3lib_div::readLLfile(t3lib_extMgm::extPath($this->extKey).'locallang_db.php',$BE_USER->uc['lang']);
+        $this->db['tables'] = array('person', 'workaddress', 'canton', 'section', 'state', 'country', 'persons_groups_rel', 'group', 'group_cat');
+        foreach($this->db['tables'] as $key => $table) {
+            $tableName = $this->db['prefix'] . $table;
+            t3lib_div::loadTCA($tableName);
+            $this->db['tca'][$tableName] = $TCA[$tableName];
+            $this->db['tables'][$table] = $tableName;
+            unset($this->db['tables'][$key]);
+        }
+
         $TYPO3_DB->debugOutput = $this->conf['debug'];
-        $this->dbLang = t3lib_div::readLLfile(t3lib_extMgm::extPath('mr_astp').'locallang_db.php',$BE_USER->uc['lang']);
 
         $this->tableLayout = array();
         $this->tableLayout['zebra'] = array('table'      => array('<table style="width: 100%; border-collapse: collapse; margin: 10px 5px; border: 1px solid #666666;">', '</table'),
@@ -452,7 +464,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content = '<form action="" method="post" enctype="multipart/form-data">';
         $content.= '<fieldset><legend>' . $LANG->getLL('filters') . '</legend>';
         $content.= '<table>';
-        $content.= '<tr><td><label for="city">' . $this->dbLang[$BE_USER->uc['lang']]['tx_mrastp_person.city'] . ': </label></td>';
+        $content.= '<tr><td><label for="city">' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables']['person'], 'city') . ': </label></td>';
         $content.= '<td><input id="city" name="city" value="" /></td></tr>';
         $content.= '<tr>' . $this->getSelectOfTable('canton') . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('state') . '</tr>';
@@ -485,11 +497,11 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    }
 
         $select = 'uid, ' . $label . ' as label';
-        $from = 'tx_mrastp_' . $table;
+        $from = $this->db['tables'][$table];
         $where = '1=1' . t3lib_BEfunc::deleteClause($from);
 	    $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, '', $label);
 
-	    $output = '<td><label for="section">' . $this->dbLang[$BE_USER->uc['lang']][$from] . ': </label></td>';
+	    $output = '<td><label for="section">' . $this->getDbLL($BE_USER->uc['lang'], $from) . ': </label></td>';
 	    $output.= '<td><select id="section" name="section" size="1">'; // multiple="multiple">';
 	    $output.= '<option value="0"></option>';
 	    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
@@ -506,6 +518,20 @@ class  mr_astp_module1 extends t3lib_SCbase {
 		    $links[] = '<a href="/' . PATH_typo3_mod . '?show=' . $item . '">' . $item . '</a>';
 		}
 		return '<div style="width: 60%; margin: 10px 5px">' . implode(' | ', $links) . '</div>';
+	}
+
+	function getDbLL($lang, $table, $column=false) {
+	    if($lang === 'en') {
+	        $lang = 'default';
+	    }
+	    if(!$column) {
+	        $llPointer = $this->db['tca'][$table]['ctrl']['title'];
+	    } else {
+	        $llPointer = $tihs->db['tca'][$table]['columns'][$column]['label'];
+	    }
+	    $llParts = explode(':', $label);
+	    $label = $llParts[3];
+	    return $this->db['locallang_db'][$lang][$label];
 	}
 }
 
