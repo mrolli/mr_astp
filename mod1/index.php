@@ -56,9 +56,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);
         $this->id = $this->conf['pid_astp'];
         $this->extKey = 'mr_astp';
-        $this->db['locallan_db'] = t3lib_div::readLLfile(t3lib_extMgm::extPath($this->extKey).'locallang_db.php',$BE_USER->uc['lang']);
+        $this->db['locallang_db'] = t3lib_div::readLLfile(t3lib_extMgm::extPath($this->extKey).'locallang_db.php',$BE_USER->uc['lang']);
         $this->db['prefix'] = 'tx_mrastp_';
-        $this->db['locallang'] = t3lib_div::readLLfile(t3lib_extMgm::extPath($this->extKey).'locallang_db.php',$BE_USER->uc['lang']);
         $this->db['tables'] = array('person', 'workaddress', 'canton', 'section', 'state', 'country', 'persons_groups_rel', 'group', 'group_cat');
         foreach($this->db['tables'] as $key => $table) {
             $tableName = $this->db['prefix'] . $table;
@@ -527,9 +526,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    if(!$column) {
 	        $llPointer = $this->db['tca'][$table]['ctrl']['title'];
 	    } else {
-	        $llPointer = $tihs->db['tca'][$table]['columns'][$column]['label'];
+	        $llPointer = $this->db['tca'][$table]['columns'][$column]['label'];
 	    }
-	    $llParts = explode(':', $label);
+	    $llParts = explode(':', $llPointer);
 	    $label = $llParts[3];
 	    return $this->db['locallang_db'][$lang][$label];
 	}
