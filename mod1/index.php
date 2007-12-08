@@ -377,7 +377,7 @@ t3lib_div::debug($_POST);
                     case 'tx_mrastp_person.status':
                     case 'tx_mrastp_workaddress.employment':
                     case 'tx_mrastp_person.section_id':
-                    case 'tx_mrastp_persons_groups_rel.group_id':
+                    case 'tx_mrastp_persons_groups_rel.groupid':
                     case 'tx_mrastp_person.city':
                         $filters[$field] = $value;
                         break;
@@ -388,7 +388,7 @@ t3lib_div::debug($_POST);
             if(isset($post['format'])) {
                 switch($post['format']) {
                     case 'html':
-                        return $this->renderHtmlList($this->generateReport($selects, $filters));
+                        return $this->renderHtmlList($this->generateReport($selects, $filters), array());
                     case 'xls':
                         $content = $this->renderCsvList($this->generateReport($selects, $filters));
                         $this->sendFile($content, 'application/vnd-ms-excel');
@@ -487,7 +487,9 @@ t3lib_div::debug($_POST);
         return $tableRows;
 	}
 
-	function renderHtmlList($rows, $fields, $heading) {
+	function renderHtmlList($rows, $heading='') {
+        $content = $this->doc->table($rows, $this->tableLayout['zebra']);
+        return $content;
 	}
 
 	function renderCsvList($rows, $fields, $heading) {
@@ -502,7 +504,7 @@ t3lib_div::debug($_POST);
         $content.= '<tr><td><label for="city">' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables']['person'], 'city') . ': </label></td>';
         $content.= '<td><input id="city" name="tx_mrastp_person|city" value="" /></td></tr>';
         $content.= '<tr>' . $this->getSelectOfTable('canton', 'tx_mrastp_person.canton_id') . '</tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('state', 'tx_mrastp_person.state') . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('state', 'tx_mrastp_person.status') . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('section', 'tx_mrastp_person.section_id') . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('group', 'tx_mrastp_persons_groups_rel.groupid') . '</tr>';
         $content.= '</table>';
@@ -568,16 +570,16 @@ t3lib_div::debug($_POST);
 	}
 
 	function generateReport($selects=false, $filters=false) {
-        $select = $from = $where = $groupBy = $orderBy = $limit = '';
+        global $TYPO3_DB, $BE_USER;
+        $select = $from = $join = $where = $groupBy = $orderBy = $limit = '';
         $fromTables = array();
 
         foreach ($filters as $field => $value) {
             list($table, $column) = explode('.', $field);
             if(in_array($table, $this->db['tables'])) {
-                $fromTables[] = $table;
-                $where .= $this->getRelationWhere($table);
+                $join.= $this->getRelationWhere($table . '.' . $column);
                 if(is_array($this->db['tca'][$table]['columns'][$column])) {
-                    if(!empty($value) && $value > 0) {
+                    if(!empty($value)) {
                         $where.= strlen($where) == 0 ? $field . "='" . $value . "'" : ' AND ' . $field . "='" . $value . "'";
                     }
                 }
@@ -588,22 +590,37 @@ t3lib_div::debug($_POST);
                 $select.= strlen($select) == 0 ? $field : ', ' . $field;
             }
         }
-        echo 'SELECT ' . $select . ' FROM ' . implode(', ', array_unique($fromTables)) . ' WHERE ' . $where;
+        $sql = 'SELECT ' . $select . ' FROM tx_mrastp_person ' . $join . ' WHERE ' . $where;
+        $result = $TYPO3_DB->admin_query($sql);
+
+        $tableRows = array();
+        $splitSelect = explode(', ', $select);
+        foreach($splitSelect as $tableField) {
+            $fieldParts = explode('.', $tableField);
+            $tableRows[0][] = $this->getDbLL($BE_USER->uc['lang'], $fieldParts[0], $fieldParts[1]);
+        }
+        while ($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+            $tableRows[] = $row;
+        }
+        return $tableRows;
 	}
 
 	function getRelationWhere($table) {
 	    switch($table) {
-	        case 'tx_mrastp_caton':
-	            return ' AND tx_mrastp_person.canton_id = tx_mrastp_canton.uid';
+            case 'tx_mrastp_persons_groups_rel.groupid':
+                return ' LEFT JOIN tx_mrastp_persons_groups_rel ON tx_mrastp_person.uid = tx_mrastp_persons_groups_rel.personid';
+                break;
+	        case 'tx_mrastp_person.canton_id':
+	            return ' LEFT JOIN tx_mrastp_canton ON tx_mrastp_person.canton_id = tx_mrastp_canton.uid';
 	            break;
-	        case 'tx_mrastp_state':
-	            return ' AND tx_mrastp_person.state = tx_mrastp_state.uid';
+	        case 'tx_mrastp_person.status':
+	            return ' LEFT JOIN tx_mrastp_state ON tx_mrastp_person.status = tx_mrastp_state.uid';
 	            break;
-	        case 'tx_mrastp_section':
-	            return ' AND tx_mrastp_person.section_id = tx_mrastp_section.uid';
+	        case 'tx_mrastp_person.section_id':
+	            return ' LEFT JOIN tx_mrastp_section ON tx_mrastp_person.section_id = tx_mrastp_section.uid';
 	            break;
-	        case 'tx_mrastp_country':
-	            return ' AND tx_mrastp_person.country_id = tx_mrastp_country.uid';
+	        case 'tx_mrastp_person.country_uid':
+	            return ' LEFT JOIN tx_mrastp_country ON tx_mrastp_person.country_id = tx_mrastp_country.uid';
 	            break;
 	        default:
 	            return '';
