@@ -608,7 +608,7 @@ t3lib_div::debug($_POST);
 	function getRelationWhere($table) {
 	    switch($table) {
             case 'tx_mrastp_persons_groups_rel.groupid':
-                return ' LEFT JOIN tx_mrastp_persons_groups_rel ON tx_mrastp_person.uid = tx_mrastp_persons_groups_rel.personid';
+                return ' LEFT JOIN tx_mrastp_persons_groups_rel ON tx_mrastp_person.uid = tx_mrastp_persons_groups_rel.personid LEFT JOIN tx_mrastp_group ON tx_mrastp_persons_groups_rel.groupid = tx_mrastp_group.uid';
                 break;
 	        case 'tx_mrastp_person.canton_id':
 	            return ' LEFT JOIN tx_mrastp_canton ON tx_mrastp_person.canton_id = tx_mrastp_canton.uid';
