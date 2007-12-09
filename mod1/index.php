@@ -82,7 +82,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                                                  ),
                                            );
         $this->tableLayout['xls'] = array('table'      => array('<table>', '</table'),
-                                          'defRow'     => array('<tr>', '</tr>'),
+                                          'defRow'     => array('<tr>' => array('<tr>', '</tr>'),
+                                                                'defCol' => array('<td>', '</td>'),
+                                                               ),
                                           0            => array('defCol' => array('<th>', '</th>')),
                                          );
         parent::init();
@@ -363,7 +365,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
     function createCustomReportsView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-t3lib_div::debug($_POST);
+
         if(count($_POST) > 0) {
             $post = t3lib_div::_POST();
             $filters = array();
@@ -393,7 +395,7 @@ t3lib_div::debug($_POST);
                     case 'html':
                         return $this->renderHtmlList($this->generateReport($selects, $filters), array());
                     case 'xls':
-                        $content = $this->renderCsvList($this->generateReport($selects, $filters));
+                        $content = $this->renderXlsFile($this->generateReport($selects, $filters));
                         $headers = array('application/vnd-ms-excel');
                         $this->sendFile($content, $headers);
                 }
@@ -492,12 +494,13 @@ t3lib_div::debug($_POST);
 	}
 
 	function renderHtmlList($rows, $heading='') {
-        $content = $this->doc->table($rows, $this->tableLayout['zebra']);
+        $content = '<a href="#" onClick="history.back()">Zurück zur Auswahl</a>';
+        $content.= $this->doc->table($rows, $this->tableLayout['zebra']);
         return $content;
 	}
 
-	function renderCsvList($rows, $fields, $heading) {
-	    $conetnt = $this->doc->tables($rows, $this->tableLayout['xls']);
+	function renderXlsFile($rows) {
+	    $content = $this->doc->table($rows, $this->tableLayout['xls']);
 	    return $content;
 	}
 
@@ -596,7 +599,14 @@ t3lib_div::debug($_POST);
                 $select.= strlen($select) == 0 ? $field : ', ' . $field;
             }
         }
-        $sql = 'SELECT ' . $select . ' FROM tx_mrastp_person ' . $join . ' WHERE ' . $where;
+        $orderBy = ' ORDER BY name';
+
+        if (!$where) {
+            $where = '1=1';
+        }
+
+        $sql = 'SELECT ' . $select . ' FROM tx_mrastp_person ' . $join . ' WHERE ' . $where . $orderBy;
+echo $sql;
         $result = $TYPO3_DB->admin_query($sql);
 
         $tableRows = array();
@@ -656,7 +666,8 @@ t3lib_div::debug($_POST);
 	    return $this->db['locallang_db'][$lang][$label];
 	}
 
-	function sendFile($content, $header) {
+	function sendFile($content, $headers) {
+        $export_file = 'astp-Adressliste_' . date('Y-m-d') . '.xls';
         header('Pragma: public');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
         header('Last-Modified: '.gmdate('D, d M Y H:i:s') . ' GMT');
@@ -667,8 +678,8 @@ t3lib_div::debug($_POST);
         foreach ($headers as $header) {
             header($header);
         }
-	    echo $content;
-	    exit;
+        header('Content-Disposition: attachment; filename="' . basename($export_file) . '"');
+	    echo $content; exit;
 	}
 
     function fkEncode($string) {
