@@ -81,7 +81,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                                                   'defCol' => array('<td style="padding: 3px; font-weight: bold; border-bottom: 1px solid #666666;">', '</td>'),
                                                                  ),
                                            );
-
+        $this->tableLayout['xls'] = array('table'      => array('<table>', '</table'),
+                                          'defRow'     => array('<tr>', '</tr>'),
+                                          0            => array('defCol' => array('<th>', '</th>')),
+                                         );
         parent::init();
 
         /*
@@ -391,7 +394,8 @@ t3lib_div::debug($_POST);
                         return $this->renderHtmlList($this->generateReport($selects, $filters), array());
                     case 'xls':
                         $content = $this->renderCsvList($this->generateReport($selects, $filters));
-                        $this->sendFile($content, 'application/vnd-ms-excel');
+                        $headers = array('application/vnd-ms-excel');
+                        $this->sendFile($content, $headers);
                 }
             }
 
@@ -493,6 +497,8 @@ t3lib_div::debug($_POST);
 	}
 
 	function renderCsvList($rows, $fields, $heading) {
+	    $conetnt = $this->doc->tables($rows, $this->tableLayout['xls']);
+	    return $content;
 	}
 
 	function getReportGeneratorForm() {
@@ -650,7 +656,17 @@ t3lib_div::debug($_POST);
 	    return $this->db['locallang_db'][$lang][$label];
 	}
 
-	function sendFile($content, $type) {
+	function sendFile($content, $header) {
+        header('Pragma: public');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Cache-Control: pre-check=0, post-check=0, max-age=0');
+        header('Pragma: no-cache');
+        header('Content-Transfer-Encoding: none');
+        foreach ($headers as $header) {
+            header($header);
+        }
 	    echo $content;
 	    exit;
 	}
