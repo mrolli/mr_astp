@@ -7,12 +7,10 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="tx_mrastp_common.label_de">German Label</label>
-                        <label index="tx_mrastp_common.label_fr">French Label</label>
-                        <label index="tx_mrastp_common.label_en">English Label</label>
+            <label index="tx_mrastp_common.label_fr">French Label</label>
+            <label index="tx_mrastp_common.label_en">English Label</label>
 			<label index="tx_mrastp_person">astp Person</label>
 			<label index="tx_mrastp_person.salutation">Salutation</label>
-			<label index="tx_mrastp_person.salutation.I.1">Mr.</label>
-			<label index="tx_mrastp_person.salutation.I.2">Mrs.</label>
 			<label index="tx_mrastp_person.firstname">Firstname</label>
 			<label index="tx_mrastp_person.name">Name</label>
 			<label index="tx_mrastp_person.street">Street</label>
@@ -45,6 +43,7 @@
 			<label index="tx_mrastp_country.cn_short_de">Short name (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Short name (FR):</label>
 			<label index="tx_mrastp_country.country_label">Country</label>
+			<label index="tx_mrastp_salutation">Salutation</label>
 			<label index="tx_mrastp_section">astp Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abbrevation</label>
 			<label index="tx_mrastp_section.section_label">Section</label>
@@ -78,16 +77,14 @@
 			<label index="tx_mrastp_group.persons">Members</label>
 			<label index="tx_mrastp_group.cat_id">Group Category</label>
 			<label index="tx_mrastp_persons_groups_rel">Group/Person Relation</label>
-                        <label index="tx_mrastp_persons_groups_rel.personid">Member</label>
+            <label index="tx_mrastp_persons_groups_rel.personid">Member</label>
 			<label index="tx_mrastp_persons_groups_rel.groupid">Work Group</label>
-                        <label index="tx_mrastp_persons_groups_rel.funktion_de">Function (de)</label>
+            <label index="tx_mrastp_persons_groups_rel.funktion_de">Function (de)</label>
 			<label index="tx_mrastp_persons_groups_rel.funktion_fr">Function (fr)</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="tx_mrastp_person">astp Personne</label>
 			<label index="tx_mrastp_person.salutation">salutation</label>
-			<label index="tx_mrastp_person.salutation.I.1">Monsieur</label>
-			<label index="tx_mrastp_person.salutation.I.2">Madame</label>
 			<label index="tx_mrastp_person.firstname">Prénom</label>
 			<label index="tx_mrastp_person.name">Nom</label>
 			<label index="tx_mrastp_person.street">Rue</label>
@@ -120,6 +117,7 @@
 			<label index="tx_mrastp_country.cn_short_de">Nom court (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Nom court (FR):</label>
 			<label index="tx_mrastp_country.country_label">Pays</label>
+			<label index="tx_mrastp_salutation">Salutation</label>
 			<label index="tx_mrastp_section">astp Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abrévation</label>
 			<label index="tx_mrastp_section.section_label">Section</label>
@@ -127,9 +125,9 @@
 			<label index="tx_mrastp_state.abbrevation">Abrévation</label>
 			<label index="tx_mrastp_state.state_label">Status</label>
 			<label index="tx_mrastp_workaddress">astp Address de travail</label>
-                        <label index="tx_mrastp_workaddress.employment">Type d'emploi</label>
-                        <label index="tx_mrastp_workaddress.employment.I.1">emploi</label>
-                        <label index="tx_mrastp_workaddress.employment.I.2">privé</label>
+            <label index="tx_mrastp_workaddress.employment">Type d'emploi</label>
+            <label index="tx_mrastp_workaddress.employment.I.1">emploi</label>
+            <label index="tx_mrastp_workaddress.employment.I.2">privé</label>
 			<label index="tx_mrastp_workaddress.name_practice">Nom practice</label>
 			<label index="tx_mrastp_workaddress.name_supplement">Nom supplément</label>
 			<label index="tx_mrastp_workaddress.address1">Address 1</label>
@@ -153,16 +151,14 @@
             <label index="tx_mrastp_group.persons">Members</label>
             <label index="tx_mrastp_group.cat_id">Group Category</label>
 			<label index="tx_mrastp_persons_groups_rel">Relation Membre/Groupe</label>
-                        <label index="tx_mrastp_persons_groups_rel.personid">Membre</label>
-                        <label index="tx_mrastp_persons_groups_rel.groupid">Groupe de travail</label>
-                        <label index="tx_mrastp_persons_groups_rel.funktion_de">Fonction (de)</label>
+            <label index="tx_mrastp_persons_groups_rel.personid">Membre</label>
+            <label index="tx_mrastp_persons_groups_rel.groupid">Groupe de travail</label>
+            <label index="tx_mrastp_persons_groups_rel.funktion_de">Fonction (de)</label>
 			<label index="tx_mrastp_persons_groups_rel.funktion_fr">Fonction (fr)</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_mrastp_person">astp Person</label>
 			<label index="tx_mrastp_person.salutation">Anrede</label>
-			<label index="tx_mrastp_person.salutation.I.1">Herr</label>
-			<label index="tx_mrastp_person.salutation.I.2">Frau</label>
 			<label index="tx_mrastp_person.firstname">Vorname</label>
 			<label index="tx_mrastp_person.name">Nachname</label>
 			<label index="tx_mrastp_person.street">Strasse</label>
@@ -195,6 +191,7 @@
 			<label index="tx_mrastp_country.cn_short_de">Kurzname (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Kurzname (FR):</label>
 			<label index="tx_mrastp_country.country_label">Land</label>
+			<label index="tx_mrastp_salutation">Anrede</label>
 			<label index="tx_mrastp_section">astp Sektion</label>
 			<label index="tx_mrastp_section.abbrevation">Abkürzung</label>
 			<label index="tx_mrastp_section.section_label">Sektion</label>
@@ -202,9 +199,9 @@
 			<label index="tx_mrastp_state.state_label">Status</label>
 			<label index="tx_mrastp_state.abbrevation">Abkürzung</label>
 			<label index="tx_mrastp_workaddress">astp Arbeitsadressen</label>
-                        <label index="tx_mrastp_workaddress.employment">Anstellungverhältnis</label>
-                        <label index="tx_mrastp_workaddress.employment.I.1">angestellt</label>
-                        <label index="tx_mrastp_workaddress.employment.I.2">selbständig</label>
+            <label index="tx_mrastp_workaddress.employment">Anstellungverhältnis</label>
+            <label index="tx_mrastp_workaddress.employment.I.1">angestellt</label>
+            <label index="tx_mrastp_workaddress.employment.I.2">selbständig</label>
 			<label index="tx_mrastp_workaddress.name_practice">Arbeitsname</label>
 			<label index="tx_mrastp_workaddress.name_supplement">Namenszusatz</label>
 			<label index="tx_mrastp_workaddress.address1">Adresse 1</label>
@@ -228,10 +225,10 @@
             <label index="tx_mrastp_group.persons">Gruppenmitglieder</label>
             <label index="tx_mrastp_group.cat_id">Gruppenkategorie</label>
 			<label index="tx_mrastp_persons_groups_rel">Person/Gruppen-Relation</label>
-                        <label index="tx_mrastp_persons_groups_rel.personid">Mitglied</label>
-                        <label index="tx_mrastp_persons_groups_rel.groupid">Arbeitsgruppe</label>
+            <label index="tx_mrastp_persons_groups_rel.personid">Mitglied</label>
+            <label index="tx_mrastp_persons_groups_rel.groupid">Arbeitsgruppe</label>
 			<label index="tx_mrastp_persons_groups_rel.funktion_de">Funktion (de)</label>
-                        <label index="tx_mrastp_persons_groups_rel.funktion_fr">Funktion (fr)</label>
+            <label index="tx_mrastp_persons_groups_rel.funktion_fr">Funktion (fr)</label>
 		</languageKey>
 	</data>
 </T3locallang>

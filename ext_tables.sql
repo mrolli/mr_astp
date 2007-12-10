@@ -32,10 +32,26 @@ CREATE TABLE tx_mrastp_person (
 	workaddress blob NOT NULL,
 	groups int(11) DEFAULT '0' NOT NULL,
 	feuser_id int(11) DEFAULT '0' NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 	KEY parent (pid),
 	KEY feuser (feuser_id)
+);
+
+
+
+#
+# Table structure for table 'tx_mrastp_salutation'
+#
+CREATE TABLE tx_mrastp_salutation (
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	label_de varchar(255) DEFAULT '' NOT NULL,
+	label_fr varchar(255) DEFAULT '' NOT NULL,
+
+	PRIMARY KEY (uid),
+	KEY parent (pid)
 );
 
 
@@ -46,19 +62,13 @@ CREATE TABLE tx_mrastp_person (
 CREATE TABLE tx_mrastp_canton (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
-	tstamp int(11) DEFAULT '0' NOT NULL,
-	crdate int(11) DEFAULT '0' NOT NULL,
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	sorting int(10) DEFAULT '0' NOT NULL,
-	deleted tinyint(4) DEFAULT '0' NOT NULL,
-	hidden tinyint(4) DEFAULT '0' NOT NULL,
-	starttime int(11) DEFAULT '0' NOT NULL,
-	endtime int(11) DEFAULT '0' NOT NULL,
 	abbrevation char(2) DEFAULT '' NOT NULL,
 	label_de varchar(255) DEFAULT '' NOT NULL,
 	label_fr varchar(255) DEFAULT '' NOT NULL,
 	label_en varchar(255) DEFAULT '' NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );
@@ -69,15 +79,16 @@ CREATE TABLE tx_mrastp_canton (
 # Table structure for table 'tx_mrastp_country'
 #
 CREATE TABLE tx_mrastp_country (
-  uid int(11) unsigned DEFAULT '0' NOT NULL auto_increment,
-  pid int(11) unsigned DEFAULT '0' NOT NULL,
-  cn_iso_2 char(2) DEFAULT '' NOT NULL,
-  cn_iso_3 char(3) DEFAULT '' NOT NULL,
-  cn_short_en varchar(50) DEFAULT '' NOT NULL,
-  cn_short_de varchar(50) DEFAULT '' NOT NULL,
-  cn_short_fr varchar(50) DEFAULT '' NOT NULL,
-  PRIMARY KEY (uid),
-  UNIQUE uid (uid)
+    uid int(11) unsigned DEFAULT '0' NOT NULL auto_increment,
+    pid int(11) unsigned DEFAULT '0' NOT NULL,
+    cruser_id int(11) DEFAULT '0' NOT NULL,
+    cn_iso_2 char(2) DEFAULT '' NOT NULL,
+    cn_iso_3 char(3) DEFAULT '' NOT NULL,
+    cn_short_en varchar(50) DEFAULT '' NOT NULL,
+    cn_short_de varchar(50) DEFAULT '' NOT NULL,
+    cn_short_fr varchar(50) DEFAULT '' NOT NULL,
+    PRIMARY KEY (uid),
+    UNIQUE uid (uid)
 );
 
 
@@ -88,18 +99,12 @@ CREATE TABLE tx_mrastp_country (
 CREATE TABLE tx_mrastp_section (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
-	tstamp int(11) DEFAULT '0' NOT NULL,
-	crdate int(11) DEFAULT '0' NOT NULL,
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	sorting int(10) DEFAULT '0' NOT NULL,
-	deleted tinyint(4) DEFAULT '0' NOT NULL,
-	hidden tinyint(4) DEFAULT '0' NOT NULL,
-	starttime int(11) DEFAULT '0' NOT NULL,
-	endtime int(11) DEFAULT '0' NOT NULL,
 	abbrevation char(2) DEFAULT '' NOT NULL,
 	label_de varchar(255) DEFAULT '' NOT NULL,
 	label_fr varchar(255) DEFAULT '' NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );
@@ -112,18 +117,12 @@ CREATE TABLE tx_mrastp_section (
 CREATE TABLE tx_mrastp_state (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
-	tstamp int(11) DEFAULT '0' NOT NULL,
-	crdate int(11) DEFAULT '0' NOT NULL,
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	sorting int(10) DEFAULT '0' NOT NULL,
-	deleted tinyint(4) DEFAULT '0' NOT NULL,
-	hidden tinyint(4) DEFAULT '0' NOT NULL,
-	starttime int(11) DEFAULT '0' NOT NULL,
-	endtime int(11) DEFAULT '0' NOT NULL,
 	abbrevation char(10) DEFAULT '' NOT NULL,
 	label_de varchar(255) DEFAULT '' NOT NULL,
 	label_fr varchar(255) DEFAULT '' NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );
@@ -164,7 +163,7 @@ CREATE TABLE tx_mrastp_workaddress (
 	languages varchar(255) DEFAULT '' NOT NULL,
 	website varchar(255) DEFAULT '' NOT NULL,
 	startofwork int(11) DEFAULT '0' NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );
@@ -201,7 +200,7 @@ CREATE TABLE tx_mrastp_group (
 #
 CREATE TABLE tx_mrastp_group_cat (
         uid int(11) NOT NULL auto_increment,
-        pid int(11) DEFAULT '0' NOT NULL, 
+        pid int(11) DEFAULT '0' NOT NULL,
         tstamp int(11) DEFAULT '0' NOT NULL,
         crdate int(11) DEFAULT '0' NOT NULL,
         cruser_id int(11) DEFAULT '0' NOT NULL,

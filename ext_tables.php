@@ -33,58 +33,61 @@ $TCA["tx_mrastp_canton"] = array (
 	"ctrl" => array (
 		'title'     => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_canton',
 		'label'     => 'abbrevation',
-		'tstamp'    => 'tstamp',
-		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
 		'default_sortby' => 'abbrevation',
-		'delete' => 'deleted',
-		'enablecolumns' => array (
-			'disabled' => 'hidden',
-			'starttime' => 'starttime',
-			'endtime' => 'endtime',
-		),
+        'adminOnly'       => 1,
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_canton.gif',
 	),
 	"feInterface" => array (
-		"fe_admin_fieldList" => "hidden, starttime, endtime, abbrevation, label_de, label_fr, label_en",
+		"fe_admin_fieldList" => "abbrevation, label_de, label_fr, label_en",
+	)
+);
+
+$TCA["tx_mrastp_salutation"] = array (
+	"ctrl" => array (
+		'title'           => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_salutation',
+		'label'           => 'label_de',
+		'label_alt'       => 'label_fr',
+		'label_alt_force' => 1,
+		'cruser_id'       => 'cruser_id',
+        'adminOnly'       => 1,
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_salutation.gif',
+	),
+	"feInterface" => array (
+		"fe_admin_fieldList" => "abbrevation, label_de, label_fr, label_en",
 	)
 );
 
 $TCA['tx_mrastp_country'] = array(
-        'ctrl' => array(
-                'label' => 'cn_short_en',
-                'label_alt' => 'cn_short_en,cn_iso_2',
-                'adminOnly' => 1,
-                'default_sortby' => 'ORDER BY cn_short_en',
-                'title' => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_country',
-                'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-                'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_country.gif'
-        ),
-        'interface' => array(
-                'showRecordFieldList' => 'cn_iso_2,cn_iso_3,cn_short_en,cn_short_de,cn_short_fr'
-        )
+    'ctrl' => array(
+        'label' => 'cn_short_en',
+        'label_alt' => 'cn_short_en,cn_iso_2',
+        'cruser_id' => 'cruser_id',
+        'adminOnly' => 1,
+        'default_sortby' => 'ORDER BY cn_short_en',
+        'title' => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_country',
+        'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
+        'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_country.gif'
+    ),
+    'interface' => array(
+        'showRecordFieldList' => 'cn_iso_2,cn_iso_3,cn_short_en,cn_short_de,cn_short_fr'
+    )
 );
 
 $TCA["tx_mrastp_section"] = array (
 	"ctrl" => array (
 		'title'     => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_section',
 		'label'     => 'abbrevation',
-		'tstamp'    => 'tstamp',
-		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'default_sortby' => 'abbrevation',
-		'delete' => 'deleted',
-		'enablecolumns' => array (
-			'disabled' => 'hidden',
-			'starttime' => 'starttime',
-			'endtime' => 'endtime',
-		),
+		'sortby'    => 'sorting',
+        'adminOnly' => 1,
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_section.gif',
 	),
 	"feInterface" => array (
-		"fe_admin_fieldList" => "hidden, starttime, endtime, abbrevation, label_de, label_fr, label_en",
+		"fe_admin_fieldList" => "abbrevation, label_de, label_fr, label_en",
 	)
 );
 
@@ -96,17 +99,11 @@ $TCA["tx_mrastp_state"] = array (
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
 		'sortby' => 'sorting',
-		'delete' => 'deleted',
-		'enablecolumns' => array (
-			'disabled' => 'hidden',
-			'starttime' => 'starttime',
-			'endtime' => 'endtime',
-		),
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_state.gif',
 	),
 	"feInterface" => array (
-		"fe_admin_fieldList" => "hidden, starttime, endtime, abbrevation, label_de, label_fr, label_en",
+		"fe_admin_fieldList" => "abbrevation, label_de, label_fr, label_en",
 	)
 );
 
