@@ -399,9 +399,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                         }
                         break;
                     case 'sorting_field':
-                        if(!empty($value)) {
-                            $orderBy[] = $this->fkDecode($value);
-                        }
+                        $orderBy = $post['sorting_field'];
                         break;
                     default:
                         $selects[$field] = $value;
@@ -544,18 +542,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= $this->generateRadioSwitch('group_language', (isset($post['group_language']) ? $post['group_language'] : 1));
         $content.= '</table></fieldset>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_sorting') . '</legend><table>';
-        $content.= '<tr><td>' . $LANG->getLL('sorting_field') . '</td><td><select id="sorting_field" name="sorting_field" size="1">';
-        $content.= '<option value=""></option>';
-        foreach ($this->db['sortable_fields'] as $field) {
-            $fieldParts = explode('.', $field);
-            $tableName = $fieldParts[0];
-            $fieldName = $fieldParts[1];
-            $encodedField = $this->fkEncode(sprintf($field, $BE_USER->uc['lang']));
-            $selected = (isset($post['sorting_field']) && $post['sorting_field'] == $encodedField) ? ' selected="selected"' : '';
-            $content.= '<option value="' . $encodedField . '" ' . $selected . '>' . $this->getDbLL($BE_USER->uc['lang'], $tableName) . '</option>';
+        for($i=0;$i<3;$i++) {
+            $content.= '<tr><td>' . $i + 1 . '. ' . $LANG->getLL('sorting_field') . '</td><td>' . $this->getSelectOfOrderBys($post['sorting_field'][$i]) . '</td></tr>';
         }
-        $content.= '</select></td></tr></table></fieldset>';
-        $content.= '<fieldset><legend>' . $LANG->getLL('output_others') . '</legend>';
+        $content.= '</table></fieldset><fieldset><legend>' . $LANG->getLL('output_others') . '</legend>';
         $content.= '<table><tr><td><label>' . $LANG->getLL('output_format') . '</label></td>';
         $content.= '<td><input type="radio" id="html" name="format" value="html"  checked="checked" /><label for="html">' . $LANG->getLL('output_format_html') . '</label></td>';
         $content.= '<td><input type="radio" id="xls" name="format" value="xls" /><label for="xls">' . $LANG->getLL('output_format_xls') . '</label></td></tr></table>';
@@ -564,6 +554,22 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= '</fieldset></form>';
         return $content;
 	}
+
+    function getSelectOfOrderBys($preselect=false) {
+        global $BE_USER, $LANG;
+        $content = '<select id="sorting_field" name="sorting_field[]" size="1">';
+        $content.= '<option value=""></option>';
+        foreach ($this->db['sortable_fields'] as $field) {
+            $fieldParts = explode('.', $field);
+            $tableName = $fieldParts[0];
+            $fieldName = $fieldParts[1];
+            $encodedField = $this->fkEncode(sprintf($field, $BE_USER->uc['lang']));
+            $selected = ($preselect && $preselect == $encodedField) ? ' selected="selected"' : '';
+            $content.= '<option value="' . $encodedField . '" ' . $selected . '>' . $this->getDbLL($BE_USER->uc['lang'], $tableName) . '</option>';
+        }
+        $content.= '</select>';
+        return $content;
+    }
 
 	function getSelectOfTable($table, $fkField, $preselect) {
 	    global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
@@ -660,13 +666,15 @@ class  mr_astp_module1 extends t3lib_SCbase {
         if($select == '') {
             $select = 'tx_mrastp_person.firstname, tx_mrastp_person.name';
         }
-
         foreach ($sortings as $field) {
-            list($table, $column) = explode('.', $field);
-            if($table != 'tx_mrastp_person' && !preg_match('/' . $table . '/', $join)) {
-                $join.= $this->getRelationWhere($table);
+            if(!empty($field)) {
+                $field = $this->fkDecode($field);
+                list($table, $column) = explode('.', $field);
+                if($table != 'tx_mrastp_person' && !preg_match('/' . $table . '/', $join)) {
+                    $join.= $this->getRelationWhere($table);
+                }
+                $orderBy.= ($orderBy == '') ? ' ORDER BY ' . $field : ', ' . $field;
             }
-            $orderBy.= ($orderBy == '') ? ' ORDER BY ' . $field : ', ' . $field;
         }
         $orderBy.= ($orderBy == '') ? ' ORDER BY name' : ', name';
 

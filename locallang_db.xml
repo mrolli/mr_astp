@@ -14,7 +14,7 @@
 			<label index="tx_mrastp_person.firstname">Firstname</label>
 			<label index="tx_mrastp_person.name">Name</label>
 			<label index="tx_mrastp_person.street">Street</label>
-			<label index="tx_mrastp_person.compl">Compl</label>
+			<label index="tx_mrastp_person.compl">Supplement</label>
 			<label index="tx_mrastp_person.zip">Zip</label>
 			<label index="tx_mrastp_person.city">City</label>
 			<label index="tx_mrastp_person.canton_id">Canton</label>
@@ -87,7 +87,7 @@
 			<label index="tx_mrastp_person.firstname">Prénom</label>
 			<label index="tx_mrastp_person.name">Nom</label>
 			<label index="tx_mrastp_person.street">Rue</label>
-			<label index="tx_mrastp_person.compl">Compl</label>
+			<label index="tx_mrastp_person.compl">Supplément</label>
 			<label index="tx_mrastp_person.zip">NPA</label>
 			<label index="tx_mrastp_person.city">Lieu</label>
 			<label index="tx_mrastp_person.canton_id">Canton</label>
@@ -160,7 +160,7 @@
 			<label index="tx_mrastp_person.firstname">Vorname</label>
 			<label index="tx_mrastp_person.name">Nachname</label>
 			<label index="tx_mrastp_person.street">Strasse</label>
-			<label index="tx_mrastp_person.compl">Compl</label>
+			<label index="tx_mrastp_person.compl">Zusatz</label>
 			<label index="tx_mrastp_person.zip">PLZ</label>
 			<label index="tx_mrastp_person.city">Stadt</label>
 			<label index="tx_mrastp_person.canton_id">Kanton</label>
