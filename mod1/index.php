@@ -683,7 +683,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
             $fieldParts = explode('.', $tableField);
             $tableName = $fieldParts[0];
             $fieldName = preg_replace('/.* as (.*)/', '\1', $fieldParts[1]);
-            $tableRows[0][] = $this->getDbLL($BE_USER->uc['lang'], $tableName, $fieldName);
+            $tableRows[0][] = utf8_encode($this->getDbLL($BE_USER->uc['lang'], $tableName, $fieldName));
         }
         while ($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $tableRows[] = $row;
