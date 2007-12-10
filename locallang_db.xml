@@ -9,7 +9,7 @@
 			<label index="tx_mrastp_common.label_de">German Label</label>
             <label index="tx_mrastp_common.label_fr">French Label</label>
             <label index="tx_mrastp_common.label_en">English Label</label>
-			<label index="tx_mrastp_person">astp Person</label>
+			<label index="tx_mrastp_person">Person</label>
 			<label index="tx_mrastp_person.salutation_id">Salutation</label>
 			<label index="tx_mrastp_person.firstname">Firstname</label>
 			<label index="tx_mrastp_person.name">Name</label>
@@ -26,13 +26,13 @@
 			<label index="tx_mrastp_person.language_id">Language</label>
 			<label index="tx_mrastp_person.section_id">Section</label>
 			<label index="tx_mrastp_person.status">State</label>
-			<label index="tx_mrastp_person.entry_date">astp Entry Date</label>
+			<label index="tx_mrastp_person.entry_date">Entry Date</label>
 			<label index="tx_mrastp_person.workaddress">Work Addresses</label>
 			<label index="tx_mrastp_person.groups">Work Groups</label>
-			<label index="tx_mrastp_canton">astp Cantons</label>
+			<label index="tx_mrastp_canton">Cantons</label>
 			<label index="tx_mrastp_canton.abbrevation">Abbrevation</label>
 			<label index="tx_mrastp_canton.canton_label">Canton</label>
-			<label index="tx_mrastp_country">astp Countries</label>
+			<label index="tx_mrastp_country">Countries</label>
 			<label index="tx_mrastp_country.cn_iso_2">ISO 3166-1 A2 Country code:</label>
 			<label index="tx_mrastp_country.cn_iso_3">ISO 3166-1 A3 Country code:</label>
 			<label index="tx_mrastp_country.cn_short_en">Short name (EN):</label>
@@ -43,13 +43,13 @@
             <label index="tx_mrastp_language.language_label">Language</label>
 			<label index="tx_mrastp_salutation">Salutation</label>
             <label index="tx_mrastp_salutation.salutation_label">Salutation</label>
-			<label index="tx_mrastp_section">astp Section</label>
+			<label index="tx_mrastp_section">Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abbrevation</label>
 			<label index="tx_mrastp_section.section_label">Section</label>
-			<label index="tx_mrastp_state">astp State</label>
+			<label index="tx_mrastp_state">State</label>
 			<label index="tx_mrastp_state.abbrevation">Abbrevation</label>
 			<label index="tx_mrastp_state.state_label">State</label>
-			<label index="tx_mrastp_workaddress">astp Workaddress</label>
+			<label index="tx_mrastp_workaddress">Workaddress</label>
 			<label index="tx_mrastp_workaddress.employment">Employment</label>
 			<label index="tx_mrastp_workaddress.employment.I.1">employed</label>
 			<label index="tx_mrastp_workaddress.employment.I.2">self-employed</label>
@@ -69,9 +69,9 @@
 			<label index="tx_mrastp_workaddress.languages">Languages</label>
 			<label index="tx_mrastp_workaddress.website">Website</label>
 			<label index="tx_mrastp_workaddress.startofwork">Start of Work</label>
-			<label index="tx_mrastp_group_cat">astp Group Categories</label>
+			<label index="tx_mrastp_group_cat">Group Categories</label>
 			<label index="tx_mrastp_group_cat.nmae">Category Name</label>
-			<label index="tx_mrastp_group">astp Groups</label>
+			<label index="tx_mrastp_group">Groups</label>
 			<label index="tx_mrastp_group.name">Group name</label>
 			<label index="tx_mrastp_group.persons">Members</label>
 			<label index="tx_mrastp_group.cat_id">Group Category</label>
@@ -82,7 +82,7 @@
 			<label index="tx_mrastp_persons_groups_rel.funktion_fr">Function (fr)</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
-			<label index="tx_mrastp_person">astp Personne</label>
+			<label index="tx_mrastp_person">Personne</label>
 			<label index="tx_mrastp_person.salutation_id">salutation</label>
 			<label index="tx_mrastp_person.firstname">Prénom</label>
 			<label index="tx_mrastp_person.name">Nom</label>
@@ -102,10 +102,10 @@
 			<label index="tx_mrastp_person.entry_date">Date d'entrée astp</label>
 			<label index="tx_mrastp_person.workaddress">Addresses de travail</label>
 			<label index="tx_mrastp_person.groups">Groupe travail</label>
-			<label index="tx_mrastp_canton">astp Canton</label>
+			<label index="tx_mrastp_canton">Canton</label>
 			<label index="tx_mrastp_canton.abbrevation">Abrévation</label>
 			<label index="tx_mrastp_canton.canton_label">Canton</label>
-			<label index="tx_mrastp_country">astp Pays</label>
+			<label index="tx_mrastp_country">Pays</label>
 			<label index="tx_mrastp_country.cn_iso_2">Code de pays ISO 3166-1 A2:</label>
 			<label index="tx_mrastp_country.cn_iso_3">Code de pays ISO 3166-1 A3:</label>
 			<label index="tx_mrastp_country.cn_short_en">Nom court (EN):</label>
@@ -116,13 +116,13 @@
             <label index="tx_mrastp_language.language_label">Langue</label>
 			<label index="tx_mrastp_salutation">Salutation</label>
             <label index="tx_mrastp_salutation.salutation_label">Salutation</label>
-			<label index="tx_mrastp_section">astp Section</label>
+			<label index="tx_mrastp_section">Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abrévation</label>
 			<label index="tx_mrastp_section.section_label">Section</label>
-			<label index="tx_mrastp_state">astp Status</label>
+			<label index="tx_mrastp_state">Status</label>
 			<label index="tx_mrastp_state.abbrevation">Abrévation</label>
 			<label index="tx_mrastp_state.state_label">Status</label>
-			<label index="tx_mrastp_workaddress">astp Address de travail</label>
+			<label index="tx_mrastp_workaddress">Address de travail</label>
             <label index="tx_mrastp_workaddress.employment">Type d'emploi</label>
             <label index="tx_mrastp_workaddress.employment.I.1">emploi</label>
             <label index="tx_mrastp_workaddress.employment.I.2">privé</label>
@@ -142,9 +142,9 @@
 			<label index="tx_mrastp_workaddress.languages">Langues</label>
 			<label index="tx_mrastp_workaddress.website">Site de Web</label>
 			<label index="tx_mrastp_workaddress.startofwork">Entrée travail</label>
-            <label index="tx_mrastp_group_cat">astp Group Categories</label>
+            <label index="tx_mrastp_group_cat">Group Categories</label>
             <label index="tx_mrastp_group_cat.nmae">Category Name</label>
-            <label index="tx_mrastp_group">astp Groups</label>
+            <label index="tx_mrastp_group">Groups</label>
             <label index="tx_mrastp_group.name">Group name</label>
             <label index="tx_mrastp_group.persons">Members</label>
             <label index="tx_mrastp_group.cat_id">Group Category</label>
@@ -155,7 +155,7 @@
 			<label index="tx_mrastp_persons_groups_rel.funktion_fr">Fonction (fr)</label>
 		</languageKey>
 		<languageKey index="de" type="array">
-			<label index="tx_mrastp_person">astp Person</label>
+			<label index="tx_mrastp_person">Person</label>
 			<label index="tx_mrastp_person.salutation_id">Anrede</label>
 			<label index="tx_mrastp_person.firstname">Vorname</label>
 			<label index="tx_mrastp_person.name">Nachname</label>
@@ -172,13 +172,13 @@
 			<label index="tx_mrastp_person.language_id">Sprache</label>
 			<label index="tx_mrastp_person.section_id">Sektion</label>
 			<label index="tx_mrastp_person.status">Status</label>
-			<label index="tx_mrastp_person.entry_date">astp Eintrittsdatum</label>
+			<label index="tx_mrastp_person.entry_date">Eintrittsdatum</label>
 			<label index="tx_mrastp_person.workaddress">Arbeitsaddressen</label>
 			<label index="tx_mrastp_person.groups">Arbeitsgruppen</label>
-			<label index="tx_mrastp_canton">astp Kanton</label>
+			<label index="tx_mrastp_canton">Kanton</label>
 			<label index="tx_mrastp_canton.abbrevation">Abkürzung</label>
 			<label index="tx_mrastp_canton.canton_label">Kanton</label>
-			<label index="tx_mrastp_country">astp Land</label>
+			<label index="tx_mrastp_country">Land</label>
 			<label index="tx_mrastp_country.cn_iso_2">Ländercode nach ISO 3166 A2:</label>
 			<label index="tx_mrastp_country.cn_iso_3">Ländercode nach ISO 3166 A3:</label>
 			<label index="tx_mrastp_country.cn_short_en">Kurzname (EN):</label>
@@ -189,13 +189,13 @@
             <label index="tx_mrastp_language.language_label">Sprache</label>
 			<label index="tx_mrastp_salutation">Anrede</label>
             <label index="tx_mrastp_salutation.salutation_label">Anrede</label>
-			<label index="tx_mrastp_section">astp Sektion</label>
+			<label index="tx_mrastp_section">Sektion</label>
 			<label index="tx_mrastp_section.abbrevation">Abkürzung</label>
 			<label index="tx_mrastp_section.section_label">Sektion</label>
-			<label index="tx_mrastp_state">astp Status</label>
+			<label index="tx_mrastp_state">Status</label>
 			<label index="tx_mrastp_state.state_label">Status</label>
 			<label index="tx_mrastp_state.abbrevation">Abkürzung</label>
-			<label index="tx_mrastp_workaddress">astp Arbeitsadressen</label>
+			<label index="tx_mrastp_workaddress">Arbeitsadressen</label>
             <label index="tx_mrastp_workaddress.employment">Anstellungverhältnis</label>
             <label index="tx_mrastp_workaddress.employment.I.1">angestellt</label>
             <label index="tx_mrastp_workaddress.employment.I.2">selbständig</label>
@@ -215,9 +215,9 @@
 			<label index="tx_mrastp_workaddress.languages">Sprachen</label>
 			<label index="tx_mrastp_workaddress.website">Website</label>
 			<label index="tx_mrastp_workaddress.startofwork">Arbeitsbeginn</label>
-            <label index="tx_mrastp_group_cat">astp Group Categories</label>
+            <label index="tx_mrastp_group_cat">Group Categories</label>
             <label index="tx_mrastp_group_cat.nmae">Category Name</label>
-            <label index="tx_mrastp_group">astp Gruppe</label>
+            <label index="tx_mrastp_group">Gruppe</label>
             <label index="tx_mrastp_group.name">Gruppenname</label>
             <label index="tx_mrastp_group.persons">Gruppenmitglieder</label>
             <label index="tx_mrastp_group.cat_id">Gruppenkategorie</label>
