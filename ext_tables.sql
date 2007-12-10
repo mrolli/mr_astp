@@ -30,8 +30,8 @@ CREATE TABLE tx_mrastp_person (
 	status int(11) DEFAULT '0' NOT NULL,
 	entry_date int(11) DEFAULT '0' NOT NULL,
 	workaddress blob NOT NULL,
-	groups int(11) NOT NULL,
-	feuser_id int(11) NOT NULL,
+	groups int(11) DEFAULT '0' NOT NULL,
+	feuser_id int(11) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid),
@@ -137,7 +137,7 @@ CREATE TABLE tx_mrastp_workaddress (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
 	parentuid int(11) DEFAULT '0' NOT NULL,
-        parenttable VARCHAR(255) DEFAULT '' NOT NULL,
+    parenttable varchar(255) DEFAULT '' NOT NULL,
 	tstamp int(11) DEFAULT '0' NOT NULL,
 	crdate int(11) DEFAULT '0' NOT NULL,
 	cruser_id int(11) DEFAULT '0' NOT NULL,
@@ -154,9 +154,9 @@ CREATE TABLE tx_mrastp_workaddress (
 	zip varchar(6) DEFAULT '' NOT NULL,
 	city varchar(255) DEFAULT '' NOT NULL,
 	country_id int(11) DEFAULT '0' NOT NULL,
-	canton_id blob NOT NULL,
+	canton_id int(11) DEFAULT '0' NOT NULL,
 	phone varchar(20) DEFAULT '' NOT NULL,
-        mobile varchar(20) DEFAULT '' NOT NULL,
+    mobile varchar(20) DEFAULT '' NOT NULL,
 	fax varchar(20) DEFAULT '' NOT NULL,
 	email varchar(255) DEFAULT '' NOT NULL,
 	audience varchar(255) DEFAULT '' NOT NULL,
@@ -223,16 +223,16 @@ CREATE TABLE tx_mrastp_group_cat (
 # Table structure for table 'tx_mrastp_persons_groups_rel'
 #
 CREATE TABLE tx_mrastp_persons_groups_rel (
-        uid int(11) NOT NULL auto_increment,
-        pid int(11) DEFAULT '0' NOT NULL,
-        personid int(11) DEFAULT '0' NOT NULL,
-        groupid int(11) DEFAULT '0' NOT NULL,
-        personsort int(10) DEFAULT '0' NOT NULL,
-        groupsort int(10) DEFAULT '0' NOT NULL,
-        funktion_de VARCHAR(255) DEFAULT '' NOT NULL,
-	funktion_fr VARCHAR(255) DEFAULT '' NOT NULL,
-        canton_id int(11) DEFAULT '0' NOT NULL,
+    uid int(11) NOT NULL auto_increment,
+    pid int(11) DEFAULT '0' NOT NULL,
+    personid int(11) DEFAULT '0' NOT NULL,
+    groupid int(11) DEFAULT '0' NOT NULL,
+    personsort int(10) DEFAULT '0' NOT NULL,
+    groupsort int(10) DEFAULT '0' NOT NULL,
+    funktion_de varchar(255) DEFAULT '' NOT NULL,
+    funktion_fr varchar(255) DEFAULT '' NOT NULL,
+    canton_id int(11) DEFAULT '0' NOT NULL,
 
-        PRIMARY KEY (uid),
-        KEY parent (pid)
+    PRIMARY KEY (uid),
+    KEY parent (pid)
 );
