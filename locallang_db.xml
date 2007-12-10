@@ -10,7 +10,7 @@
             <label index="tx_mrastp_common.label_fr">French Label</label>
             <label index="tx_mrastp_common.label_en">English Label</label>
 			<label index="tx_mrastp_person">astp Person</label>
-			<label index="tx_mrastp_person.salutation">Salutation</label>
+			<label index="tx_mrastp_person.salutation_id">Salutation</label>
 			<label index="tx_mrastp_person.firstname">Firstname</label>
 			<label index="tx_mrastp_person.name">Name</label>
 			<label index="tx_mrastp_person.street">Street</label>
@@ -44,6 +44,7 @@
 			<label index="tx_mrastp_country.cn_short_fr">Short name (FR):</label>
 			<label index="tx_mrastp_country.country_label">Country</label>
 			<label index="tx_mrastp_salutation">Salutation</label>
+            <label index="tx_mrastp_salutation.salutation_label">Salutation</label>
 			<label index="tx_mrastp_section">astp Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abbrevation</label>
 			<label index="tx_mrastp_section.section_label">Section</label>
@@ -84,7 +85,7 @@
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="tx_mrastp_person">astp Personne</label>
-			<label index="tx_mrastp_person.salutation">salutation</label>
+			<label index="tx_mrastp_person.salutation_id">salutation</label>
 			<label index="tx_mrastp_person.firstname">Prénom</label>
 			<label index="tx_mrastp_person.name">Nom</label>
 			<label index="tx_mrastp_person.street">Rue</label>
@@ -118,6 +119,7 @@
 			<label index="tx_mrastp_country.cn_short_fr">Nom court (FR):</label>
 			<label index="tx_mrastp_country.country_label">Pays</label>
 			<label index="tx_mrastp_salutation">Salutation</label>
+            <label index="tx_mrastp_salutation.salutation_label">Salutation</label>
 			<label index="tx_mrastp_section">astp Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abrévation</label>
 			<label index="tx_mrastp_section.section_label">Section</label>
@@ -158,7 +160,7 @@
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_mrastp_person">astp Person</label>
-			<label index="tx_mrastp_person.salutation">Anrede</label>
+			<label index="tx_mrastp_person.salutation_id">Anrede</label>
 			<label index="tx_mrastp_person.firstname">Vorname</label>
 			<label index="tx_mrastp_person.name">Nachname</label>
 			<label index="tx_mrastp_person.street">Strasse</label>
@@ -192,6 +194,7 @@
 			<label index="tx_mrastp_country.cn_short_fr">Kurzname (FR):</label>
 			<label index="tx_mrastp_country.country_label">Land</label>
 			<label index="tx_mrastp_salutation">Anrede</label>
+            <label index="tx_mrastp_salutation.salutation_label">Anrede</label>
 			<label index="tx_mrastp_section">astp Sektion</label>
 			<label index="tx_mrastp_section.abbrevation">Abkürzung</label>
 			<label index="tx_mrastp_section.section_label">Sektion</label>

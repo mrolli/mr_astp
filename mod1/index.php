@@ -57,7 +57,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $this->extKey = 'mr_astp';
         $this->db['locallang_db'] = t3lib_div::readLLfile(t3lib_extMgm::extPath($this->extKey).'locallang_db.php',$BE_USER->uc['lang']);
         $this->db['prefix'] = 'tx_mrastp_';
-        $this->db['tables'] = array('person', 'workaddress', 'canton', 'section', 'state', 'country', 'persons_groups_rel', 'group', 'group_cat');
+        $this->db['tables'] = array('person', 'workaddress', 'salutation', 'canton', 'section', 'state', 'country', 'persons_groups_rel', 'group', 'group_cat');
         foreach($this->db['tables'] as $key => $table) {
             $tableName = $this->db['prefix'] . $table;
             t3lib_div::loadTCA($tableName);
@@ -66,7 +66,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
             unset($this->db['tables'][$key]);
         }
         $this->db['field_groups'] = array();
-        $this->db['field_groups']['group_private'] = array('tx_mrastp_person.salutation', 'tx_mrastp_person.street', 'tx_mrastp_person.compl', 'tx_mrastp_person.zip', 'tx_mrastp_person.city', 'tx_mrastp_canton.label_%s as canton_label', 'tx_mrastp_country.cn_short_%s as country_label');
+        $this->db['field_groups']['group_private'] = array('tx_mrastp_salutation.label_%s as salutation_label', 'tx_mrastp_person.firstname', 'tx_mrastp_person.name', 'tx_mrastp_person.street', 'tx_mrastp_person.compl', 'tx_mrastp_person.zip', 'tx_mrastp_person.city', 'tx_mrastp_canton.label_%s as canton_label', 'tx_mrastp_country.cn_short_%s as country_label');
         $this->db['field_groups']['group_private_com'] = array('tx_mrastp_person.phone', 'tx_mrastp_person.mobile', 'tx_mrastp_person.fax', 'tx_mrastp_person.email');
         $this->db['field_groups']['group_section'] = array('tx_mrastp_section.label_%s as section_label');
         $this->db['field_groups']['group_status'] = array('tx_mrastp_state.label_%s as state_label');
@@ -391,7 +391,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
                     case 'tx_mrastp_person.section_id':
                     case 'tx_mrastp_persons_groups_rel.groupid':
                     case 'tx_mrastp_person.city':
-                        $filters[$field] = $value;
+                        if(!empty($value)) {
+                            $filters[$field] = $value;
+                        }
                         break;
                     default:
                         $selects[$field] = $value;
@@ -618,21 +620,23 @@ class  mr_astp_module1 extends t3lib_SCbase {
             }
         }
 
-        $select = 'tx_mrastp_person.firstname, tx_mrastp_person.name';
         foreach ($selects as $field => $value) {
             if((int) $value == 1) {
                 if(preg_match('/^group_/', $field)) {
                     foreach ($this->db['field_groups'][$field] as $real_field) {
-                        $select.= ', ' . sprintf($real_field, $BE_USER->uc['lang']);
+                        $select.= ($select == '') ? sprintf($real_field, $BE_USER->uc['lang']) : ', ' . sprintf($real_field, $BE_USER->uc['lang']);
                         list($table, $column) = explode('.', $real_field);
                         if($table != 'tx_mrastp_person' && !preg_match('/' . $table . '/', $join)) {
                             $join.= $this->getRelationWhere($table);
                         }
                     }
                 } else {
-                    $select.= ', ' . $field;
+                    $select.= ($select == '') ? $field : ', ' . $field;
                 }
             }
+        }
+        if($select == '') {
+            $select = 'tx_mrastp_person.firstname, tx_mrastp_person.name';
         }
         $orderBy = ' ORDER BY name';
 
@@ -641,6 +645,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         }
 
         $sql = 'SELECT ' . $select . ' FROM tx_mrastp_person ' . $join . ' WHERE ' . $where . $orderBy;
+echo $sql;
         $result = $TYPO3_DB->admin_query($sql);
 
         $tableRows = array();
@@ -676,10 +681,17 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	        case 'tx_mrastp_section':
 	            return ' LEFT JOIN tx_mrastp_section ON tx_mrastp_person.section_id = tx_mrastp_section.uid';
 	            break;
-	        case 'tx_mrastp_person.country_uid':
+	        case 'tx_mrastp_person.country_id':
 	        case 'tx_mrastp_country':
 	            return ' LEFT JOIN tx_mrastp_country ON tx_mrastp_person.country_id = tx_mrastp_country.uid';
 	            break;
+            case 'tx_mrastp_person.salutation_id':
+            case 'tx_mrastp_salutation':
+                return ' LEFT JOIN tx_mrastp_salutation ON tx_mrastp_person.salutation_id = tx_mrastp_salutation.uid';
+                break;
+            case 'tx_mrastp_country':
+                return ' LEFT JOIN tx_mrastp_country ON tx_mrastp_person.country_id = tx_mrastp_country.uid';
+                break;
 	        default:
 	            return '';
 	    }

@@ -12,7 +12,7 @@ CREATE TABLE tx_mrastp_person (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	starttime int(11) DEFAULT '0' NOT NULL,
 	endtime int(11) DEFAULT '0' NOT NULL,
-	salutation tinytext NOT NULL,
+	salutation_ud int(11) DEFAULT '0' NOT NULL,
 	firstname tinytext NOT NULL,
 	name tinytext NOT NULL,
 	street tinytext NOT NULL,
