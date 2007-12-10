@@ -46,6 +46,7 @@
             <label index="group_private_com">Private comm. details</label>
             <label index="group_section">Section</label>
             <label index="group_status">State</label>
+            <label index="group_language">Language</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="show">Présenter</label>
@@ -84,6 +85,7 @@
             <label index="no">Non</label>
             <label index="output_fields">Blocs d'output</label>
             <label index="output_others">Autres</label>
+            <label index="group_language">Langue</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="show">Anzeigen</label>
@@ -122,6 +124,7 @@
             <label index="no">Nein</label>
             <label index="output_fields">Ausgabefelder</label>
             <label index="output_others">Andere</label>
+            <label index="group_language">Sprache</label>
         </languageKey>
     </data>
 </T3locallang>

@@ -57,7 +57,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $this->extKey = 'mr_astp';
         $this->db['locallang_db'] = t3lib_div::readLLfile(t3lib_extMgm::extPath($this->extKey).'locallang_db.php',$BE_USER->uc['lang']);
         $this->db['prefix'] = 'tx_mrastp_';
-        $this->db['tables'] = array('person', 'workaddress', 'salutation', 'canton', 'section', 'state', 'country', 'persons_groups_rel', 'group', 'group_cat');
+        $this->db['tables'] = array('person', 'workaddress', 'salutation', 'canton', 'section', 'state', 'language', 'country', 'persons_groups_rel', 'group', 'group_cat');
         foreach($this->db['tables'] as $key => $table) {
             $tableName = $this->db['prefix'] . $table;
             t3lib_div::loadTCA($tableName);
@@ -70,6 +70,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $this->db['field_groups']['group_private_com'] = array('tx_mrastp_person.phone', 'tx_mrastp_person.mobile', 'tx_mrastp_person.fax', 'tx_mrastp_person.email');
         $this->db['field_groups']['group_section'] = array('tx_mrastp_section.label_%s as section_label');
         $this->db['field_groups']['group_status'] = array('tx_mrastp_state.label_%s as state_label');
+        $this->db['field_groups']['group_language'] = array('tx_mrastp_language.label_%s as language_label');
 
         $TYPO3_DB->debugOutput = $this->conf['debug'];
 
@@ -385,7 +386,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                     case 'SET':
                         break;
                     case 'tx_mrastp_person.canton_id':
-                    case 'tx_mrastp_person.lang':
+                    case 'tx_mrastp_person.language_id':
                     case 'tx_mrastp_person.status':
                     case 'tx_mrastp_workaddress.employment':
                     case 'tx_mrastp_person.section_id':
@@ -523,6 +524,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= '<td><input id="city" name="tx_mrastp_person|city" value="' . (isset($post['tx_mrastp_person|city']) ? $post['tx_mrastp_person|city'] : '') . '" /></td></tr>';
         $content.= '<tr>' . $this->getSelectOfTable('canton', 'tx_mrastp_person|canton_id', (isset($post['tx_mrastp_person|canton_id']) ? $post['tx_mrastp_person|canton_id'] : false)) . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('state', 'tx_mrastp_person|status', (isset($post['tx_mrastp_person|status']) ? $post['tx_mrastp_person|status'] : false)) . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('language', 'tx_mrastp_person|language_id', (isset($post['tx_mrastp_person|language_id']) ? $post['tx_mrastp_person|language_id'] : false)) . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('section', 'tx_mrastp_person|section_id', (isset($post['tx_mrastp_person|section_id']) ? $post['tx_mrastp_person|section_id'] : false)) . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('group', 'tx_mrastp_persons_groups_rel|groupid', (isset($post['tx_mrastp_persons_groups_rel|groupid']) ? $post['tx_mrastp_persons_groups_rel|groupid'] : false)) . '</tr>';
         $content.= '</table>';
@@ -532,6 +534,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= $this->generateRadioSwitch('group_private_com', (isset($post['group_private_com']) ? $post['group_private_com'] : 0));
         $content.= $this->generateRadioSwitch('group_section', (isset($post['group_section']) ? $post['group_section'] : 0));
         $content.= $this->generateRadioSwitch('group_status', (isset($post['group_status']) ? $post['group_status'] : 1));
+        $content.= $this->generateRadioSwitch('group_language', (isset($post['group_language']) ? $post['group_language'] : 1));
         $content.= '</table></fieldset>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_others') . '</legend>';
         $content.= '<table><tr><td><label>' . $LANG->getLL('output_format') . '</label></td>';
@@ -688,6 +691,10 @@ echo $sql;
             case 'tx_mrastp_person.salutation_id':
             case 'tx_mrastp_salutation':
                 return ' LEFT JOIN tx_mrastp_salutation ON tx_mrastp_person.salutation_id = tx_mrastp_salutation.uid';
+                break;
+            case 'tx_mrastp_person.language_id':
+            case 'tx_mrastp_language':
+                return ' LEFT JOIN tx_mrastp_language ON tx_mrastp_person.language_id = tx_mrastp_language.uid';
                 break;
             case 'tx_mrastp_country':
                 return ' LEFT JOIN tx_mrastp_country ON tx_mrastp_person.country_id = tx_mrastp_country.uid';
