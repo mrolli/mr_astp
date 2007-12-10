@@ -42,6 +42,8 @@
             <label index="no">No</label>
             <label index="output_fields">Output Fields</label>
             <label index="output_others">Others</label>
+            <label index="output_sorting">Sorting</label>
+            <label index="sorting_field">Sorting Field</label>
             <label index="group_private">Private address</label>
             <label index="group_private_com">Private comm. details</label>
             <label index="group_section">Section</label>
@@ -85,6 +87,8 @@
             <label index="no">Non</label>
             <label index="output_fields">Blocs d'output</label>
             <label index="output_others">Autres</label>
+            <label index="output_sorting">Triage</label>
+            <label index="sorting_field">Bloc pour trier</label>
             <label index="group_language">Langue</label>
         </languageKey>
         <languageKey index="de" type="array">
@@ -124,6 +128,8 @@
             <label index="no">Nein</label>
             <label index="output_fields">Ausgabefelder</label>
             <label index="output_others">Andere</label>
+            <label index="output_sorting">Sortierung</label>
+            <label index="sorting_field">Sortierfeld</label>
             <label index="group_language">Sprache</label>
         </languageKey>
     </data>
