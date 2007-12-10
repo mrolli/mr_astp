@@ -194,7 +194,7 @@
 			<label index="tx_mrastp_country.cn_short_en">Kurzname (EN):</label>
 			<label index="tx_mrastp_country.cn_short_de">Kurzname (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Kurzname (FR):</label>
-			<label index="tx_mrastp_country.country_label">Country</label>
+			<label index="tx_mrastp_country.country_label">Land</label>
 			<label index="tx_mrastp_section">astp Sektion</label>
 			<label index="tx_mrastp_section.abbrevation">Abkürzung</label>
 			<label index="tx_mrastp_section.section_label">Sektion</label>
