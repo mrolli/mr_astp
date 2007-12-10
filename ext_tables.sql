@@ -12,7 +12,7 @@ CREATE TABLE tx_mrastp_person (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	starttime int(11) DEFAULT '0' NOT NULL,
 	endtime int(11) DEFAULT '0' NOT NULL,
-	salutation_ud int(11) DEFAULT '0' NOT NULL,
+	salutation_id int(11) DEFAULT '0' NOT NULL,
 	firstname tinytext NOT NULL,
 	name tinytext NOT NULL,
 	street tinytext NOT NULL,
@@ -94,9 +94,9 @@ CREATE TABLE tx_mrastp_country (
 
 
 #
-# Table structure for table 'tx_mrastp_languages'
+# Table structure for table 'tx_mrastp_language'
 #
-CREATE TABLE tx_mrastp_languages (
+CREATE TABLE tx_mrastp_language (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
 	cruser_id int(11) DEFAULT '0' NOT NULL,

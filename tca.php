@@ -182,13 +182,13 @@ $TCA["tx_mrastp_person"] = array (
 				"eval" => " trim",
 			)
 		),
-		"language" => Array (
+		"language_id" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.language_id",
 			"config" => Array (
 				"type" => "select",
-				"foreign_table" => "tx_mrastp_languages",
-				"foreign_table_where" => "AND tx_mrastp_languages.pid=###CURRENT_PID### ORDER BY tx_mrastp_languages.uid",
+				"foreign_table" => "tx_mrastp_language",
+				"foreign_table_where" => "AND tx_mrastp_language.pid=###CURRENT_PID### ORDER BY tx_mrastp_language.uid",
 				"size" => 1,
 				"minitems" => 0,
 				"maxitems" => 1,

@@ -39,8 +39,8 @@
 			<label index="tx_mrastp_country.cn_short_de">Short name (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Short name (FR):</label>
 			<label index="tx_mrastp_country.country_label">Country</label>
-			<label index="tx_mrastp_languages">Language</label>
-            <label index="tx_mrastp_languages.languages_label">Language</label>
+			<label index="tx_mrastp_language">Language</label>
+            <label index="tx_mrastp_language.language_label">Language</label>
 			<label index="tx_mrastp_salutation">Salutation</label>
             <label index="tx_mrastp_salutation.salutation_label">Salutation</label>
 			<label index="tx_mrastp_section">astp Section</label>
@@ -112,8 +112,8 @@
 			<label index="tx_mrastp_country.cn_short_de">Nom court (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Nom court (FR):</label>
 			<label index="tx_mrastp_country.country_label">Pays</label>
-			<label index="tx_mrastp_languages">Langue</label>
-            <label index="tx_mrastp_languages.languages_label">Langue</label>
+			<label index="tx_mrastp_language">Langue</label>
+            <label index="tx_mrastp_language.language_label">Langue</label>
 			<label index="tx_mrastp_salutation">Salutation</label>
             <label index="tx_mrastp_salutation.salutation_label">Salutation</label>
 			<label index="tx_mrastp_section">astp Section</label>
@@ -185,8 +185,8 @@
 			<label index="tx_mrastp_country.cn_short_de">Kurzname (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Kurzname (FR):</label>
 			<label index="tx_mrastp_country.country_label">Land</label>
-			<label index="tx_mrastp_languages">Sprache</label>
-            <label index="tx_mrastp_languages.languages_label">Sprache</label>
+			<label index="tx_mrastp_language">Sprache</label>
+            <label index="tx_mrastp_language.language_label">Sprache</label>
 			<label index="tx_mrastp_salutation">Anrede</label>
             <label index="tx_mrastp_salutation.salutation_label">Anrede</label>
 			<label index="tx_mrastp_section">astp Sektion</label>
