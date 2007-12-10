@@ -44,6 +44,7 @@
 			<label index="tx_mrastp_country.cn_short_en">Short name (EN):</label>
 			<label index="tx_mrastp_country.cn_short_de">Short name (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Short name (FR):</label>
+			<label index="tx_mrastp_country.country_label">Country</label>
 			<label index="tx_mrastp_section">astp Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abbrevation</label>
 			<label index="tx_mrastp_section.section_label">Section</label>
@@ -118,6 +119,7 @@
 			<label index="tx_mrastp_country.cn_short_en">Nom court (EN):</label>
 			<label index="tx_mrastp_country.cn_short_de">Nom court (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Nom court (FR):</label>
+			<label index="tx_mrastp_country.country_label">Pays</label>
 			<label index="tx_mrastp_section">astp Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abrévation</label>
 			<label index="tx_mrastp_section.section_label">Section</label>
@@ -192,6 +194,7 @@
 			<label index="tx_mrastp_country.cn_short_en">Kurzname (EN):</label>
 			<label index="tx_mrastp_country.cn_short_de">Kurzname (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Kurzname (FR):</label>
+			<label index="tx_mrastp_country.country_label">Country</label>
 			<label index="tx_mrastp_section">astp Sektion</label>
 			<label index="tx_mrastp_section.abbrevation">Abkürzung</label>
 			<label index="tx_mrastp_section.section_label">Sektion</label>
