@@ -66,6 +66,11 @@ class  mr_astp_module1 extends t3lib_SCbase {
             $this->db['tables'][$table] = $tableName;
             unset($this->db['tables'][$key]);
         }
+        $this->db['field_groups'] = array();
+        $this->db['field_groups']['group_private'] = array('tx_mrastp_person.salutation', 'tx_mrastp_person.street', 'tx_mrastp_person.compl', 'tx_mrastp_person.zip', 'tx_mrastp_person.city', 'tx_mrastp_canton.label_%s', 'tx_mrastp_country.cn_short_%s');
+        $this->db['field_groups']['group_private_com'] = array('tx_mrastp_person.phone', 'tx_mrastp_person.mobile', 'tx_mrastp_person.fax', 'tx_mrastp_person.email');
+        $this->db['field_groups']['group_section'] = array('tx_mrastp_section.label_%s');
+        $this->db['field_groups']['group_status'] = array('tx_mrastp_state.label_%s');
 
         $TYPO3_DB->debugOutput = $this->conf['debug'];
 
@@ -519,8 +524,12 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= '</table>';
         $content.= '</fieldset><fieldset style="margin-top: 10px"><legend><b>' . $LANG->getLL('output_params') . '</b></legend>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_fields') . '</legend><table>';
-        $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'firstname');
-        $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'name');
+        $content.= $this->generateRadioSwitch('group_private');
+        $content.= $this->generateRadioSwitch('group_private_com');
+        $content.= $this->generateRadioSwitch('group_section');
+        $cotnent.= $this->generateFieldSwitch('group_status');
+        $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'section_id');
+        $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'lang');
         $content.= '</table></fieldset>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_others') . '</legend>';
         $content.= '<table><tr><td><label>' . $LANG->getLL('output_format') . '</label></td>';
@@ -529,7 +538,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= '</fieldset>';
         $content.= '<input type="submit" name="submit" value="' . $LANG->getLL('form_generate') . '" />';
         $content.= '<input type="reset" name="reset" value="' . $LANG->getLL('form_reset') . '" />';
-        $content.= '</form>';
+        $content.= '</fieldset></form>';
         return $content;
 	}
 
@@ -578,6 +587,17 @@ class  mr_astp_module1 extends t3lib_SCbase {
         return $xhtml;
 	}
 
+	function generateRadioSwitch($name) {
+	    global $LANG, $BE_USER;
+
+	    $xhtml.= '<tr><td><label>' . $LANG->getLL($name) . '</label></td>';
+	    $xhtml.= '<td><input type="radio" id="' . $name . '" name="' . $name . '" value="1" checked="checked"/>';
+	    $xhtml.= '<label for="' . $name . '">' . $LANG->getLL('yes') . '</label></td>';
+        $xhtml.= '<td><input type="radio" id="' . $name . '" name="' . $name . '" value="0" /> ';
+        $xhtml.= '<label for="' . $name . '">' . $LANG->getLL('no') . '</label></td></tr>';
+        return $xhtml;
+	}
+
 	function generateReport($selects=false, $filters=false) {
         global $TYPO3_DB, $BE_USER;
         $select = $from = $join = $where = $groupBy = $orderBy = $limit = '';
@@ -596,7 +616,17 @@ class  mr_astp_module1 extends t3lib_SCbase {
         }
         foreach ($selects as $field => $value) {
             if((int) $value == 1) {
-                $select.= strlen($select) == 0 ? $field : ', ' . $field;
+                if(preg_match('/^group_/', $field)) {
+                    foreach ($this->db['field_groups'][$field] as $real_field) {
+                        $select.= strlen($select) == 0 ? $real_field : ', ' . $real_field;
+                        list($table, $column) = explode('.', $real_field);
+                        if($table != 'tx_mrastp_person' && !preg_match('/' . $table . '/', $join)) {
+                            $join.= $this->getRelationWhere($table);
+                        }
+                    }
+                } else {
+                    $select.= strlen($select) == 0 ? $field : ', ' . $field;
+                }
             }
         }
         $orderBy = ' ORDER BY name';
@@ -606,7 +636,6 @@ class  mr_astp_module1 extends t3lib_SCbase {
         }
 
         $sql = 'SELECT ' . $select . ' FROM tx_mrastp_person ' . $join . ' WHERE ' . $where . $orderBy;
-echo $sql;
         $result = $TYPO3_DB->admin_query($sql);
 
         $tableRows = array();
@@ -624,18 +653,24 @@ echo $sql;
 	function getRelationWhere($table) {
 	    switch($table) {
             case 'tx_mrastp_persons_groups_rel.groupid':
+            case 'tx_mrastp_persons_groups_rel':
+            case 'tx_mrastp_group':
                 return ' LEFT JOIN tx_mrastp_persons_groups_rel ON tx_mrastp_person.uid = tx_mrastp_persons_groups_rel.personid LEFT JOIN tx_mrastp_group ON tx_mrastp_persons_groups_rel.groupid = tx_mrastp_group.uid';
                 break;
 	        case 'tx_mrastp_person.canton_id':
+	        case 'tx_mrastp_canton':
 	            return ' LEFT JOIN tx_mrastp_canton ON tx_mrastp_person.canton_id = tx_mrastp_canton.uid';
 	            break;
 	        case 'tx_mrastp_person.status':
+	        case 'tx_mrastp_state':
 	            return ' LEFT JOIN tx_mrastp_state ON tx_mrastp_person.status = tx_mrastp_state.uid';
 	            break;
 	        case 'tx_mrastp_person.section_id':
+	        case 'tx_mrastp_section':
 	            return ' LEFT JOIN tx_mrastp_section ON tx_mrastp_person.section_id = tx_mrastp_section.uid';
 	            break;
 	        case 'tx_mrastp_person.country_uid':
+	        case 'tx_mrastp_country':
 	            return ' LEFT JOIN tx_mrastp_country ON tx_mrastp_person.country_id = tx_mrastp_country.uid';
 	            break;
 	        default:
