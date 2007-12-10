@@ -42,6 +42,10 @@
             <label index="no">No</label>
             <label index="output_fields">Output Fields</label>
             <label index="output_others">Others</label>
+            <label index="group_private">Private address</label>
+            <label index="group_private_com">Private comm. details</label>
+            <label index="group_section">Section</label>
+            <label index="group_status">State</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="show">Présenter</label>

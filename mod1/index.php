@@ -67,10 +67,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
             unset($this->db['tables'][$key]);
         }
         $this->db['field_groups'] = array();
-        $this->db['field_groups']['group_private'] = array('tx_mrastp_person.salutation', 'tx_mrastp_person.street', 'tx_mrastp_person.compl', 'tx_mrastp_person.zip', 'tx_mrastp_person.city', 'tx_mrastp_canton.label_%s', 'tx_mrastp_country.cn_short_%s');
+        $this->db['field_groups']['group_private'] = array('tx_mrastp_person.salutation', 'tx_mrastp_person.street', 'tx_mrastp_person.compl', 'tx_mrastp_person.zip', 'tx_mrastp_person.city', 'tx_mrastp_canton.label_%s as canton_label', 'tx_mrastp_country.cn_short_%s as country_label');
         $this->db['field_groups']['group_private_com'] = array('tx_mrastp_person.phone', 'tx_mrastp_person.mobile', 'tx_mrastp_person.fax', 'tx_mrastp_person.email');
-        $this->db['field_groups']['group_section'] = array('tx_mrastp_section.label_%s');
-        $this->db['field_groups']['group_status'] = array('tx_mrastp_state.label_%s');
+        $this->db['field_groups']['group_section'] = array('tx_mrastp_section.label_%s as section_label');
+        $this->db['field_groups']['group_status'] = array('tx_mrastp_state.label_%s as state_label');
 
         $TYPO3_DB->debugOutput = $this->conf['debug'];
 
@@ -370,6 +370,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
     function createCustomReportsView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+        $content = '';
+        $post = array();
 
         if(count($_POST) > 0) {
             $post = t3lib_div::_POST();
@@ -398,7 +400,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
             if(isset($post['format'])) {
                 switch($post['format']) {
                     case 'html':
-                        return $this->renderHtmlList($this->generateReport($selects, $filters), array());
+                        $content.= $this->renderHtmlList($this->generateReport($selects, $filters), array());
+                        break;
                     case 'xls':
                         $content = $this->renderXlsFile($this->generateReport($selects, $filters));
                         $headers = array('application/vnd-ms-excel');
@@ -407,7 +410,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
             }
 
         }
-        $content = $this->getReportGeneratorForm();
+        $content = $this->getReportGeneratorForm($post) . $content;
         return $content;
     }
 
@@ -499,8 +502,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	}
 
 	function renderHtmlList($rows, $heading='') {
-        $content = '<a href="#" onClick="history.back()">Zurück zur Auswahl</a>';
-        $content.= $this->doc->table($rows, $this->tableLayout['zebra']);
+        $content = $this->doc->table($rows, $this->tableLayout['zebra']);
         return $content;
 	}
 
@@ -509,40 +511,37 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    return $content;
 	}
 
-	function getReportGeneratorForm() {
+	function getReportGeneratorForm($post) {
 	    global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
         $content = '<form action="" method="post" enctype="multipart/form-data">';
         $content.= '<fieldset><legend><b>' . $LANG->getLL('filters') . '</b></legend>';
         $content.= '<table>';
         $content.= '<tr><td><label for="city">' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables']['person'], 'city') . ': </label></td>';
-        $content.= '<td><input id="city" name="tx_mrastp_person|city" value="" /></td></tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('canton', 'tx_mrastp_person.canton_id') . '</tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('state', 'tx_mrastp_person.status') . '</tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('section', 'tx_mrastp_person.section_id') . '</tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('group', 'tx_mrastp_persons_groups_rel.groupid') . '</tr>';
+        $content.= '<td><input id="city" name="tx_mrastp_person|city" value="' . (isset($post['tx_mrastp_person|city']) ? $post['tx_mrastp_person|city'] : '') . '" /></td></tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('canton', 'tx_mrastp_person|canton_id', (isset($post['tx_mrastp_person|canton_id']) ? $post['tx_mrastp_person|canton_id'] : false)) . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('state', 'tx_mrastp_person|status', (isset($post['tx_mrastp_person|status']) ? $post['tx_mrastp_person|status'] : false)) . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('section', 'tx_mrastp_person|section_id', (isset($post['tx_mrastp_person|section_id']) ? $post['tx_mrastp_person|section_id'] : false)) . '</tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('group', 'tx_mrastp_persons_groups_rel|groupid', (isset($post['tx_mrastp_persons_groups_rel|groupid']) ? $post['tx_mrastp_persons_groups_rel|groupid'] : false)) . '</tr>';
         $content.= '</table>';
         $content.= '</fieldset><fieldset style="margin-top: 10px"><legend><b>' . $LANG->getLL('output_params') . '</b></legend>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_fields') . '</legend><table>';
-        $content.= $this->generateRadioSwitch('group_private');
-        $content.= $this->generateRadioSwitch('group_private_com');
-        $content.= $this->generateRadioSwitch('group_section');
-        $cotnent.= $this->generateFieldSwitch('group_status');
-        $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'section_id');
-        $content.= $this->generateFieldSwitch($this->db['tables']['person'], 'lang');
+        $content.= $this->generateRadioSwitch('group_private', (isset($post['group_private']) ? $post['group_private'] : 1));
+        $content.= $this->generateRadioSwitch('group_private_com', (isset($post['group_private_com']) ? $post['group_private_com'] : 0));
+        $content.= $this->generateRadioSwitch('group_section', (isset($post['group_section']) ? $post['group_section'] : 0));
+        $content.= $this->generateRadioSwitch('group_status', (isset($post['group_status']) ? $post['group_status'] : 1));
         $content.= '</table></fieldset>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_others') . '</legend>';
         $content.= '<table><tr><td><label>' . $LANG->getLL('output_format') . '</label></td>';
-        $content.= '<td><input type="radio" id="html" name="format" value="html" /><label for="html" checked="checked">' . $LANG->getLL('output_format_html') . '</label></td>';
+        $content.= '<td><input type="radio" id="html" name="format" value="html"  checked="checked" /><label for="html">' . $LANG->getLL('output_format_html') . '</label></td>';
         $content.= '<td><input type="radio" id="xls" name="format" value="xls" /><label for="xls">' . $LANG->getLL('output_format_xls') . '</label></td></tr></table>';
         $content.= '</fieldset>';
         $content.= '<input type="submit" name="submit" value="' . $LANG->getLL('form_generate') . '" />';
-        $content.= '<input type="reset" name="reset" value="' . $LANG->getLL('form_reset') . '" />';
         $content.= '</fieldset></form>';
         return $content;
 	}
 
-	function getSelectOfTable($table, $fkField) {
+	function getSelectOfTable($table, $fkField, $preselect) {
 	    global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 	    $userLang = $BE_USER->uc['lang'];
 	    switch($userLang) {
@@ -566,10 +565,14 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, '', $label);
 
 	    $output = '<td><label for="' . $table . '">' . $this->getDbLL($BE_USER->uc['lang'], $from) . ': </label></td>';
-	    $output.= '<td><select id="' . $table . '" name="' . $this->fkEncode($fkField) . '" size="1">'; // multiple="multiple">';
+	    $output.= '<td><select id="' . $table . '" name="' . $fkField . '" size="1">'; // multiple="multiple">';
 	    $output.= '<option value="0"></option>';
 	    while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-	        $output.= '<option value="' . $row['uid'] . '">' . $row['label'] . '</option>';
+            $selected = '';
+            if($preselect == $row['uid']) {
+                $selected = ' selected="selected"';
+            }
+	        $output.= '<option value="' . $row['uid'] . '"' . $selected . '>' . $row['label'] . '</option>';
 	    }
 	    $output.= '</select></td>';
 	    return $output;
@@ -587,13 +590,13 @@ class  mr_astp_module1 extends t3lib_SCbase {
         return $xhtml;
 	}
 
-	function generateRadioSwitch($name) {
+	function generateRadioSwitch($name, $preselect) {
 	    global $LANG, $BE_USER;
 
 	    $xhtml.= '<tr><td><label>' . $LANG->getLL($name) . '</label></td>';
-	    $xhtml.= '<td><input type="radio" id="' . $name . '" name="' . $name . '" value="1" checked="checked"/>';
+	    $xhtml.= '<td><input type="radio" id="' . $name . '" name="' . $name . '" value="1" ' . ($preselect ? ' checked="checked"' : '') . '/>';
 	    $xhtml.= '<label for="' . $name . '">' . $LANG->getLL('yes') . '</label></td>';
-        $xhtml.= '<td><input type="radio" id="' . $name . '" name="' . $name . '" value="0" /> ';
+        $xhtml.= '<td><input type="radio" id="' . $name . '" name="' . $name . '" value="0" ' . (!$preselect ? ' checked="checked"' : '') . '/> ';
         $xhtml.= '<label for="' . $name . '">' . $LANG->getLL('no') . '</label></td></tr>';
         return $xhtml;
 	}
@@ -614,18 +617,20 @@ class  mr_astp_module1 extends t3lib_SCbase {
                 }
             }
         }
+
+        $select = 'tx_mrastp_person.firstname, tx_mrastp_person.name';
         foreach ($selects as $field => $value) {
             if((int) $value == 1) {
                 if(preg_match('/^group_/', $field)) {
                     foreach ($this->db['field_groups'][$field] as $real_field) {
-                        $select.= strlen($select) == 0 ? $real_field : ', ' . $real_field;
+                        $select.= ', ' . sprintf($real_field, $BE_USER->uc['lang']);
                         list($table, $column) = explode('.', $real_field);
                         if($table != 'tx_mrastp_person' && !preg_match('/' . $table . '/', $join)) {
                             $join.= $this->getRelationWhere($table);
                         }
                     }
                 } else {
-                    $select.= strlen($select) == 0 ? $field : ', ' . $field;
+                    $select.= ', ' . $field;
                 }
             }
         }
@@ -642,7 +647,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $splitSelect = explode(', ', $select);
         foreach($splitSelect as $tableField) {
             $fieldParts = explode('.', $tableField);
-            $tableRows[0][] = $this->getDbLL($BE_USER->uc['lang'], $fieldParts[0], $fieldParts[1]);
+            $tableName = $fieldParts[0];
+            $fieldName = preg_replace('/.* as (.*)/', '\1', $fieldParts[1]);
+            $tableRows[0][] = $this->getDbLL($BE_USER->uc['lang'], $tableName, $fieldName);
         }
         while ($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $tableRows[] = $row;
@@ -694,7 +701,11 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    if(!$column) {
 	        $llPointer = $this->db['tca'][$table]['ctrl']['title'];
 	    } else {
-	        $llPointer = $this->db['tca'][$table]['columns'][$column]['label'];
+            if(isset($this->db['tca'][$table]['columns'][$column]['label'])) {
+	            $llPointer = $this->db['tca'][$table]['columns'][$column]['label'];
+            } else {
+                $llPointer = 'LLL:EXT:mr_astp/locallang_db.xml:' . $table . '.' . $column;
+            }
 	    }
 	    $llParts = explode(':', $llPointer);
 	    $label = $llParts[3];
