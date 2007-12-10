@@ -182,18 +182,15 @@ $TCA["tx_mrastp_person"] = array (
 				"eval" => " trim",
 			)
 		),
-		"lang" => Array (
+		"language" => Array (
 			"exclude" => 1,
-			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.lang",
+			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.language_id",
 			"config" => Array (
 				"type" => "select",
-				"items" => Array (
-					Array("LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.lang.I.0", "0", t3lib_extMgm::extRelPath("mr_astp")."icons/de.gif"),
-					Array("LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.lang.I.1", "1", t3lib_extMgm::extRelPath("mr_astp")."icons/fr.gif"),
-					Array("LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.lang.I.2", "2", t3lib_extMgm::extRelPath("mr_astp")."icons/it.gif"),
-					Array("LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.lang.I.3", "3", t3lib_extMgm::extRelPath("mr_astp")."icons/gb.gif"),
-				),
+				"foreign_table" => "tx_mrastp_languages",
+				"foreign_table_where" => "AND tx_mrastp_languages.pid=###CURRENT_PID### ORDER BY tx_mrastp_languages.uid",
 				"size" => 1,
+				"minitems" => 0,
 				"maxitems" => 1,
 			)
 		),
@@ -498,6 +495,48 @@ $TCA["tx_mrastp_section"] = array (
 	),
 	"types" => array (
 		"0" => array("showitem" => "abbrevation, label_de, label_fr")
+	),
+);
+
+
+
+$TCA["tx_mrastp_languages"] = array (
+	"ctrl" => $TCA["tx_mrastp_languages"]["ctrl"],
+	"interface" => array (
+		"showRecordFieldList" => "label_de,label_fr,label_en"
+	),
+	"feInterface" => $TCA["tx_mrastp_languages"]["feInterface"],
+	"columns" => array (
+		"label_de" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_common.label_de",
+			"config" => Array (
+				"type" => "input",
+				"size" => "30",
+				"eval" => "required,trim",
+			)
+		),
+		"label_fr" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_common.label_fr",
+			"config" => Array (
+				"type" => "input",
+				"size" => "30",
+				"eval" => "required,trim",
+			)
+		),
+		"label_fr" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_common.label_fr",
+			"config" => Array (
+				"type" => "input",
+				"size" => "30",
+				"eval" => "required,trim",
+			)
+		),
+	),
+	"types" => array (
+		"0" => array("showitem" => "label_de, label_fr, label_en")
 	),
 );
 

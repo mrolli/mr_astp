@@ -25,7 +25,7 @@ CREATE TABLE tx_mrastp_person (
 	mobile varchar(20) DEFAULT '' NOT NULL,
 	fax varchar(20) DEFAULT '' NOT NULL,
 	email varchar(255) DEFAULT '' NOT NULL,
-	lang int(11) DEFAULT '0' NOT NULL,
+	language_id int(11) DEFAULT '0' NOT NULL,
 	section_id int(11) DEFAULT '0' NOT NULL,
 	status int(11) DEFAULT '0' NOT NULL,
 	entry_date int(11) DEFAULT '0' NOT NULL,
@@ -89,6 +89,24 @@ CREATE TABLE tx_mrastp_country (
     cn_short_fr varchar(50) DEFAULT '' NOT NULL,
     PRIMARY KEY (uid),
     UNIQUE uid (uid)
+);
+
+
+
+#
+# Table structure for table 'tx_mrastp_languages'
+#
+CREATE TABLE tx_mrastp_languages (
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	sorting int(10) DEFAULT '0' NOT NULL,
+	label_de varchar(255) DEFAULT '' NOT NULL,
+	label_fr varchar(255) DEFAULT '' NOT NULL,
+	label_en varchar(255) DEFAULT '' NOT NULL,
+
+	PRIMARY KEY (uid),
+	KEY parent (pid)
 );
 
 

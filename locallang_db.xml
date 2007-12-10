@@ -23,11 +23,7 @@
 			<label index="tx_mrastp_person.mobile">Mobile</label>
 			<label index="tx_mrastp_person.fax">Fax</label>
 			<label index="tx_mrastp_person.email">Email</label>
-			<label index="tx_mrastp_person.lang.I.0">German</label>
-			<label index="tx_mrastp_person.lang.I.1">French</label>
-			<label index="tx_mrastp_person.lang.I.2">Italian</label>
-			<label index="tx_mrastp_person.lang.I.3">English</label>
-			<label index="tx_mrastp_person.lang">Language</label>
+			<label index="tx_mrastp_person.language_id">Language</label>
 			<label index="tx_mrastp_person.section_id">Section</label>
 			<label index="tx_mrastp_person.status">State</label>
 			<label index="tx_mrastp_person.entry_date">astp Entry Date</label>
@@ -43,6 +39,8 @@
 			<label index="tx_mrastp_country.cn_short_de">Short name (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Short name (FR):</label>
 			<label index="tx_mrastp_country.country_label">Country</label>
+			<label index="tx_mrastp_languages">Language</label>
+            <label index="tx_mrastp_languages.languages_label">Language</label>
 			<label index="tx_mrastp_salutation">Salutation</label>
             <label index="tx_mrastp_salutation.salutation_label">Salutation</label>
 			<label index="tx_mrastp_section">astp Section</label>
@@ -98,11 +96,7 @@
 			<label index="tx_mrastp_person.mobile">Mobile</label>
 			<label index="tx_mrastp_person.fax">Fax</label>
 			<label index="tx_mrastp_person.email">Courielle</label>
-			<label index="tx_mrastp_person.lang.I.0">Allemande</label>
-			<label index="tx_mrastp_person.lang.I.1">Français</label>
-			<label index="tx_mrastp_person.lang.I.2">Italien</label>
-			<label index="tx_mrastp_person.lang.I.3">Anglais</label>
-			<label index="tx_mrastp_person.lang">Langue</label>
+			<label index="tx_mrastp_person.language_id">Langue</label>
 			<label index="tx_mrastp_person.section_id">Section</label>
 			<label index="tx_mrastp_person.status">Status</label>
 			<label index="tx_mrastp_person.entry_date">Date d'entrée astp</label>
@@ -118,6 +112,8 @@
 			<label index="tx_mrastp_country.cn_short_de">Nom court (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Nom court (FR):</label>
 			<label index="tx_mrastp_country.country_label">Pays</label>
+			<label index="tx_mrastp_languages">Langue</label>
+            <label index="tx_mrastp_languages.languages_label">Langue</label>
 			<label index="tx_mrastp_salutation">Salutation</label>
             <label index="tx_mrastp_salutation.salutation_label">Salutation</label>
 			<label index="tx_mrastp_section">astp Section</label>
@@ -173,11 +169,7 @@
 			<label index="tx_mrastp_person.mobile">Mobile</label>
 			<label index="tx_mrastp_person.fax">Fax</label>
 			<label index="tx_mrastp_person.email">Email</label>
-			<label index="tx_mrastp_person.lang.I.0">Deutsch</label>
-			<label index="tx_mrastp_person.lang.I.1">Frazösisch</label>
-			<label index="tx_mrastp_person.lang.I.2">Italienisch</label>
-			<label index="tx_mrastp_person.lang.I.3">Englisch</label>
-			<label index="tx_mrastp_person.lang">Sprache</label>
+			<label index="tx_mrastp_person.language_id">Sprache</label>
 			<label index="tx_mrastp_person.section_id">Sektion</label>
 			<label index="tx_mrastp_person.status">Status</label>
 			<label index="tx_mrastp_person.entry_date">astp Eintrittsdatum</label>
@@ -193,6 +185,8 @@
 			<label index="tx_mrastp_country.cn_short_de">Kurzname (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Kurzname (FR):</label>
 			<label index="tx_mrastp_country.country_label">Land</label>
+			<label index="tx_mrastp_languages">Sprache</label>
+            <label index="tx_mrastp_languages.languages_label">Sprache</label>
 			<label index="tx_mrastp_salutation">Anrede</label>
             <label index="tx_mrastp_salutation.salutation_label">Anrede</label>
 			<label index="tx_mrastp_section">astp Sektion</label>

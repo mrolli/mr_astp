@@ -91,6 +91,23 @@ $TCA["tx_mrastp_section"] = array (
 	)
 );
 
+$TCA["tx_mrastp_languages"] = array (
+	"ctrl" => array (
+		'title'           => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_languages',
+		'label'           => 'label_de',
+		'label_alt'       => 'label_fr',
+		'label_alt_force' => 1,
+		'cruser_id'       => 'cruser_id',
+		'sortby'          => 'sorting',
+        'adminOnly'       => 1,
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_mrastp_languages.gif',
+	),
+	"feInterface" => array (
+		"fe_admin_fieldList" => "label_de, label_fr, label_en",
+	)
+);
+
 $TCA["tx_mrastp_state"] = array (
 	"ctrl" => array (
 		'title'     => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_state',
