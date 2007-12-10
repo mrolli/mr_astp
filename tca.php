@@ -48,15 +48,16 @@ $TCA["tx_mrastp_person"] = array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.salutation",
 			"config" => Array (
-				"type" => "select",
-				"items" => Array (
-					Array('', 0),
-					Array('LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.salutation.I.1', 1),
-					Array('LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.salutation.I.2', 2),
-				),
-                                "minitems" => 0,
-                                "maxitems" => 1,
-			)
+                "type" => "select",
+                "items" => Array (
+                    Array("",0),
+                ),
+                "foreign_table" => "tx_mrastp_salutation",
+                "foreign_table_where" => "AND tx_mrastp_salutation.pid=###CURRENT_PID### ORDER BY tx_mrastp_salutation.uid",
+                "size" => 1,
+                "minitems" => 0,
+                "maxitems" => 1,
+            )
 		),
 		"firstname" => Array (
 			"exclude" => 1,

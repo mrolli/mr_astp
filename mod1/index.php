@@ -54,7 +54,6 @@ class  mr_astp_module1 extends t3lib_SCbase {
         global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA,$CLIENT, $TYPO3_CONF_VARS;
 
         $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);
-        $this->id = $this->conf['pid_astp'];
         $this->extKey = 'mr_astp';
         $this->db['locallang_db'] = t3lib_div::readLLfile(t3lib_extMgm::extPath($this->extKey).'locallang_db.php',$BE_USER->uc['lang']);
         $this->db['prefix'] = 'tx_mrastp_';
@@ -128,8 +127,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
      */
     function main()	{
         global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
-
+    
         // Access check!
+        $this->id = $this->conf['pid_astp'];
         // The page will show only if there is a valid page and if this page may be viewed by the user
         $this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
         $access = is_array($this->pageinfo) ? 1 : 0;
