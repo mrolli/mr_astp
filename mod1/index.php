@@ -758,7 +758,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	}
 
 	function sendFile($content, $headers) {
-        $export_file = 'astp-Adressliste_' . date('Y-m-d_H:m:s') . '.xls';
+        $export_file = 'astp-Adressliste_' . date('Y-m-d_H-m-s') . '.xls';
         header('Pragma: public');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
         header('Last-Modified: '.gmdate('D, d M Y H:i:s') . ' GMT');
