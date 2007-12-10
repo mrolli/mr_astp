@@ -37,6 +37,7 @@
 			<label index="tx_mrastp_person.groups">Work Groups</label>
 			<label index="tx_mrastp_canton">astp Cantons</label>
 			<label index="tx_mrastp_canton.abbrevation">Abbrevation</label>
+			<label index="tx_mrastp_canton.canton_label">Canton</label>
 			<label index="tx_mrastp_country">astp Countries</label>
 			<label index="tx_mrastp_country.cn_iso_2">ISO 3166-1 A2 Country code:</label>
 			<label index="tx_mrastp_country.cn_iso_3">ISO 3166-1 A3 Country code:</label>
@@ -45,8 +46,10 @@
 			<label index="tx_mrastp_country.cn_short_fr">Short name (FR):</label>
 			<label index="tx_mrastp_section">astp Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abbrevation</label>
+			<label index="tx_mrastp_section.section_label">Section</label>
 			<label index="tx_mrastp_state">astp State</label>
 			<label index="tx_mrastp_state.abbrevation">Abbrevation</label>
+			<label index="tx_mrastp_state.state_label">State</label>
 			<label index="tx_mrastp_workaddress">astp Workaddress</label>
 			<label index="tx_mrastp_workaddress.employment">Employment</label>
 			<label index="tx_mrastp_workaddress.employment.I.1">employed</label>
@@ -108,6 +111,7 @@
 			<label index="tx_mrastp_person.groups">Groupe travail</label>
 			<label index="tx_mrastp_canton">astp Canton</label>
 			<label index="tx_mrastp_canton.abbrevation">Abrévation</label>
+			<label index="tx_mrastp_canton.canton_label">Canton</label>
 			<label index="tx_mrastp_country">astp Pays</label>
 			<label index="tx_mrastp_country.cn_iso_2">Code de pays ISO 3166-1 A2:</label>
 			<label index="tx_mrastp_country.cn_iso_3">Code de pays ISO 3166-1 A3:</label>
@@ -116,8 +120,10 @@
 			<label index="tx_mrastp_country.cn_short_fr">Nom court (FR):</label>
 			<label index="tx_mrastp_section">astp Section</label>
 			<label index="tx_mrastp_section.abbrevation">Abrévation</label>
+			<label index="tx_mrastp_section.section_label">Section</label>
 			<label index="tx_mrastp_state">astp Status</label>
 			<label index="tx_mrastp_state.abbrevation">Abrévation</label>
+			<label index="tx_mrastp_state.state_label">Status</label>
 			<label index="tx_mrastp_workaddress">astp Address de travail</label>
                         <label index="tx_mrastp_workaddress.employment">Type d'emploi</label>
                         <label index="tx_mrastp_workaddress.employment.I.1">emploi</label>
@@ -179,6 +185,7 @@
 			<label index="tx_mrastp_person.groups">Arbeitsgruppen</label>
 			<label index="tx_mrastp_canton">astp Kanton</label>
 			<label index="tx_mrastp_canton.abbrevation">Abkürzung</label>
+			<label index="tx_mrastp_canton.canton_label">Kanton</label>
 			<label index="tx_mrastp_country">astp Land</label>
 			<label index="tx_mrastp_country.cn_iso_2">Ländercode nach ISO 3166 A2:</label>
 			<label index="tx_mrastp_country.cn_iso_3">Ländercode nach ISO 3166 A3:</label>
@@ -187,7 +194,9 @@
 			<label index="tx_mrastp_country.cn_short_fr">Kurzname (FR):</label>
 			<label index="tx_mrastp_section">astp Sektion</label>
 			<label index="tx_mrastp_section.abbrevation">Abkürzung</label>
+			<label index="tx_mrastp_section.section_label">Sektion</label>
 			<label index="tx_mrastp_state">astp Status</label>
+			<label index="tx_mrastp_state.state_label">Status</label>
 			<label index="tx_mrastp_state.abbrevation">Abkürzung</label>
 			<label index="tx_mrastp_workaddress">astp Arbeitsadressen</label>
                         <label index="tx_mrastp_workaddress.employment">Anstellungverhältnis</label>
