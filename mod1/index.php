@@ -218,7 +218,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                 $this->content.=$this->doc->section($LANG->getLL('custom_reports') . ':', $this->createCustomReportsView(), 0, 1);
                 break;
             case 5:
-                $this->content.=$this->doc->section($LANG->getLL('lists_view') . ':', $this->createBackupView(), 0, 1);
+                $this->content.=$this->doc->section($LANG->getLL('backup_view') . ':', $this->createBackupView(), 0, 1);
                 /*
                 $content='<div align=center><strong>Menu item #3...</strong></div>';
                 $this->content.=$this->doc->section('Message #3:',$content,0,1);
@@ -338,20 +338,18 @@ class  mr_astp_module1 extends t3lib_SCbase {
      */
     function createListView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-
+/*
         $action = t3lib_div::_GP('list_action');
         if($action) {
             $this->action = t3lib_div::_GP('list_action');
             $this->list = t3lib_div::_GP('list');
             $this->processList();
         }
-
-/*
         $tableRows = array();
 
         $tableRows = array_merge($tableRows, $this->getGroupsArray());
         $tableRows = array_merge($tableRows, $this->getCantonsArray());
-*/
+
         // other additional lists
         $miscLists   = array();
         $miscLists[] = array('<b>' . $LANG->getLL('lists') . '</b>',
@@ -368,6 +366,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= $this->doc->section($LANG->getLL('cantons'), $this->doc->table($this->getCantonsArray(), $this->tableLayout['zebra']), 1, 0);
         $content.= $this->doc->section($LANG->getLL('misc_lists'), $this->doc->table($miscLists, $this->tableLayout['zebra']), 1, 0);
         return $content;
+*/
+        return 'kommt in neuem Kleid wieder';
     }
 
     function createCustomReportsView() {
@@ -420,6 +420,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
         }
         $content = $this->getReportGeneratorForm($post) . $content;
         return $content;
+    }
+
+    function createBackupView() {
+        return 'to be done';
     }
 
     /**
@@ -543,7 +547,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= '</table></fieldset>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_sorting') . '</legend><table>';
         for($i=0;$i<3;$i++) {
-            $content.= '<tr><td>' . $i + 1 . '. ' . $LANG->getLL('sorting_field') . '</td><td>' . $this->getSelectOfOrderBys($post['sorting_field'][$i]) . '</td></tr>';
+            $content.= '<tr><td>' . $LANG->getLL('sorting_field') . ' ' . ($i+1) . '</td><td>' . $this->getSelectOfOrderBys($post['sorting_field'][$i]) . '</td></tr>';
         }
         $content.= '</table></fieldset><fieldset><legend>' . $LANG->getLL('output_others') . '</legend>';
         $content.= '<table><tr><td><label>' . $LANG->getLL('output_format') . '</label></td>';
