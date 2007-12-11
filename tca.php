@@ -239,49 +239,49 @@ $TCA["tx_mrastp_person"] = array (
 			"config" => Array (
 				"type" => "inline",
 				"foreign_table" => "tx_mrastp_workaddress",
-                                "foreign_field" => "parentuid",
-                                "foreign_table_field" => "parenttable",
+                "foreign_field" => "parentuid",
+                "foreign_table_field" => "parenttable",
 				"minitems" => 0,
 				"maxitems" => 10,
 				"appearance" => Array (
-                                        "expandSingle" => 1,
+                    "expandSingle" => 1,
 					"useSortable" => 1,
 				),
 			)
 		),
-                "groups" => Array (
-                        "exclude" => 1,
-                        "label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.groups",
-                        "config" => Array (
-                                "type" => "inline",
-                                "foreign_table" => "tx_mrastp_persons_groups_rel",
-                                "foreign_field" => "personid",
+        "groups" => Array (
+            "exclude" => 1,
+            "label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.groups",
+            "config" => Array (
+                "type" => "inline",
+                "foreign_table" => "tx_mrastp_persons_groups_rel",
+                "foreign_field" => "personid",
 				"foreign_unique" => "groupid",
-                                "foreign_label" => "groupid",
-                                "minitems" => 0,
-                                "maxitems" => 20,
-                                "appearance" => Array (
-					"expandSingle" => 1,
-                                        "useSortable" => 1,
+                "foreign_label" => "groupid",
+                "minitems" => 0,
+                "maxitems" => 20,
+                "appearance" => Array (
+				    "expandSingle" => 1,
+                    "useSortable" => 1,
 					"newRecordLinkAddTitle" => 1,
 					"newRecordLinkPosition" => "top",
-                                ),
-                        )
                 ),
-                "feuser_id" => Array (
-                        "exclude" => 1,
-                        "label" => "LLL:EXT:cms/locallang_tca.php:fe_users",
-                        "config" => Array (
-                                "type" => "inline",
-                                "foreign_table" => "fe_users",
-                                "minitems" => 0,
-                                "maxitems" => 1,
-                                "appearance" => Array (
-                                        "expandSingle" => 1,
-                                        "useSortable" => 0,
-                                ),
-                        )
+            )
+        ),
+        "feuser_id" => Array (
+            "exclude" => 1,
+            "label" => "LLL:EXT:cms/locallang_tca.php:fe_users",
+            "config" => Array (
+                "type" => "inline",
+                "foreign_table" => "fe_users",
+                "minitems" => 0,
+                "maxitems" => 1,
+                "appearance" => Array (
+                    "expandSingle" => 1,
+                    "useSortable" => 0,
                 ),
+            )
+        ),
 	),
 	"types" => array (
 		"0" => array("showitem" => "hidden;;1;;1-1-1, salutation_id, firstname, name, street, compl, zip, city, canton_id, country_id, phone, mobile, fax, email, language_id, section_id, status, entry_date, workaddress, groups, feuser_id")
