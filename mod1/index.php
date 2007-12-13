@@ -777,7 +777,6 @@ class  mr_astp_module1 extends t3lib_SCbase {
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Cache-Control: pre-check=0, post-check=0, max-age=0');
         header('Pragma: no-cache');
-        header('Content-Transfer-Encoding: none');
         foreach ($headers as $header) {
             header($header);
         }
