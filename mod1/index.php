@@ -412,7 +412,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                         break;
                     case 'xls':
                         $content = $this->renderXlsFile($this->generateReport($selects, $filters, $orderBy));
-                        $headers = array('application/vnd-ms-excel');
+                        $headers = array('Content-type: application/vnd.ms-excel; charset=UTF-16LE');
                         $this->sendFile($content, $headers);
                 }
             }
@@ -781,7 +781,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
             header($header);
         }
         header('Content-Disposition: attachment; filename="' . basename($export_file) . '"');
-	    echo $content; exit;
+	    echo chr(255).chr(254).mb_convert_encoding( $content, 'UTF-16LE', 'UTF-8'); exit;
 	}
 
     function fkEncode($string) {
