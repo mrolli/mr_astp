@@ -633,18 +633,6 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    return $output;
 	}
 
-	function generateFieldSwitch($table, $field) {
-        global $LANG, $BE_USER;
-
-        $field = $this->fkEncode($field);
-	    $xhtml.= '<tr><td><label>' . $this->getDbLL($BE_USER->uc['lang'], $table, $field) . '</label></td>';
-	    $xhtml.= '<td><input type="radio" id="' . $table . '|' . $field . '" name="' . $table . '|' . $field . '" value="1" checked="checked"/>';
-	    $xhtml.= '<label for="' . $table . '|' . $field . '">' . $LANG->getLL('yes') . '</label></td>';
-        $xhtml.= '<td><input type="radio" id="' . $table . '|' . $field . '" name="' . $table . '|' . $field . '" value="0" /> ';
-        $xhtml.= '<label for="' . $table . '|' . $field . '">' . $LANG->getLL('no') . '</label></td></tr>';
-        return $xhtml;
-	}
-
 	function generateRadioSwitch($name, $preselect) {
 	    global $LANG, $BE_USER;
 
