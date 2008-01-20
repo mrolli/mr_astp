@@ -344,6 +344,15 @@ class  mr_astp_module1 extends t3lib_SCbase {
     }
 
     /**
+     * Generates addresslist view
+     */
+    function createAddresslistView()
+    {
+        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
+        return 'Neues Modul';
+    }
+
+    /**
      * Generates List View
      */
     function createListView() {
