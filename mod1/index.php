@@ -434,6 +434,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                     case 'xls':
                         $content = $this->renderXlsFile($this->generateReport($selects, $filters, $orderBy));
                         $headers = array('Content-type: application/vnd.ms-excel; charset=UTF-16LE');
+                        $content = chr(255).chr(254).mb_convert_encoding( $content, 'UTF-16LE', 'UTF-8');
                         $this->sendFile($content, $headers);
                 }
             }
@@ -513,6 +514,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
         }
 
         $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
+        if($this->conf['debug']) {
+            echo $sql;
+        }
 
         $tableRows   = array();
         $tableRows[] = array('<b>' . $LANG->getLL('lists') . '</b>',
@@ -666,6 +670,11 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
 	function generateReport($selects=false, $filters=false, $sortings=false) {
         global $TYPO3_DB, $BE_USER;
+
+        require_once('Zend/Db/Adapter/Mysqli.php');
+        require_once('Zend/Db/Select.php');
+        $db = new Zend_Db_Adapter_Mysqli(array('host' => 'localhost', 'username' => 'typo3admin', 'password' => 't3pass', 'dbname' => 't3_astp');
+        $select = new Zend_Db_Select();
         $select = $from = $join = $where = $groupBy = $orderBy = $limit = '';
         $fromTables = array();
 
@@ -815,7 +824,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
             header($header);
         }
         header('Content-Disposition: attachment; filename="' . basename($export_file) . '"');
-	    echo chr(255).chr(254).mb_convert_encoding( $content, 'UTF-16LE', 'UTF-8'); exit;
+	    echo $content;
+	    exit;
 	}
 
     function fkEncode($string) {
