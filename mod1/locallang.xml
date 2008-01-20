@@ -151,6 +151,22 @@
             <label index="group_section">Sektion</label>
             <label index="group_status">Status</label>
             <label index="group_language">Sprache</label>
+            <label index="private_zip">P:PLZ</label>
+            <label index="private_city">P:Stadt</label>
+            <label index="private_canton">P:Kanton</label>
+            <label index="private_country">P:Land</label>
+            <label index="private_phone">P:Telefon</label>
+            <label index="private_fax">P:Fax</label>
+            <label index="private_mobile">P:Mobile</label>
+            <label index="private_email">P:Email</label>
+            <label index="work_zip">A:PLZ</label>
+            <label index="work_city">A:Stadt</label>
+            <label index="work_canton">A:Kanton</label>
+            <label index="work_country">A:Land</label>
+            <label index="work_phone">A:Telefon</label>
+            <label index="work_fax">A:Fax</label>
+            <label index="work_mobile">A:Mobil</label>
+            <label index="work_email">A:Email</label>
         </languageKey>
     </data>
 </T3locallang>
