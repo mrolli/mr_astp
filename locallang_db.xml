@@ -61,9 +61,7 @@
 			<label index="tx_mrastp_workaddress.address1">Address 1</label>
 			<label index="tx_mrastp_workaddress.address2">Address 2</label>
 			<label index="tx_mrastp_workaddress.zip">Zip</label>
-            <label index="tx_mrastp_workaddress.work_zip">Zip</label>
 			<label index="tx_mrastp_workaddress.city">City</label>
-            <label index="tx_mrastp_workaddress.work_city">City</label>
 			<label index="tx_mrastp_workaddress.country_id">Country</label>
 			<label index="tx_mrastp_workaddress.canton_id">Canton</label>
 			<label index="tx_mrastp_workaddress.phone">Phone</label>
@@ -136,9 +134,7 @@
 			<label index="tx_mrastp_workaddress.address1">Address 1</label>
 			<label index="tx_mrastp_workaddress.address2">Address 2</label>
 			<label index="tx_mrastp_workaddress.zip">NPA</label>
-            <label index="tx_mrastp_workaddress.work_zip">NPA</label>
 			<label index="tx_mrastp_workaddress.city">Lieu</label>
-            <label index="tx_mrastp_workaddress.work_city">Lieu</label>
 			<label index="tx_mrastp_workaddress.country_id">Pay</label>
 			<label index="tx_mrastp_workaddress.canton_id">Canton</label>
 			<label index="tx_mrastp_workaddress.phone">Téléphone</label>
@@ -184,7 +180,6 @@
 			<label index="tx_mrastp_person.groups">Arbeitsgruppen</label>
 			<label index="tx_mrastp_canton">Kanton</label>
 			<label index="tx_mrastp_canton.abbrevation">Abkürzung</label>
-			<label index="tx_mrastp_canton.canton_label">Kanton</label>
             <label index="tx_mrastp_canton.label_de">Kanton</label>
             <label index="tx_mrastp_canton.label_en">Kanton</label>
             <label index="tx_mrastp_canton.label_fr">Kanton</label>
@@ -194,7 +189,6 @@
 			<label index="tx_mrastp_country.cn_short_en">Kurzname (EN):</label>
 			<label index="tx_mrastp_country.cn_short_de">Kurzname (DE):</label>
 			<label index="tx_mrastp_country.cn_short_fr">Kurzname (FR):</label>
-			<label index="tx_mrastp_country.country_label">Land</label>
 			<label index="tx_mrastp_language">Sprache</label>
             <label index="tx_mrastp_language.language_label">Sprache</label>
 			<label index="tx_mrastp_salutation">Anrede</label>
@@ -214,9 +208,7 @@
 			<label index="tx_mrastp_workaddress.address1">Adresse 1</label>
 			<label index="tx_mrastp_workaddress.address2">Addresse 2</label>
 			<label index="tx_mrastp_workaddress.zip">PLZ</label>
-            <label index="tx_mrastp_workaddress.work_zip">PLZ</label>
 			<label index="tx_mrastp_workaddress.city">Stadt</label>
-            <label index="tx_mrastp_workaddress.work_city">Stadt</label>
 			<label index="tx_mrastp_workaddress.country_id">Land</label>
 			<label index="tx_mrastp_workaddress.canton_id">Kanton</label>
 			<label index="tx_mrastp_workaddress.phone">Telefon</label>
