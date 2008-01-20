@@ -46,6 +46,8 @@
             <label index="sorting_field">Sorting Field</label>
             <label index="group_private">Private address</label>
             <label index="group_private_com">Private comm. details</label>
+            <label index="group_work">Work address</label>
+            <label index="group_work_com">Work comm. details</label>
             <label index="group_section">Section</label>
             <label index="group_status">State</label>
             <label index="group_language">Language</label>
@@ -90,6 +92,12 @@
             <label index="output_sorting">Triage</label>
             <label index="sorting_field">Bloc pour trier</label>
             <label index="group_language">Langue</label>
+            <label index="group_private">Address privé</label>
+            <label index="group_private_com">Comm. privé</label>
+            <label index="group_work">Address travail</label>
+            <label index="group_work_com">Comm. travail</label>
+            <label index="group_section">Section</label>
+            <label index="group_status">State</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="show">Anzeigen</label>
@@ -130,6 +138,12 @@
             <label index="output_others">Andere</label>
             <label index="output_sorting">Sortierung</label>
             <label index="sorting_field">Sortierfeld</label>
+            <label index="group_private">Privatadresse</label>
+            <label index="group_private_com">Privatkomm.</label>
+            <label index="group_work">Arbeitsadresse</label>
+            <label index="group_work_com">Arbeitskomm.</label>
+            <label index="group_section">Sektion</label>
+            <label index="group_status">Status</label>
             <label index="group_language">Sprache</label>
         </languageKey>
     </data>

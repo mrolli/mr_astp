@@ -68,6 +68,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $this->db['field_groups'] = array();
         $this->db['field_groups']['group_private'] = array('tx_mrastp_salutation.label_%s as salutation_label', 'tx_mrastp_person.firstname', 'tx_mrastp_person.name', 'tx_mrastp_person.street', 'tx_mrastp_person.compl', 'tx_mrastp_person.zip', 'tx_mrastp_person.city', 'tx_mrastp_canton.label_%s as canton_label', 'tx_mrastp_country.cn_short_%s as country_label');
         $this->db['field_groups']['group_private_com'] = array('tx_mrastp_person.phone', 'tx_mrastp_person.mobile', 'tx_mrastp_person.fax', 'tx_mrastp_person.email');
+        $this->db['field_groups']['group_work'] = array('tx_mrastp_workaddress.name_practice', 'tx_mrastp_workaddress.name_supplement', 'tx_mrastp_workaddress.address1', 'tx_mrastp_workaddress.address2', 'tx_mrastp_workaddress.zip as work_zip', 'tx_mrastp_workaddress.city as work_city', 'tx_mrastp_canton.label_%s as work_canton_label', 'tx_mrastp_country.cn_short_%s as work_country_label');
+        $this->db['field_groups']['group_work_com'] = array('tx_mrastp_workaddress.phone as work_phone', 'tx_mrastp_workaddress.mobile as work_mobile', 'tx_mrastp_workaddress.fax as work_fax', 'tx_mrastp_workaddress.email as work_email');
         $this->db['field_groups']['group_section'] = array('tx_mrastp_section.label_%s as section_label');
         $this->db['field_groups']['group_status'] = array('tx_mrastp_state.label_%s as state_label');
         $this->db['field_groups']['group_language'] = array('tx_mrastp_language.label_%s as language_label');
@@ -390,10 +392,12 @@ class  mr_astp_module1 extends t3lib_SCbase {
                     case 'tx_mrastp_person.canton_id':
                     case 'tx_mrastp_person.language_id':
                     case 'tx_mrastp_person.status':
-                    case 'tx_mrastp_workaddress.employment':
                     case 'tx_mrastp_person.section_id':
                     case 'tx_mrastp_persons_groups_rel.groupid':
                     case 'tx_mrastp_person.city':
+                    case 'tx_mrastp_workaddress.employment':
+                    case 'tx_mrastp_workaddress.city':
+                    case 'tx_mrastp_workaddress.canton.id':
                         if(!empty($value)) {
                             $filters[$field] = $value;
                         }
@@ -529,21 +533,29 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content = '<form action="" method="post" enctype="multipart/form-data">';
         $content.= '<fieldset><legend><b>' . $LANG->getLL('filters') . '</b></legend>';
         $content.= '<table>';
-        $content.= '<tr><td><label for="city">' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables']['person'], 'city') . ': </label></td>';
-        $content.= '<td><input id="city" name="tx_mrastp_person|city" value="' . (isset($post['tx_mrastp_person|city']) ? $post['tx_mrastp_person|city'] : '') . '" /></td></tr>';
-        $content.= '<tr>' . $this->getSelectOfTable('canton', 'tx_mrastp_person|canton_id', (isset($post['tx_mrastp_person|canton_id']) ? $post['tx_mrastp_person|canton_id'] : false)) . '</tr>';
+        $content.= '<tr><td colspan="2"><b>Personendaten:</b></td></tr>';
         $content.= '<tr>' . $this->getSelectOfTable('state', 'tx_mrastp_person|status', (isset($post['tx_mrastp_person|status']) ? $post['tx_mrastp_person|status'] : false)) . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('language', 'tx_mrastp_person|language_id', (isset($post['tx_mrastp_person|language_id']) ? $post['tx_mrastp_person|language_id'] : false)) . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('section', 'tx_mrastp_person|section_id', (isset($post['tx_mrastp_person|section_id']) ? $post['tx_mrastp_person|section_id'] : false)) . '</tr>';
         $content.= '<tr>' . $this->getSelectOfTable('group', 'tx_mrastp_persons_groups_rel|groupid', (isset($post['tx_mrastp_persons_groups_rel|groupid']) ? $post['tx_mrastp_persons_groups_rel|groupid'] : false)) . '</tr>';
+        $content.= '<tr><td colspan="2"><b>Privatadresse:</b></td></tr>';
+        $content.= '<tr><td><label for="private.city">' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables']['person'], 'city') . ': </label></td>';
+        $content.= '<td><input id="private.city" name="tx_mrastp_person|city" value="' . (isset($post['tx_mrastp_person|city']) ? $post['tx_mrastp_person|city'] : '') . '" /></td></tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('canton', 'tx_mrastp_person|canton_id', (isset($post['tx_mrastp_person|canton_id']) ? $post['tx_mrastp_person|canton_id'] : false)) . '</tr>';
+        $content.= '<tr><td colspan="2"><b>Arbeitsadresse:</b></td></tr>';
+        $content.= '<tr><td><label for="work.city">' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables']['workaddress'], 'city') . ': </label></td>';
+        $content.= '<td><input id="work.city" name="tx_mrastp_workaddress|city" value="' . (isset($post['tx_mrastp_workaddress|city']) ? $post['tx_mrastp_workaddress|city'] : '') . '" /></td></tr>';
+        $content.= '<tr>' . $this->getSelectOfTable('canton', 'tx_mrastp_workaddress|canton_id', (isset($post['tx_mrastp_workaddress|canton_id']) ? $post['tx_mrastp_workaddress|canton_id'] : false)) . '</tr>';
         $content.= '</table>';
         $content.= '</fieldset><fieldset style="margin-top: 10px"><legend><b>' . $LANG->getLL('output_params') . '</b></legend>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_fields') . '</legend><table>';
-        $content.= $this->generateRadioSwitch('group_private', (isset($post['group_private']) ? $post['group_private'] : 1));
-        $content.= $this->generateRadioSwitch('group_private_com', (isset($post['group_private_com']) ? $post['group_private_com'] : 0));
         $content.= $this->generateRadioSwitch('group_section', (isset($post['group_section']) ? $post['group_section'] : 0));
         $content.= $this->generateRadioSwitch('group_status', (isset($post['group_status']) ? $post['group_status'] : 1));
         $content.= $this->generateRadioSwitch('group_language', (isset($post['group_language']) ? $post['group_language'] : 1));
+        $content.= $this->generateRadioSwitch('group_private', (isset($post['group_private']) ? $post['group_private'] : 1));
+        $content.= $this->generateRadioSwitch('group_private_com', (isset($post['group_private_com']) ? $post['group_private_com'] : 0));
+        $content.= $this->generateRadioSwitch('group_work', (isset($post['group_work']) ? $post['group_work'] : 0));
+        $content.= $this->generateRadioSwitch('group_work_com', (isset($post['group_work_com']) ? $post['group_work_com'] : 0));
         $content.= '</table></fieldset>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_sorting') . '</legend><table>';
         for($i=0;$i<3;$i++) {
@@ -566,7 +578,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         foreach ($this->db['sortable_fields'] as $field) {
             $fieldParts = explode('.', $field);
             $tableName = $fieldParts[0];
-            $fieldName = $fieldParts[1];
+            $fieldName = sprintf($fieldParts[1], $BE_USER->uc['lang']);
             $encodedField = $this->fkEncode(sprintf($field, $BE_USER->uc['lang']));
             $selected = ($preselect && $preselect == $encodedField) ? ' selected="selected"' : '';
             $content.= '<option value="' . $encodedField . '" ' . $selected . '>' . $this->getDbLL($BE_USER->uc['lang'], $tableName) . '</option>';
@@ -735,8 +747,13 @@ class  mr_astp_module1 extends t3lib_SCbase {
                 return ' LEFT JOIN tx_mrastp_language ON tx_mrastp_person.language_id = tx_mrastp_language.uid';
                 break;
             case 'tx_mrastp_country':
-                return ' LEFT JOIN tx_mrastp_country ON tx_mrastp_person.country_id = tx_mrastp_country.uid';
+                return ' LEFT JOIN tx_mrastp_country ON tx_mrastp_person.country_id = tx_mrastp_country.uid LEFT JOIN tx_mrastp_canton ON tx_mrastp_workaddress.canton_id = tx_mrastp_canton.uid LEFT JOIN  LEFT JOIN tx_mrastp_country ON tx_mrastp_person.country_id = tx_mrastp_country.uid';
                 break;
+            case 'tx_mrastp_workaddress.canton_id':
+            case 'tx_mrastp_workaddress.employment':
+            case 'tx_mrastp_workaddress.city':
+            case 'tx_mrastp_workaddress':
+                return ' LEFT JOIN tx_mrastp_workaddress ON tx_mrastp_workaddress.parentuid = tx_mrastp_person.uid';
 	        default:
 	            return '';
 	    }

@@ -128,7 +128,6 @@ $TCA["tx_mrastp_workaddress"] = array (
 	"ctrl" => array (
 		'title'     => 'LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_workaddress',
 		'label'     => 'name_practice',
-		'label_alt' => 'name_supplement',
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
