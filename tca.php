@@ -500,12 +500,12 @@ $TCA["tx_mrastp_section"] = array (
 
 
 
-$TCA["tx_mrastp_languages"] = array (
-	"ctrl" => $TCA["tx_mrastp_languages"]["ctrl"],
+$TCA["tx_mrastp_language"] = array (
+	"ctrl" => $TCA["tx_mrastp_language"]["ctrl"],
 	"interface" => array (
 		"showRecordFieldList" => "label_de,label_fr,label_en"
 	),
-	"feInterface" => $TCA["tx_mrastp_languages"]["feInterface"],
+	"feInterface" => $TCA["tx_mrastp_language"]["feInterface"],
 	"columns" => array (
 		"label_de" => Array (
 			"exclude" => 1,
