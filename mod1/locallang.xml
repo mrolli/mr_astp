@@ -12,11 +12,13 @@
             <label index="members">Members</label>
             <label index="group">Group</label>
             <label index="groups">Groups</label>
+            <label index="groups_view">Group Directory</label>
             <label index="reports">Reports</label>
             <label index="custom_reports">Custom Reports</label>
             <label index="backups">Backup</label>
             <label index="members_view">Member Directory</label>
-            <label index="groups_view">Group Directory</label>
+            <label index="workaddresses">Work addresses</label>
+            <label index="workaddress_view">Work addresses directory</label>
             <label index="lists_view">Downloadable Lists</label>
             <label index="new_record">Create new record</label>
             <label index="members_found">Members found</label>
@@ -64,6 +66,8 @@
             <label index="backups">Backup</label>
             <label index="members_view">Liste de membres</label>
             <label index="groups_view">Liste de groupes</label>
+            <label index="workaddresses">Addresses travail</label>
+            <label index="workaddress_view">Liste d'addresses travail</label>
             <label index="lists_view">Listes pour télécharger</label>
             <label index="new_record">Créer un nouvel enregistrement</label>
             <label index="members_found">Membres trouvés</label>
@@ -111,6 +115,8 @@
             <label index="backups">Backups</label>
             <label index="members_view">Mitgliederverzeichnis</label>
             <label index="groups_view">Gruppenverzeichnis</label>
+            <label index="workaddresses">Arbeitsadressen</label>
+            <label index="workaddress_view">Arbeitsadressenverzeichnis</label>
             <label index="lists_view">Downloadbare Listen</label>
             <label index="new_record">Neuen Datensatz erstellen</label>
             <label index="members_found">Gefundene Mitglieder</label>

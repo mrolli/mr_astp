@@ -119,9 +119,10 @@ class  mr_astp_module1 extends t3lib_SCbase {
                             'function' => array (
                                              '1' => $LANG->getLL('members'),
                                              '2' => $LANG->getLL('groups'),
-                                             '3' => $LANG->getLL('reports'),
-                                             '4' => $LANG->getLL('custom_reports'),
-                                             '5' => $LANG->getLL('backups'),
+                                             '3' => $LANG->getLL('workaddresses'),
+                                             '4' => $LANG->getLL('reports'),
+                                             '5' => $LANG->getLL('custom_reports'),
+                                             '6' => $LANG->getLL('backups'),
                                           ),
                           );
         parent::menuConfig();
@@ -218,12 +219,15 @@ class  mr_astp_module1 extends t3lib_SCbase {
                 $this->content.=$this->doc->section($LANG->getLL('groups_view') . ':', $this->createGroupView(), 0, 1);
                 break;
             case 3:
-                $this->content.=$this->doc->section($LANG->getLL('lists_view') . ':', $this->createListView(), 0, 1);
+                $this->content.=$this->doc->section($LANG->getLL('workaddress_view') . ':', $this->createWorkaddressView(), 0, 1);
                 break;
             case 4:
-                $this->content.=$this->doc->section($LANG->getLL('custom_reports') . ':', $this->createCustomReportsView(), 0, 1);
+                $this->content.=$this->doc->section($LANG->getLL('lists_view') . ':', $this->createListView(), 0, 1);
                 break;
             case 5:
+                $this->content.=$this->doc->section($LANG->getLL('custom_reports') . ':', $this->createCustomReportsView(), 0, 1);
+                break;
+            case 6:
                 $this->content.=$this->doc->section($LANG->getLL('backup_view') . ':', $this->createBackupView(), 0, 1);
                 /*
                 $content='<div align=center><strong>Menu item #3...</strong></div>';
