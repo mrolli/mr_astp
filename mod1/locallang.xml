@@ -8,6 +8,7 @@
         <languageKey index="default" type="array">
             <label index="show">Show</label>
             <label index="download">Download</label>
+            <label index="preview">Preview</label>
             <label index="title">astp Database</label>
             <label index="members">Members</label>
             <label index="group">Group</label>
@@ -46,6 +47,7 @@
             <label index="output_others">Others</label>
             <label index="output_sorting">Sorting</label>
             <label index="sorting_field">Sorting Field</label>
+            <label index="uid">Uid</label>
             <label index="group_private">Private address</label>
             <label index="group_private_com">Private comm. details</label>
             <label index="group_work">Work address</label>
@@ -73,6 +75,7 @@
         <languageKey index="fr" type="array">
             <label index="show">Présenter</label>
             <label index="download">Télécharger</label>
+            <label index="preview">Aperçu</label>
             <label index="title">astp database</label>
             <label index="members">Membres</label>
             <label index="group">Groupe</label>
@@ -138,6 +141,7 @@
         <languageKey index="de" type="array">
             <label index="show">Anzeigen</label>
             <label index="download">Download</label>
+            <label index="preview">Vorschau</label>
             <label index="title">astp Datenbank</label>
             <label index="members">Mitglieder</label>
             <label index="group">Gruppe</label>
@@ -199,6 +203,12 @@
             <label index="work_fax">A:Fax</label>
             <label index="work_mobile">A:Mobil</label>
             <label index="work_email">A:Email</label>
+            <label index="mit_aktiv">Sektion Mittelland, Aktivmitglieder</label>
+            <label index="mit_passiv">Sektion Mittelland, Passivmitglieder</label>
+            <label index="rom_aktiv">Sektion Romandie, Aktivmitglieder</label>
+            <label index="rom_passiv">Sektion Romandie, Passivmitglieder</label>
+            <label index="ost_aktiv">Sektion Ostschweiz, Aktivmitglieder</label>
+            <label index="ost_passiv">Sektion Ostschweiz, Passivmitglieder</label>
         </languageKey>
     </data>
 </T3locallang>

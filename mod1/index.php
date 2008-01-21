@@ -77,6 +77,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $this->db['field_groups']['group_section'] = array('tx_mrastp_section.label_%s as section_label');
         $this->db['field_groups']['group_status'] = array('tx_mrastp_state.label_%s as state_label');
         $this->db['field_groups']['group_language'] = array('tx_mrastp_language.label_%s as language_label');
+        $this->db['field_groups']['group_auditval'] = array('tx_mrastp_person.uid', 'tx_mrastp_section.label_%s as section_label', 'tx_mrastp_state.label_%s as state_label', 'tx_mrastp_salutation.label_%s as salutation_label', 'tx_mrastp_person.firstname', 'tx_mrastp_person.name', 'tx_mrastp_person.street', 'tx_mrastp_person.compl', 'tx_mrastp_person.zip as private_zip', 'tx_mrastp_person.city as private_city', 'pc.label_%s as private_canton', 'pl.cn_short_%s as private_country', 'tx_mrastp_person.phone as private_phone', 'tx_mrastp_person.mobile as private_mobile', 'tx_mrastp_person.fax as private_fax', 'tx_mrastp_person.email as private_email');
         $this->db['sortable_fields'] = array('private_canton', 'work_canton', 'tx_mrastp_language.label_%s', 'tx_mrastp_state.label_%s');
 
         $TYPO3_DB->debugOutput = $this->conf['debug'];
@@ -357,7 +358,69 @@ class  mr_astp_module1 extends t3lib_SCbase {
      */
     function createListView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-        return 'kommt in neuem Kleid wieder';
+
+        $groups = array('Auditval' => array('mit_aktiv', 'mit_passiv', 'rom_aktiv', 'rom_passiv', 'ost_aktiv', 'ost_passiv'));
+        if (count($_GET) > 0) {
+            $get = t3lib_div::_GET();
+            if ($this->config['debug']) {
+                t3lib_div::debug($get);
+            }
+            switch ($get['list']) {
+                case 'mit_aktiv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 1);
+                    $sortings = array();
+                    break;
+                case 'mit_passiv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 2);
+                    $sortings = array();
+                    break;
+                case 'rom_aktiv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 1);
+                    $sortings = array();
+                    break;
+                case 'rom_passiv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 2);
+                    $sortings = array();
+                    break;
+                case 'ost_aktiv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 1);
+                    $sortings = array();
+                    break;
+                case 'ost_passiv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 2);
+                    $sortings = array();
+                    break;
+            }
+            if(isset($get['format'])) {
+                switch($get['format']) {
+                    case 'html':
+                        $content.= $this->renderHtmlList($this->generateReport($selects, $filters, $sortings), array());
+                        break;
+                    case 'xls':
+                        $content = $this->renderXlsFile($this->generateReport($selects, $filters, $sortings));
+                        $headers = array('Content-type: application/vnd.ms-excel; charset=UTF-16LE');
+                        $content = chr(255).chr(254).mb_convert_encoding($content, 'UTF-16LE', 'UTF-8');
+                        $this->sendFile($content, $headers, str_replace(array(', ', ' '), '_', $LANG->getLL($get['list'])) . '.xls');
+                }
+            }
+        }
+
+        $pre_content = '';
+        $table_rows[] = array();
+        foreach ($groups as $key => $lists) {
+            $pre_content.= '<h3>' . $key . '</h3>'; 
+            foreach ($lists as $list) {
+                $table_rows[] = array($LANG->getLL($list), '<a href="?list=' . $list . '&format=html">' . $LANG->getLL('preview') . '</a>', '<a href="?list=' . $list . '&format=xls">Excel</a>');
+            }
+            $pre_content.= $this->doc->table($table_rows, $this->tableLayout['zebra']);
+        }
+        return $pre_content . $content;
     }
 
     function createCustomReportsView() {
@@ -365,9 +428,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content = '';
         $post = array();
 
-        if(count($_POST) > 0) {
+        if (count($_POST) > 0) {
             $post = t3lib_div::_POST();
-            if($this->conf['debug']) {
+            if ($this->conf['debug']) {
                 t3lib_div::debug($post);
             }
             $filters = (isset($post['filters'])) ? $post['filters'] : array();
@@ -695,8 +758,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	    return $label_value;
 	}
 
-	function sendFile($content, $headers) {
-        $export_file = 'astp-Adressliste_' . date('Y-m-d_H-m-s') . '.xls';
+	function sendFile($content, $headers, $filename=null) {
+        $filename = ($filename == null) ? 'astp-Adressliste_' . date('Y-m-d_H-m-s') . '.xls' : $filename;
         header('Pragma: public');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
         header('Last-Modified: '.gmdate('D, d M Y H:i:s') . ' GMT');
@@ -706,7 +769,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         foreach ($headers as $header) {
             header($header);
         }
-        header('Content-Disposition: attachment; filename="' . basename($export_file) . '"');
+        header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
 	    echo $content;
 	    exit;
 	}
