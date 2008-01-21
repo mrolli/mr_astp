@@ -53,6 +53,22 @@
             <label index="group_section">Section</label>
             <label index="group_status">State</label>
             <label index="group_language">Language</label>
+            <label index="private_zip">P:Zip</label>
+            <label index="private_city">P:City</label>
+            <label index="private_canton">P:Canton</label>
+            <label index="private_country">P:Country</label>
+            <label index="private_phone">P:Phone</label>
+            <label index="private_fax">P:Fax</label>
+            <label index="private_mobile">P:Mobile</label>
+            <label index="private_email">P:Email</label>
+            <label index="work_zip">W:Zip</label>
+            <label index="work_city">W:City</label>
+            <label index="work_canton">W:Canton</label>
+            <label index="work_country">W:Country</label>
+            <label index="work_phone">W:Phone</label>
+            <label index="work_fax">W:Fax</label>
+            <label index="work_mobile">W:Mobile</label>
+            <label index="work_email">W:Email</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="show">Présenter</label>
@@ -81,7 +97,7 @@
             <label index="filters">Filtres</label>
             <label index="firstname">Prénom</label>
             <label index="lastname">Nom</label>
-            <label index="zip">NLA</label>
+            <label index="zip">NPA</label>
             <label index="city">Lieu</label>
             <label index="output_params">Paramètres output</label>
             <label index="output_format">Format</label>
@@ -102,6 +118,22 @@
             <label index="group_work_com">Comm. travail</label>
             <label index="group_section">Section</label>
             <label index="group_status">State</label>
+            <label index="private_zip">P:NPA</label>
+            <label index="private_city">P:Lieu</label>
+            <label index="private_canton">P:Canton</label>
+            <label index="private_country">P:Paxs</label>
+            <label index="private_phone">P:Téléfon</label>
+            <label index="private_fax">P:Fax</label>
+            <label index="private_mobile">P:Mobile</label>
+            <label index="private_email">P:Email</label>
+            <label index="work_zip">T:NPA</label>
+            <label index="work_city">T:Lieu</label>
+            <label index="work_canton">A:Canton</label>
+            <label index="work_country">A:Pays</label>
+            <label index="work_phone">A:Téléphone</label>
+            <label index="work_fax">A:Fax</label>
+            <label index="work_mobile">A:Mobile</label>
+            <label index="work_email">A:Email</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="show">Anzeigen</label>

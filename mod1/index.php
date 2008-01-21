@@ -357,35 +357,6 @@ class  mr_astp_module1 extends t3lib_SCbase {
      */
     function createListView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-/*
-        $action = t3lib_div::_GP('list_action');
-        if($action) {
-            $this->action = t3lib_div::_GP('list_action');
-            $this->list = t3lib_div::_GP('list');
-            $this->processList();
-        }
-        $tableRows = array();
-
-        $tableRows = array_merge($tableRows, $this->getGroupsArray());
-        $tableRows = array_merge($tableRows, $this->getCantonsArray());
-
-        // other additional lists
-        $miscLists   = array();
-        $miscLists[] = array('<b>' . $LANG->getLL('lists') . '</b>',
-                             '<b>' . $LANG->getLL('show') . '</b>',
-                             '<b>' . $LANG->getLL('download') . '</b>'
-                            );
-        $miscLists[] = array('IV-Liste',
-                             '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />',
-                             '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />',
-                            );
-
-        $content = '';
-        $content.= $this->doc->section($LANG->getLL('group_comm'), $this->doc->table($this->getGroupsArray(), $this->tableLayout['zebra']), 1, 0);
-        $content.= $this->doc->section($LANG->getLL('cantons'), $this->doc->table($this->getCantonsArray(), $this->tableLayout['zebra']), 1, 0);
-        $content.= $this->doc->section($LANG->getLL('misc_lists'), $this->doc->table($miscLists, $this->tableLayout['zebra']), 1, 0);
-        return $content;
-*/
         return 'kommt in neuem Kleid wieder';
     }
 
@@ -423,96 +394,6 @@ class  mr_astp_module1 extends t3lib_SCbase {
     function createBackupView() {
         return 'to be done';
     }
-
-    /**
-     * Get array of all groups available
-     */
-    function getGroupsArray() {
-         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-
-        // define statement parts
-        $select = 'uid, label_de, label_fr';
-        $from = 'tx_mrastp_group';
-        $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_group');
-        $groupBy = '';
-        // ordering depends on backend user's selected language
-        switch($BE_USER->uc['lang']) {
-            case 'fr':
-                $orderBy = $label = 'label_fr';
-                break;
-            default:
-                $orderBy = $label = 'label_de';
-        }
-
-        $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
-
-        $tableRows   = array();
-        $tableRows[] = array('<b>' . $LANG->getLL('lists') . '</b>',
-                             '<b>' . $LANG->getLL('show') . '</b>',
-                             '<b>' . $LANG->getLL('download') . '</b>'
-                            );
-        /*
-        $tableRows[] = array('<b>' . $LANG->getLL('group_comm') .  '</b>',
-                             '',
-                             '',
-                            );
-        */
-        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-            $tableRows[] = array($row[$label],
-                                 '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />',
-                                 '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />',
-                                );
-        }
-        return $tableRows;
-    }
-
-    /**
-     * Get array of all cantons available
-     */
-	function getCantonsArray() {
-        global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-
-        // define statement parts
-        $select = 'uid, label_de, label_fr, label_en';
-        $from = 'tx_mrastp_canton';
-        $where.= '1=1' . t3lib_BEfunc::deleteClause('tx_mrastp_canton');
-        $groupBy = '';
-        // ordering depends on backend user's selected language
-        switch($BE_USER->uc['lang']) {
-            case 'en';
-                $orderBy = $label = 'label_en';
-                break;
-            case 'fr':
-                $orderBy = $label = 'label_fr';
-                break;
-            default:
-                $orderBy = $label = 'label_de';
-        }
-
-        $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
-        if($this->conf['debug']) {
-            echo $sql;
-        }
-
-        $tableRows   = array();
-        $tableRows[] = array('<b>' . $LANG->getLL('lists') . '</b>',
-                             '<b>' . $LANG->getLL('show') . '</b>',
-                             '<b>' . $LANG->getLL('download') . '</b>'
-                            );
-        /*
-        $tableRows[] = array('<b>' . $LANG->getLL('cantons') . '</b>',
-                             '',
-                             '',
-                            );
-        */
-        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-            $tableRows[] = array($row[$label],
-                                 '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/viewdok.gif','width="11" height="12"').' title="'.$LANG->getLL('view').'" class="absmiddle" alt="" />',
-                                 '<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/csv.gif','width="11" height="12"').' title="'.$LANG->getLL('download').'" class="absmiddle" alt="" />',
-                                );
-        }
-        return $tableRows;
-	}
 
 	function renderHtmlList($rows, $heading='') {
         $content = $this->doc->table($rows, $this->tableLayout['zebra']);
