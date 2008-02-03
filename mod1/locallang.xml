@@ -205,10 +205,20 @@
             <label index="work_email">A:Email</label>
             <label index="mit_aktiv">Sektion Mittelland, Aktivmitglieder</label>
             <label index="mit_passiv">Sektion Mittelland, Passivmitglieder</label>
+            <label index="mit_ehren">Sektion Mittelland, Ehrenmitglieder</label>
+            <label index="mit_iv">Sektion Mittelland, IV</label>
+            <label index="mit_studi">Sektion Mittelland, Studenten</label>
             <label index="rom_aktiv">Sektion Romandie, Aktivmitglieder</label>
             <label index="rom_passiv">Sektion Romandie, Passivmitglieder</label>
+            <label index="rom_ehren">Sektion Romandie, Ehrenmitglieder</label>
+            <label index="rom_iv">Sektion Romandie, IV</label>
+            <label index="rom_studi">Sektion Romandie, Studenten</label>
             <label index="ost_aktiv">Sektion Ostschweiz, Aktivmitglieder</label>
             <label index="ost_passiv">Sektion Ostschweiz, Passivmitglieder</label>
+            <label index="ost_ehren">Sektion Ostschweiz, Ehrenmitglieder</label>
+            <label index="ost_iv">Sektion Ostschweiz, IV</label>
+            <label index="ost_studi">Sektion Ostschweiz, Studenten</label>
+            
         </languageKey>
     </data>
 </T3locallang>

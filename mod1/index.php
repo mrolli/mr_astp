@@ -359,7 +359,11 @@ class  mr_astp_module1 extends t3lib_SCbase {
     function createListView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
-        $groups = array('Auditval' => array('mit_aktiv', 'mit_passiv', 'rom_aktiv', 'rom_passiv', 'ost_aktiv', 'ost_passiv'));
+        $groups = array('Auditval' => array('mit_aktiv', 'mit_passiv', 'mit_ehren', 'mit_iv', 'mit_studi',
+                                            'rom_aktiv', 'rom_passiv', 'rom_ehren', 'rom_iv', 'rom_studi',
+                                            'ost_aktiv', 'ost_passiv', 'ost_ehren', 'ost_iv', 'ost_studi', 
+                                            ),
+                       );
         if (count($_GET) > 0) {
             $get = t3lib_div::_GET();
             if ($this->config['debug']) {
@@ -376,6 +380,26 @@ class  mr_astp_module1 extends t3lib_SCbase {
                     $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 2);
                     $sortings = array();
                     break;
+                case 'mit_passiv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 2);
+                    $sortings = array();
+                    break;
+                case 'mit_ehren':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 3);
+                    $sortings = array();
+                    break;
+                case 'mit_iv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 4);
+                    $sortings = array();
+                    break;
+                case 'mit_studi':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 5);
+                    $sortings = array();
+                    break;
                 case 'rom_aktiv':
                     $selects = array('group_auditval' => 1);
                     $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 1);
@@ -386,6 +410,21 @@ class  mr_astp_module1 extends t3lib_SCbase {
                     $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 2);
                     $sortings = array();
                     break;
+                case 'rom_ehren':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 3);
+                    $sortings = array();
+                    break;
+                case 'rom_iv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 4);
+                    $sortings = array();
+                    break;
+                case 'rom_studi':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 5);
+                    $sortings = array();
+                    break;
                 case 'ost_aktiv':
                     $selects = array('group_auditval' => 1);
                     $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 1);
@@ -394,6 +433,21 @@ class  mr_astp_module1 extends t3lib_SCbase {
                 case 'ost_passiv':
                     $selects = array('group_auditval' => 1);
                     $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 2);
+                    $sortings = array();
+                    break;
+                case 'ost_ehren':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 3);
+                    $sortings = array();
+                    break;
+                case 'ost_iv':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 4);
+                    $sortings = array();
+                    break;
+                case 'ost_studi':
+                    $selects = array('group_auditval' => 1);
+                    $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 5);
                     $sortings = array();
                     break;
             }
@@ -592,10 +646,6 @@ class  mr_astp_module1 extends t3lib_SCbase {
 	function generateReport($selects=false, $filters=false, $sortings=false) {
         global $TYPO3_DB, $BE_USER;
 
-        require_once('Zend/Db/Adapter/Mysqli.php');
-        require_once('Zend/Db/Select.php');
-        $db = new Zend_Db_Adapter_Mysqli(array('host' => 'localhost', 'username' => 'typo3admin', 'password' => 't3pass', 'dbname' => 't3_astp'));
-        //$select = new Zend_Db_Select();
         $select = $from = $join = $where = $groupBy = $orderBy = $limit = '';
         $fromTables = array();
 
