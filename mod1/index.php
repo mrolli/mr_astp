@@ -78,6 +78,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $this->db['field_groups']['group_status'] = array('tx_mrastp_state.label_%s as state_label');
         $this->db['field_groups']['group_language'] = array('tx_mrastp_language.label_%s as language_label');
         $this->db['field_groups']['group_auditval'] = array('tx_mrastp_person.uid', 'tx_mrastp_section.label_%s as section_label', 'tx_mrastp_state.label_%s as state_label', 'tx_mrastp_salutation.label_%s as salutation_label', 'tx_mrastp_person.firstname', 'tx_mrastp_person.name', 'tx_mrastp_person.street', 'tx_mrastp_person.compl', 'tx_mrastp_person.zip as private_zip', 'tx_mrastp_person.city as private_city', 'pc.label_%s as private_canton', 'pl.cn_short_%s as private_country', 'tx_mrastp_person.phone as private_phone', 'tx_mrastp_person.mobile as private_mobile', 'tx_mrastp_person.fax as private_fax', 'tx_mrastp_person.email as private_email');
+        $this->db['field_groups']['group_employment'] = array('tx_mrastp_workaddress.employment');
         $this->db['sortable_fields'] = array('private_canton', 'work_canton', 'tx_mrastp_language.label_%s', 'tx_mrastp_state.label_%s');
 
         $TYPO3_DB->debugOutput = $this->conf['debug'];
@@ -541,6 +542,15 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= '<tr><td><label for="work.city">' . $this->getDbLL($BE_USER->uc['lang'], $this->db['tables']['workaddress'], 'city') . ': </label></td>';
         $content.= '<td><input id="work.city" name="filters[tx_mrastp_workaddress|city]" value="' . (isset($post['filters']['tx_mrastp_workaddress|city']) ? $post['filters']['tx_mrastp_workaddress|city'] : '') . '" /></td></tr>';
         $content.= '<tr>' . $this->getSelectOfTable('canton', 'filters[tx_mrastp_workaddress|canton_id]', (isset($post['filters']['tx_mrastp_workaddress|canton_id']) ? $post['filters']['tx_mrastp_workaddress|canton_id'] : false), true, 10) . '</tr>';
+        $content.= '<tr><td><input type="radio" name="filters[tx_mrastp_workaddress|employment]" value="1" ';
+        if (isset($post['filters']['tx_mrastp_workaddress|employment']) && $post['filters']['tx_mrastp_workaddress|employment'] == 1) {
+            $content.= 'selected="selected"';
+        }
+        $content.= ' /> nur angestellt</td><td><input type="radio" name="filters[tx_mrastp_workaddress|employment]" value="2"  ';
+        if (isset($post['filters']['tx_mrastp_workaddress|employment']) && $post['filters']['tx_mrastp_workaddress|employment'] == 2) {
+            $content.= 'selected="selected"';
+        }
+        $content.= ' /> nur selbständig</td></tr>';
         $content.= '</table>';
         $content.= '</fieldset><fieldset style="margin-top: 10px"><legend><b>' . $LANG->getLL('output_params') . '</b></legend>';
         $content.= '<fieldset><legend>' . $LANG->getLL('output_fields') . '</legend><table>';
