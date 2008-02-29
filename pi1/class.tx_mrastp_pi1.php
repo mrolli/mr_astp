@@ -250,7 +250,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
             $content.= '<td>' . nl2br($address['services']) . '</td>';
             $content.= '<td>' . nl2br($address['audience']) . '</td>';
             $content.= '<td>' . nl2br($address['languages']) . '</td>';
-            $content.= '<td>' . $address['address1'] . $street_suppl . '<br />' . $address['zip'] . ' ' . $address['city'] . '<br />' . $canton['abbrevation'] . '</td>';
+            $content.= '<td>' . $address['address1'] . $street_suppl . '<br />' . $address['zip'] . ' ' . $address['city'] . '<br />' . $canton_data['abbrevation'] . '</td>';
             $content.= '<td>' . implode('<br />', array($address['phone'], $address['fax'], $address['mobile'], $email, $website)) . '</td>';
             $content.= '</tr>';
         }
