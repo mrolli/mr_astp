@@ -9,24 +9,42 @@
 			<label index="plugin_name.pi1">astp Address lists</label>
 			<label index="pi1_plus_wiz_description">(Description)</label>
 			<label index="mr_astp.pi_flexform.sheet_general">General Settings</label>
-            		<label index="mr_astp.pi_flexform.what_to_display">What to display?</label>
+            <label index="mr_astp.pi_flexform.what_to_display">What to display?</label>
 			<label index="mr_astp.pi_flexform.addresslists">Address lists</label>
+            <label index="name">Name</label>
+            <label index="services">Services</label>
+            <label index="audience">Audience</label>
+            <label index="languages">Languages</label>
+            <label index="address">Address</label>
+            <label index="contact">Contact</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="plugin_name.pi1">astp Listes d'addresses</label>
 			<label index="pi1_title">Offres d'Emploi</label>
 			<label index="pi1_plus_wiz_description">(Déscription)</label>
 			<label index="mr_astp.pi_flexform.sheet_general">General</label>
-            		<label index="mr_astp.pi_flexform.what_to_display">Quoi montrer? </label>
+            <label index="mr_astp.pi_flexform.what_to_display">Quoi montrer? </label>
 			<label index="mr_astp.pi_flexform.addresslists">Listes d'addresses</label>
+            <label index="name">Nom</label>
+            <label index="services">Prestations</label>
+            <label index="audience">Cible</label>
+            <label index="languages">Languages</label>
+            <label index="address">Addresse</label>
+            <label index="contact">Contact</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="plugin_name.pi1">astp Adresslisten</label>
 			<label index="pi1_title">Stellenangebote</label>
 			<label index="pi1_plus_wiz_description">(Beschreibung)</label>
 			<label index="mr_astp.pi_flexform.sheet_general">Allgemeines</label>
-            		<label index="mr_astp.pi_flexform.what_to_display">Was angezeigen?</label>
+            <label index="mr_astp.pi_flexform.what_to_display">Was angezeigen?</label>
 			<label index="mr_astp.pi_flexform.addresslists">Adresslisten</label>
+            <label index="name">Name</label>
+            <label index="services">Angebote</label>
+            <label index="audience">Zielgruppe</label>
+            <label index="languages">Sprachen</label>
+            <label index="address">Adresse</label>
+            <label index="contact">Kontakt</label>
 		</languageKey>
 	</data>
 </T3locallang>

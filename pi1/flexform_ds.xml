@@ -19,11 +19,15 @@
 									<numIndex index="0" type="array">
 										<numIndex index="0">Adressliste</numIndex>
 										<numIndex index="1">addresslist</numIndex>
-									</numIndex>
-                                                                        <numIndex index="1" type="array">
-                                                                                <numIndex index="0">Mitgliederliste</numIndex>
-                                                                                <numIndex index="1">memberlist</numIndex>
-                                                                        </numIndex>
+    								</numIndex>
+                                    <numIndex index="1" type="array">
+                                            <numIndex index="0">Mitgliederliste</numIndex>
+                                            <numIndex index="1">memberlist</numIndex>
+                                    </numIndex>
+                                    <numIndex index="2" type="array">
+                                            <numIndex index="0">Selbstaendigenliste</numIndex>
+                                            <numIndex index="1">independentslist</numIndex>
+                                    </numIndex>
 								</items>
 								<maxitems>10</maxitems>
 								<size>5</size>
