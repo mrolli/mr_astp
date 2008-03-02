@@ -28,6 +28,10 @@
                                             <numIndex index="0">Selbstaendigenliste</numIndex>
                                             <numIndex index="1">independentslist</numIndex>
                                     </numIndex>
+                                    <numIndex index="3" type="array">
+                                            <numIndex index="0">Therapiestellen CH</numIndex>
+                                            <numIndex index="1">therapyplaceslist</numIndex>
+                                    </numIndex>
 								</items>
 								<maxitems>10</maxitems>
 								<size>5</size>
