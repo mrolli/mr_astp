@@ -130,52 +130,91 @@ class tx_mrastp_pi1 extends tslib_pibase {
 
 	    $pi1_getVars = t3lib_div::_GET('tx_mrastp_pi1');
 	    if(isset($pi1_getVars['show'])) {
-		$show = $pi1_getVars['show'];
+		    $show = $pi1_getVars['show'];
 	    } else {
-		$show = 'A';
+		    $show = 'alle';
 	    }
+        if(isset($pi1_getVars['canton_id'])) {
+            $canton_id = (int) $pi1_getVars['canton_id'];
+        } else {
+            $canton_id = 1;
+        }
 
-            $members = array();
-	    $content = $this->helperMembersAlphabet($show);
-            $fields = 'firstname, name, street, compl, zip, city, phone, email, canton_id';
+        $members = array();
+        $content = '<h4>' . $this->pi_getLL('first_letter_of_name') . '</h4>';
+	    $content.= $this->helperMembersAlphabet($show);
+	    $content.= '<h4>' . $this->pi_getLL('canton') . '</h4>';
+	    $content.= $this->helperCantonsAlphabet($canton_id, false);
+        $fields = 'firstname, name, street, compl, zip, city, phone, email, canton_id';
 
 	    switch($show) {
-		case '':
-		    $where = 'name LIKE \'A%\'';
-		    break;
-		case 'alle':
-		    $where = '1=1';
-		    break;
-		default:
-		    $where = 'name like \'' . substr($show, 0, 1) . '%\'';
-		    break;
+    		case '':
+    		    $where = 'name LIKE \'A%\'';
+    		    break;
+    		case 'alle':
+    		    $where = '1=1';
+    		    break;
+    		default:
+    		    $where = 'name like \'' . substr($show, 0, 1) . '%\'';
+    		    break;
 	    }
-            $where.= $this->cObj->enableFields('tx_mrastp_person');
-            $groupby = '';
-            $orderby = 'name, firstname ASC';
-            $limit = '';
+	    switch($canton_id) {
+            case '':
+                $where.= ' AND canton_id = 1';
+                break;
+            case -1:
+                break;
+            default:
+                $where.= ' AND canton_id = ' . $canton_id;
+                break;
+        }
+        $where.= $this->cObj->enableFields('tx_mrastp_person');
+        $groupby = '';
+        $orderby = 'canton_id, name, firstname ASC';
+        $limit = '';
 	    $i=0;
 
 	    $content.= '<table class="contenttable contenttable-2">';
-            $result = $TYPO3_DB->exec_SELECTquery($fields, 'tx_mrastp_person', $where, $groupby, $orderby, $limit);
-            while($member = $TYPO3_DB->sql_fetch_assoc($result)) {
-                if(0 == $i%2) {
-                    $zebra = 'tr-even';
-                } else {
-                    $zebra = 'tr-odd';
-                }
-                $compl = (!empty($member['compl'])) ? '<br />' . $member['compl'] : '';
-                $canton_data = $this->getCantonData( $member['canton_id']);
-                $canton = $canton_data['abbrevation'];
-                $email = (!empty($member['email'])) ? $this->local_cObj->mailto_makelinks('mailto:' . $member['email'], $this->conf['makelinks.']['mailto.']) : '';
-                $i++;
-                $content.= '<tr class="' . $zebra . '">';
-                $content.= '<td>' . $member['name'] . ', ' . $member['firstname'] . '</td>';
-                $content.= '<td>' . $member['street'] . $compl . '<br />' . $member['zip'] . ' ' . $member['city'] . '<br />' . $canton . '</td>';
-                $content.= '<td>' . $member['phone'] . '</td>';
-                $content.= '<td>' . $email . '</td>';
+        $result = $TYPO3_DB->exec_SELECTquery($fields, 'tx_mrastp_person', $where, $groupby, $orderby, $limit);
+        $got_one = false;
+        $current_canton = 0;
+
+        while($member = $TYPO3_DB->sql_fetch_assoc($result)) {
+            $got_one = true;
+            $canton_data = $this->getCantonData($member['canton_id']);
+            if ($current_canton !== $member['canton_id']) {
+                $content .= '<tr><td class="tr-odd" colspan="4"></td></tr><tr><td class="tr-head" colspan="4">' . $canton_data['label'] . '</td></tr>';
+                $current_canton = $member['canton_id'];
+                $i=1;
+                $content.= '<tr class="tr-even">';
+                $content.= '<td><b>' . $this->pi_getLL('name') . '</b></td>';
+                $content.= '<td><b>' . $this->pi_getLL('address') . '</b></td>';
+                $content.= '<td><b>' . $this->pi_getLL('phone') . '</b></td>';
+                $content.= '<td><b>' . $this->pi_getLL('email') . '</b></td>';
                 $content.= '</tr>';
+            }
+            if(0 == $i%2) {
+                $zebra = 'tr-even';
+            } else {
+                $zebra = 'tr-odd';
+            }
+            $compl = (!empty($member['compl'])) ? '<br />' . $member['compl'] : '';
+            $canton_data = $this->getCantonData( $member['canton_id']);
+            $canton = $canton_data['abbrevation'];
+            $email = (!empty($member['email'])) ? $this->local_cObj->mailto_makelinks('mailto:' . $member['email'], $this->conf['makelinks.']['mailto.']) : '';
+            $i++;
+            $content.= '<tr class="' . $zebra . '">';
+            $content.= '<td>' . $member['name'] . ', ' . $member['firstname'] . '</td>';
+            $content.= '<td>' . $member['street'] . $compl . '<br />' . $member['zip'] . ' ' . $member['city'] . '<br />' . $canton . '</td>';
+            $content.= '<td>' . $member['phone'] . '</td>';
+            $content.= '<td>' . $email . '</td>';
+            $content.= '</tr>';
 	    }
+        if (!$got_one) {
+            $canton_data = $this->getCantonData($canton_id);
+            $content .= '<tr><td class="tr-odd" colspan="5"></td></tr><tr><td class="tr-head" colspan="5">' . $canton_data['label'] . '</td></tr>';
+            $content .= '<tr><td>' . $this->pi_getLL('no_addresses_found') . '</td></tr>';
+        }
 	    $content.= '</table>';
 	    return $content;
 	}
@@ -185,16 +224,17 @@ class tx_mrastp_pi1 extends tslib_pibase {
         global $TYPO3_DB;
 
         $pi1_getVars = t3lib_div::_GET('tx_mrastp_pi1');
-        if(isset($pi1_getVars['show'])) {
-            $show = (int) $pi1_getVars['show'];
+        if(isset($pi1_getVars['canton_id'])) {
+            $canton_id = (int) $pi1_getVars['canton_id'];
         } else {
-            $show = 1;
+            $canton_id = -1;
         }
 
-        $content = $this->helperCantonsAlphabet($show);
+        $content = '<h4>' . $this->pi_getLL('canton') . '</h4>';
+        $content.= $this->helperCantonsAlphabet($canton_id);
         $fields =  'name_practice, name_supplement, address1, address2, zip, city, country_id, canton_id, phone, mobile, fax, email, audience, services, languages, website';
 
-        switch($show) {
+        switch($canton_id) {
             case '':
                 $where = 'canton_id = 1';
                 break;
@@ -202,7 +242,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
                 $where = '1=1';
                 break;
             default:
-                $where = 'canton_id = ' . $show;
+                $where = 'canton_id = ' . $canton_id;
                 break;
         }
         $where.= ' AND employment=2' . $this->cObj->enableFields('tx_mrastp_workaddress');
@@ -217,7 +257,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
         $got_one = false;
         while($address = $TYPO3_DB->sql_fetch_assoc($result)) {
             $got_one = true;
-            $canton_data = $this->getCantonData( $address['canton_id']);
+            $canton_data = $this->getCantonData($address['canton_id']);
             if ($current_canton !== $address['canton_id']) {
                 $content .= '<tr><td class="tr-odd" colspan="6"></td></tr><tr><td class="tr-head" colspan="6">' . $canton_data['label'] . '</td></tr>';
                 $current_canton = $address['canton_id'];
@@ -257,7 +297,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
             $content.= '</tr>';
         }
         if (!$got_one) {
-            $canton_data = $this->getCantonData($show);
+            $canton_data = $this->getCantonData($canton_id);
             $content .= '<tr><td class="tr-odd" colspan="5"></td></tr><tr><td class="tr-head" colspan="5">' . $canton_data['label'] . '</td></tr>';
             $content .= '<tr><td>' . $this->pi_getLL('no_addresses_found') . '</td></tr>';
         }
@@ -265,21 +305,22 @@ class tx_mrastp_pi1 extends tslib_pibase {
         return $content;
 	}
 
-   private function displayTherapyPlacesList()
+    private function displayTherapyPlacesList()
     {
         global $TYPO3_DB;
 
         $pi1_getVars = t3lib_div::_GET('tx_mrastp_pi1');
-        if(isset($pi1_getVars['show'])) {
-            $show = (int) $pi1_getVars['show'];
+        if(isset($pi1_getVars['canton_id'])) {
+            $canton_id = (int) $pi1_getVars['canton_id'];
         } else {
-            $show = 1;
+            $canton_id = -1;
         }
 
-        $content = $this->helperCantonsAlphabet($show);
+        $content = '<h4>' . $this->pi_getLL('canton') . '</h4>';
+        $content.= $this->helperCantonsAlphabet($canton_id);
         $fields =  'name_practice, name_supplement, address1, address2, zip, city, country_id, canton_id, phone, mobile, fax, email, audience, services, languages, website';
 
-        switch($show) {
+        switch($canton_id) {
             case '':
                 $where = 'canton_id = 1';
                 break;
@@ -287,7 +328,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
                 $where = '1=1';
                 break;
             default:
-                $where = 'canton_id = ' . $show;
+                $where = 'canton_id = ' . $canton_id;
                 break;
         }
         $where.= $this->cObj->enableFields('tx_mrastp_workaddress');
@@ -342,7 +383,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
             $content.= '</tr>';
         }
         if (!$got_one) {
-            $canton_data = $this->getCantonData($show);
+            $canton_data = $this->getCantonData($canton_id);
             $content .= '<tr><td class="tr-odd" colspan="5"></td></tr><tr><td class="tr-head" colspan="5">' . $canton_data['label'] . '</td></tr>';
             $content .= '<tr><td>' . $this->pi_getLL('no_addresses_found') . '</td></tr>';
         }
@@ -426,32 +467,36 @@ class tx_mrastp_pi1 extends tslib_pibase {
         $links = array();
     $content = '<table class="contenttable fancytable"><tr>';
         foreach ($items as $item) {
-	$tdclass = ($show == $item) ? ' class="selected"' : '';
+	        $tdclass = ($show == $item) ? ' class="selected"' : '';
             $content.= '<td' . $tdclass . ' style="width: 3%"><b>' . $this->pi_linkTP_keepPIvars($item,$overrulePIvars=array('show' => $item)) . '</b></td>';
         }
     $content.= '</tr></table>';
         return $content;
     }
+
     
-    private function helperCantonsAlphabet($show) {
+    private function helperCantonsAlphabet($canton_id, $ch_only = true) {
             global $TYPO3_DB;
             
             $result = $TYPO3_DB->exec_SELECTquery('uid, abbrevation',  'tx_mrastp_canton', '1=1', 'abbrevation ASC');
             $end_cantons = array();
 
             $content = '<table class="contenttable fancytable"><tr>';
-            $content.= '<td><b>' . $this->pi_linkTP_keepPIvars('alle',$overrulePIvars=array('show' => -1)) . '</b></td>';
+            $tdclass = ($canton_id == -1) ? ' class="selected"' : '';
+            $content.= '<td ' . $tdclass . '><b>' . $this->pi_linkTP_keepPIvars('alle', $overrulePIvars=array('canton_id' => -1)) . '</b></td>';
             while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-                if (strlen($row['abbrevation']) > 1) {
-                    $tdclass = ($show == $row['uid']) ? ' class="selected"' : '';
-                    $content.= '<td' . $tdclass . '><b>' . $this->pi_linkTP_keepPIvars($row['abbrevation'], array('show' => $row['uid'])) . '</b></td>';
+                if (strlen($row['abbrevation']) > 1 && $row['abbrevation'] !== 'FL') {
+                    $tdclass = ($canton_id == $row['uid']) ? ' class="selected"' : '';
+                    $content.= '<td' . $tdclass . '><b>' . $this->pi_linkTP_keepPIvars($row['abbrevation'], array('canton_id' => $row['uid'])) . '</b></td>';
                 } else {
                     $end_cantons[] = $row;
                 }
             }
-            foreach ($end_cantons as $row) {
-                $tdclass = ($show == $row['uid']) ? ' class="selected"' : '';
-                $content.= '<td' . $tdclass . '><b>' . $this->pi_linkTP_keepPIvars($row['abbrevation'], array('show' => $row['uid'])) . '</b></td>';
+            if (!$ch_only) {
+                foreach ($end_cantons as $row) {
+                    $tdclass = ($canton_id == $row['uid']) ? ' class="selected"' : '';
+                    $content.= '<td' . $tdclass . '><b>' . $this->pi_linkTP_keepPIvars($row['abbrevation'], array('canton_id' => $row['uid'])) . '</b></td>';
+                }
             }
             $content.= '</tr></table>';
             return $content;

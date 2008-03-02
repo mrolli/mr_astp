@@ -18,6 +18,8 @@
             <label index="address">Address</label>
             <label index="contact">Contact</label>
             <label index="no_addresses_found">No addresses could be found.</label>
+            <label index="first_letter_of_name">First letter of the name</label>
+            <label index="canton">Canton</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="plugin_name.pi1">astp Listes d'addresses</label>
@@ -33,6 +35,8 @@
             <label index="address">Addresse</label>
             <label index="contact">Contact</label>
             <label index="no_addresses_found">Acune addresse trouvé.</label>
+            <label index="first_letter_of_name">Première lettre du nom</label>
+            <label index="canton">Canton</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="plugin_name.pi1">astp Adresslisten</label>
@@ -48,6 +52,8 @@
             <label index="address">Adresse</label>
             <label index="contact">Kontakt</label>
             <label index="no_addresses_found">Keine Adressen gefunden.</label>
+            <label index="first_letter_of_name">Erster Buchstabe des Nachmanes</label>
+            <label index="canton">Kanton</label>
 		</languageKey>
 	</data>
 </T3locallang>
