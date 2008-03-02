@@ -259,7 +259,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
         if (!$got_one) {
             $canton_data = $this->getCantonData($show);
             $content .= '<tr><td class="tr-odd" colspan="5"></td></tr><tr><td class="tr-head" colspan="5">' . $canton_data['label'] . '</td></tr>';
-            $content .= '<tr><td>Keine Adressen gefunden</td></tr>';
+            $content .= '<tr><td>' . $this->pi_getLL('no_addresses_found') . '</td></tr>';
         }
         $content.= '</table>';
         return $content;
@@ -344,7 +344,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
         if (!$got_one) {
             $canton_data = $this->getCantonData($show);
             $content .= '<tr><td class="tr-odd" colspan="5"></td></tr><tr><td class="tr-head" colspan="5">' . $canton_data['label'] . '</td></tr>';
-            $content .= '<tr><td>Keine Adressen gefunden</td></tr>';
+            $content .= '<tr><td>' . $this->pi_getLL('no_addresses_found') . '</td></tr>';
         }
         $content.= '</table>';
         return $content;
@@ -421,7 +421,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
         return $row;
     }
 
-    function helperMembersAlphabet($show) {
+    private function helperMembersAlphabet($show) {
         $items = array('alle', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
         $links = array();
     $content = '<table class="contenttable fancytable"><tr>';
@@ -437,6 +437,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
             global $TYPO3_DB;
             
             $result = $TYPO3_DB->exec_SELECTquery('uid, abbrevation',  'tx_mrastp_canton', '1=1', 'abbrevation ASC');
+            $end_cantons = array();
 
             $content = '<table class="contenttable fancytable"><tr>';
             $content.= '<td><b>' . $this->pi_linkTP_keepPIvars('alle',$overrulePIvars=array('show' => -1)) . '</b></td>';
@@ -444,7 +445,13 @@ class tx_mrastp_pi1 extends tslib_pibase {
                 if (strlen($row['abbrevation']) > 1) {
                     $tdclass = ($show == $row['uid']) ? ' class="selected"' : '';
                     $content.= '<td' . $tdclass . '><b>' . $this->pi_linkTP_keepPIvars($row['abbrevation'], array('show' => $row['uid'])) . '</b></td>';
+                } else {
+                    $end_cantons[] = $row;
                 }
+            }
+            foreach ($end_cantons as $row) {
+                $tdclass = ($show == $row['uid']) ? ' class="selected"' : '';
+                $content.= '<td' . $tdclass . '><b>' . $this->pi_linkTP_keepPIvars($row['abbrevation'], array('show' => $row['uid'])) . '</b></td>';
             }
             $content.= '</tr></table>';
             return $content;

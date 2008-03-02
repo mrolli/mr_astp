@@ -17,6 +17,7 @@
             <label index="languages">Languages</label>
             <label index="address">Address</label>
             <label index="contact">Contact</label>
+            <label index="no_addresses_found">No addresses could be found.</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="plugin_name.pi1">astp Listes d'addresses</label>
@@ -31,6 +32,7 @@
             <label index="languages">Languages</label>
             <label index="address">Addresse</label>
             <label index="contact">Contact</label>
+            <label index="no_addresses_found">Acune addresse trouvé.</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="plugin_name.pi1">astp Adresslisten</label>
@@ -45,6 +47,7 @@
             <label index="languages">Sprachen</label>
             <label index="address">Adresse</label>
             <label index="contact">Kontakt</label>
+            <label index="no_addresses_found">Keine Adressen gefunden.</label>
 		</languageKey>
 	</data>
 </T3locallang>
