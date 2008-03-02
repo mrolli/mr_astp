@@ -251,7 +251,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
      */
     function createMemberView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-        $userlang = $BE_USER->lang;
+        $userlang = $BE_USER->uc['lang'];
 
 
         $params='&edit[tx_mrastp_person][' . $this->id . ']=new';
@@ -261,7 +261,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
         $content.= $this->helperMembersAlphabet();
 
         // define statement parts
-        $select  = 'uid, firstname, name, zip, city';
+        $select  = 'uid, firstname, name, zip, city, hidden';
         $from    = 'tx_mrastp_person';
         $where   = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? " name like '" . t3lib_div::_GET('show') . "%'" : '1=1';
         $where  .= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
@@ -274,20 +274,20 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
         $tableRows = array();
         $tableRows[] = array('',
-                             '<b>' . $LANG->getLL('lastname') .  '</b>',
-                             '<b>' . $LANG->getLL('firstname') . '</b>',
-                             '<b>' . $LANG->getLL('zip') .       '</b>',
-                             '<b>' . $LANG->getLL('city') .      '</b>',
+                             '<b>' . $this->getDbLL($userlang, 'tx_mrastp_person', 'lastname') .  '</b>',
+                             '<b>' . $this->getDbLL($userlang, 'tx_mrastp_person', 'firstname') . '</b>',
+                             '<b>' . $this->getDbLL($userlang, 'tx_mrastp_person', 'zip') .       '</b>',
+                             '<b>' . $this->getDbLL($userlang, 'tx_mrastp_person', 'city') .      '</b>',
                             );
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $params='&edit[tx_mrastp_person]['.$row['uid'].']=edit';
             $tableRows[] = array('<a href="#" onclick="' .
                                      htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')) . '">' .
                                      '<img' . t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"') . ' title="' . $LANG->getLL('edit',1) . '" class="absmiddle" alt="" /></a>',
-                                 $row['name'],
-                                 $row['firstname'],
-                                 $row['zip'],
-                                 $row['city'],
+                                 $this->grayout($row['name'], $row['hidden']),
+                                 $this->grayout($row['firstname'], $row['hidden']),
+                                 $this->grayout($row['zip'], $row['hidden']),
+                                 $this->grayout($row['city'], $row['hidden']),
                                  );
         }
 
@@ -351,7 +351,52 @@ class  mr_astp_module1 extends t3lib_SCbase {
     function createWorkaddressView()
     {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
-        return 'Neues Modul';
+        $userlang = $BE_USER->uc['lang'];
+
+
+        $params='&edit[tx_mrastp_workaddress][' . $this->id . ']=new';
+        $content = '<a href="#" onclick="'.
+                        htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
+        $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
+        $content.= $this->helperCantonsAlphabet();
+
+        // define statement parts
+        $select  = 'uid, name_practice, name_supplement, zip, city, hidden';
+        $from    = 'tx_mrastp_workaddress';
+        $where   = (isset($_GET['canton_id']) && t3lib_div::_GET('canton_id') > -1) ? ' canton_id=' . (int) t3lib_div::_GET('canton_id') : '1=1';
+        $where  .= t3lib_BEfunc::deleteClause('tx_mrastp_workaddress');
+        $groupBy = '';
+        $orderBy = 'zip, name_practice ASC';
+
+        // query database, get number of rows and fill in an array
+        $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
+        $num_rows = $TYPO3_DB->sql_num_rows($result);
+
+        $tableRows = array();
+        $tableRows[] = array('',
+                             '<b>' . $this->getDbLL($userlang, 'tx_mrastp_workaddress', 'name_practice') .  '</b>',
+                             '<b>' . $this->getDbLL($userlang, 'tx_mrastp_workaddress', 'name_supplement') . '</b>',
+                             '<b>' . $this->getDbLL($userlang, 'tx_mrastp_workaddress', 'zip') .       '</b>',
+                             '<b>' . $this->getDbLL($userlang, 'tx_mrastp_workaddress', 'city') .      '</b>',
+                            );
+        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+            $params='&edit[tx_mrastp_workaddress]['.$row['uid'].']=edit';
+            $tableRows[] = array('<a href="#" onclick="' .
+                                     htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')) . '">' .
+                                     '<img' . t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"') . ' title="' . $LANG->getLL('edit',1) . '" class="absmiddle" alt="" /></a>',
+                                 $this->grayout($row['name_practice'], $row['hidden']),
+                                 $this->grayout($row['name_supplement'], $row['hidden']),
+                                 $this->grayout($row['zip'], $row['hidden']),
+                                 $this->grayout($row['city'], $row['hidden']),
+                                 );
+        }
+
+        // assemble output
+        $content.= '<p><b>' . $LANG->getLL('addresses_found') . ': ' . $num_rows . '</b><br />';
+        $content.= $this->doc->table($tableRows, $this->tableLayout['zebra']);
+        $content.= '</p>';
+
+        return $content;
     }
 
     /**
@@ -717,7 +762,12 @@ class  mr_astp_module1 extends t3lib_SCbase {
         if (!$where) {
             $where = '1=1';
         }
-        $where  .= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
+        $where.= t3lib_BEfunc::deleteClause('tx_mrastp_person');
+        $where.= t3lib_BEfunc::BEenableFields('tx_mrastp_person');
+        if(preg_match('/tx_mrastp_workaddress/', $join)) {
+            $where .= t3lib_BEfunc::deleteClause('tx_mrastp_workaddress');
+            $where .= t3lib_BEfunc::BEenableFields('tx_mrastp_workaddress');
+        }
 
         $sql = 'SELECT ' . $select . ' FROM tx_mrastp_person ' . $join . ' WHERE ' . $where . $orderBy;
         if($this->conf['debug']) {
@@ -789,6 +839,19 @@ class  mr_astp_module1 extends t3lib_SCbase {
 		}
 		return '<div style="width: 60%; margin: 10px 5px">' . implode(' | ', $links) . '</div>';
 	}
+	
+    private function helperCantonsAlphabet() {
+        global $TYPO3_DB;
+        
+        $result = $TYPO3_DB->exec_SELECTquery('uid, abbrevation',  'tx_mrastp_canton', '1=1', 'abbrevation ASC');
+        $links = array();
+
+        $links[] = '<a href="/' . PATH_typo3_mod . '?canton_id=-1">alle</a>';
+        while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+            $links[] = '<a href="/' . PATH_typo3_mod . '?canton_id=' . $row['uid'] . '">' . $row['abbrevation'] . '</a>';
+        }
+        return '<div style="margin: 10px 5px">' . implode(' | ', $links) . '</div>';
+    }
 
 	function getDbLL($lang, $table, $column=false) {
         global $LANG;
@@ -840,6 +903,14 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
     function fkDecode($string) {
         return str_replace('|', '.', $string);
+    }
+
+    function grayout($value, $do = 1) {
+        if ($do == 1) {
+            return '<span style="color: #aaaaaa">' . $value . '</span>'; 
+        } else {
+            return $value;
+        }
     }
 }
 

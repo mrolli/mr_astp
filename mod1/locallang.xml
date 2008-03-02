@@ -22,7 +22,8 @@
             <label index="workaddress_view">Work addresses directory</label>
             <label index="lists_view">Downloadable Lists</label>
             <label index="new_record">Create new record</label>
-            <label index="members_found">Members found</label>
+            <label index="members_found">Memberss found</label>
+            <label index="addresses_found">Addresses found</label>
             <label index="lists">Lists</label>
             <label index="view">View</label>
             <label index="download">Download</label>
@@ -90,6 +91,7 @@
             <label index="lists_view">Listes pour télécharger</label>
             <label index="new_record">Créer un nouvel enregistrement</label>
             <label index="members_found">Membres trouvés</label>
+            <label index="addresses_found">Addresses trouvées</label>
             <label index="lists">Listes</label>
             <label index="view">Regarder</label>
             <label index="download">Télécharger</label>
@@ -156,6 +158,7 @@
             <label index="lists_view">Downloadbare Listen</label>
             <label index="new_record">Neuen Datensatz erstellen</label>
             <label index="members_found">Gefundene Mitglieder</label>
+            <label index="addresses_found">Gefundene Addressen</label>
             <label index="lists">Listen</label>
             <label index="view">Anschauen</label>
             <label index="download">Herunterladen</label>
