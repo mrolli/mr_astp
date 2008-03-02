@@ -17,6 +17,9 @@
             <label index="languages">Languages</label>
             <label index="address">Address</label>
             <label index="contact">Contact</label>
+            <label index="function">Function</label>
+            <label index="phone">Phone</label>
+            <label index="email">Email</label>
             <label index="no_addresses_found">No addresses could be found.</label>
             <label index="first_letter_of_name">First letter of the name</label>
             <label index="canton">Canton</label>
@@ -34,6 +37,9 @@
             <label index="languages">Languages</label>
             <label index="address">Addresse</label>
             <label index="contact">Contact</label>
+            <label index="function">Fonction</label>
+            <label index="phone">Téléphone</label>
+            <label index="email">Courielle</label>
             <label index="no_addresses_found">Acune addresse trouvé.</label>
             <label index="first_letter_of_name">Première lettre du nom</label>
             <label index="canton">Canton</label>
@@ -51,6 +57,9 @@
             <label index="languages">Sprachen</label>
             <label index="address">Adresse</label>
             <label index="contact">Kontakt</label>
+            <label index="function">Funktion</label>
+            <label index="phone">Telefon</label>
+            <label index="email">Email</label>
             <label index="no_addresses_found">Keine Adressen gefunden.</label>
             <label index="first_letter_of_name">Erster Buchstabe des Nachmanes</label>
             <label index="canton">Kanton</label>

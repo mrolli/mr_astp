@@ -413,31 +413,37 @@ class tx_mrastp_pi1 extends tslib_pibase {
 
 	private function renderGroup($grouptitle, $members) {
 	    $content = '<h2>' . $grouptitle . '</h2>';
-	    $content.= '<table class="contenttable contenttable-2">';
-	    $i=0; 
-            foreach ($members as $member) {
-		if(0 == $i%2) {
-		    $zebra = 'tr-even';
-		} else {
-		    $zebra = 'tr-odd';
-		}
-		$compl = (!empty($member['compl'])) ? '<br />' . $member['compl'] : '';
-		$canton = '';
-		if ($member['canton_id']>0) {
-		    $canton_data = $this->getCantonData( (int) $member['canton_id']);
-		    $canton = $canton_data['abbrevation'];
-		}
-		$i++;
-		$content.= '<tr class="' . $zebra . '">';
-		$content.= '<td>' . $member['firstname'] . ' ' . $member['name'] . '</td>';
-		$content.= '<td>' . $member['funktion'] . ' ' . $canton . '</td>';
-		$content.= '<td>' . $member['street'] . $compl . '<br />' . $member['zip'] . ' ' . $member['city'] . '</td>';
-		$content.= '<td>' . $member['phone'] . '</td>';
-		$content.= '<td>' . $this->local_cObj->mailto_makelinks('mailto:' . $member['email'], $this->conf['makelinks.']['mailto.']) . '</td>';
-		$content.= '</tr>';
-                
+	    $content.= '<table class="contenttable contenttable-2">'; 
+	    $content.= '<tr class="tr-even">';
+        $content.= '<td><b>' . $this->pi_getLL('name') . '</b></td>';
+        $content.= '<td><b>' . $this->pi_getLL('function') . '</b></td>';
+        $content.= '<td><b>' . $this->pi_getLL('address') . '</b></td>';
+        $content.= '<td><b>' . $this->pi_getLL('phone') . '</b></td>';
+        $content.= '<td><b>' . $this->pi_getLL('email') . '</b></td>';
+        $content.= '</tr>';
+        $i=1;
+        foreach ($members as $member) {
+    		if(0 == $i%2) {
+    		    $zebra = 'tr-even';
+    		} else {
+    		    $zebra = 'tr-odd';
+    		}
+    		$compl = (!empty($member['compl'])) ? '<br />' . $member['compl'] : '';
+    		$canton = '';
+    		if ($member['canton_id']>0) {
+    		    $canton_data = $this->getCantonData( (int) $member['canton_id']);
+    		    $canton = $canton_data['abbrevation'];
+    		}
+    		$i++;
+    		$content.= '<tr class="' . $zebra . '">';
+    		$content.= '<td>' . $member['firstname'] . ' ' . $member['name'] . '</td>';
+    		$content.= '<td>' . $member['funktion'] . ' ' . $canton . '</td>';
+    		$content.= '<td>' . $member['street'] . $compl . '<br />' . $member['zip'] . ' ' . $member['city'] . '</td>';
+    		$content.= '<td>' . $member['phone'] . '</td>';
+    		$content.= '<td>' . $this->local_cObj->mailto_makelinks('mailto:' . $member['email'], $this->conf['makelinks.']['mailto.']) . '</td>';
+    		$content.= '</tr>';
 	    }
-            $content.= '</table>';
+        $content.= '</table>';
 	    return $content;
 	}
 
