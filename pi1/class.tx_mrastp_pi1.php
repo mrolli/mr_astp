@@ -51,7 +51,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
 	function main($content,$conf)	{
 
 	    $this->local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
-	    $this->pi_USER_INT_obj=1;	// Configuring so caching is not expected. This value means that no cHash params are ever set. We do this, because it's a USER_INT object!
+	    #$this->pi_USER_INT_obj=1;	// Configuring so caching is not expected. This value means that no cHash params are ever set. We do this, because it's a USER_INT object!
             $this->init($conf);
 
             // get codes and decide which function is used to process the content

@@ -702,8 +702,8 @@ $TCA["tx_mrastp_workaddress"] = array (
 				"items" => Array (
 					Array("",0),
 				),
-				"foreign_table" => "static_countries",
-				"foreign_table_where" => "AND static_countries.pid=###SITEROOT### ORDER BY static_countries.uid",
+                "foreign_table" => "tx_mrastp_country",
+                "foreign_table_where" => "AND tx_mrastp_country.pid=###CURRENT_PID### ORDER BY tx_mrastp_country.uid",
 				"size" => 1,
 				"minitems" => 0,
 				"maxitems" => 1,
