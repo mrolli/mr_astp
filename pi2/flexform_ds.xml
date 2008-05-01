@@ -1,0 +1,46 @@
+<T3DataStructure>
+	<meta>
+		<langDisable>1</langDisable>
+	</meta>
+	<sheets>
+		<sDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:mr_astp/pi2/locallang.xml:mr_astp.pi_flexform.sheet_general</sheetTitle>
+				</TCEforms>
+				<type>array</type>
+				<el>
+					<what_to_display>
+						<TCEforms>
+							<label>LLL:EXT:mr_astp/pi2/locallang.xml:mr_astp.pi_flexform.what_to_display</label>
+							<config>
+								<type>select</type>
+								<items type="array">
+									<numIndex index="0" type="array">
+										<numIndex index="0">Forward Notes (signup/edit)</numIndex>
+										<numIndex index="1">forward</numIndex>
+    								</numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">User Registration Form</numIndex>
+                                        <numIndex index="1">create</numIndex>
+                                    </numIndex>
+                                    <numIndex index="2" type="array">
+                                        <numIndex index="0">Account Management</numIndex>
+                                        <numIndex index="1">edit</numIndex>
+                                    </numIndex>
+                                    <numIndex index="3" type="array">
+                                        <numIndex index="0">Confirmation Page</numIndex>
+                                        <numIndex index="1">confirm</numIndex>
+                                    </numIndex>
+								</items>
+								<maxitems>1</maxitems>
+								<size>4</size>
+								<multiple>0</multiple>
+							</config>
+						</TCEforms>
+					</what_to_display>
+				</el>
+			</ROOT>
+		</sDEF>
+	</sheets>
+</T3DataStructure>

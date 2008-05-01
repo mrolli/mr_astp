@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for extension 'mr_astp.pi2'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="plugin_name.pi2">astp Frontend User Management</label>
+            <label index="pi2_title">astp Frontend User Management</label>
+			<label index="pi2_plus_wiz_description">(Description)</label>
+			<label index="mr_astp.pi_flexform.sheet_general">General Settings</label>
+            <label index="mr_astp.pi_flexform.what_to_display">What to do?</label>
+            <label index="no_view_selected">No view was choosen in plugin configuration</label>
+            <label index="click_here_to_register">Not a member yet? Click here to register.</label>
+            <label index="click_here_to_edit">Click here to edit your profile or delete your account.</label>
+            <label index="required_info_notice">Please make sure that you fill in your details for the fields marked *</label>
+            <label index="button_register">Send registration</label>
+            
+            <!-- Form stuff -->
+            <label index="form_error">Please fill in all required (*) fields.</label>
+            <label index="personal_data">Personal data / Private Address</label>
+            <label index="choose_one">Choose one</label>
+            <label index="online_account">Online Account</label>
+            <label index="member_exists">A member with given firstname, lastname, city or given email already exists.</label>
+            <label index="incorrect_email">The given email address is not a valid email address.</label>
+            
+            <!-- DB Fieldnames -->
+            <label index="salutation_id">Salutation</label>
+            <label index="firstname">Firstname</label>
+            <label index="name">Name</label>
+            <label index="street">Street Nr.</label>
+            <label index="compl">Supplement</label>
+            <label index="zip">Zip</label>
+            <label index="city">City</label>
+            <label index="canton_id">Canton</label>
+            <label index="country_id">Country</label>
+            <label index="phone">Phone (i.e. 031 352 25 12)</label>
+            <label index="mobile">Mobile (i.e. 079 243 12 15)</label>
+            <label index="fax">Fax (i.e. 031 352 25 12)</label>
+            <label index="email">Email</label>
+            <label index="language_id">Language</label>
+            <label index="section_id">Section</label>
+            <label index="status">State</label>
+            <label index="username">Username</label>
+            <label index="password">Password</label>
+            <label index="password-repeat">Password repetition</label>
+		</languageKey>
+        <languageKey index="de" type="array">
+            <label index="click_here_to_register">Zum ersten mal hier? Hier können Sie sich anmelden.</label>
+            <label index="click_here_to_edit">Klicken Sie hier, um Ihre Benutzerdaten zu bearbeiten.</label>
+            <label index="required_info_notice">Die Felder, die mit einem Stern (*) markiert sind, müssen ausgefüllt werden!</label>
+            <label index="button_register">Anmeldung abschicken</label>
+            
+            <!-- Form stuff -->
+            <label index="form_error">Bitte füllen Sie alle benötigten Felder (*) aus.</label>
+            <label index="personal_data">Persönliche Angaben / Privatadresse</label>
+            <label index="choose_one">Wählen</label>
+            <label index="online_account">Online-Konto</label>
+            <label index="member_exists">Ein Mitglied mit diesen Namen, Vornamen und Stadt oder dieser Email-Adresse existiert bereits.</label>
+            <label index="incorrect_email">Die eingegebene Email ist keine gültige Email.</label>
+
+            <!-- DB Fieldnames -->
+            <label index="salutation_id">Anrede</label>
+            <label index="firstname">Vorname</label>
+            <label index="name">Name</label>
+            <label index="street">Strasse Nr.</label>
+            <label index="compl">Adresszusatz</label>
+            <label index="zip">PLZ</label>
+            <label index="city">Stadt</label>
+            <label index="canton_id">Kanton</label>
+            <label index="country_id">Land</label>
+            <label index="phone">Telefon (z.B. 031 352 25 12)</label>
+            <label index="mobile">Mobile (z.B. 079 243 12 15)</label>
+            <label index="fax">Fax (z.B. 031 352 25 12)</label>
+            <label index="email">Email</label>
+            <label index="language_id">Sprache</label>
+            <label index="section_id">Sektion</label>
+            <label index="status">Status</label>
+            <label index="username">Bevorzugter Benutzername</label>
+            <label index="password">Passwort</label>
+            <label index="password-repeat">Wiederholung</label>
+        </languageKey>
+        <languageKey index="fr" type="array">
+            <label index="click_here_to_register">Première visite? Cliquez ici pour vous enregistrer.</label>
+            <label index="click_here_to_edit">Cliquez ici pour mettre à jour votre profil.</label>
+            <label index="required_info_notice">N.B.: Les champs marqués d'un * doivent être complétés!</label>
+            <label index="button_register">Envoyer l'enregistrement</label>
+            
+            <!-- Form stuff -->
+            <label index="form_error">Merci bien pour compléter tout les champs nécessaire (*).</label>
+            <label index="personal_data">Coordonnées / Addresse privée</label>
+            <label index="choose_one">Choississez</label>
+            <label index="online_account">Compte online</label>
+            <label index="member_exists">Une person avec ce prénom, nom et lieu ou courielle existe déja.</label>
+
+            <!-- DB Fieldnames -->
+            <label index="salutation_id">Salutation</label>
+            <label index="firstname">Prénom</label>
+            <label index="name">Nom</label>
+            <label index="street">Rue No.</label>
+            <label index="compl">Addresse Supplémentaire</label>
+            <label index="zip">NPA</label>
+            <label index="city">Lieu</label>
+            <label index="canton_id">Canton</label>
+            <label index="country_id">Pay</label>
+            <label index="phone">Téléphone (p.e. 031 352 25 12)</label>
+            <label index="mobile">Mobile (p.e. 079 243 12 15)</label>
+            <label index="fax">Fax (p.e. 031 352 25 12)</label>
+            <label index="email">Courielle</label>
+            <label index="language_id">Langue</label>
+            <label index="section_id">Section</label>
+            <label index="status">State</label>
+            <label index="username">Nom d'utilisateur</label>
+            <label index="password">Mot de Passe</label>
+            <label index="password-repeat">Mot de Passe (Une seconde fois)</label>
+        </languageKey>
+	</data>
+</T3locallang>

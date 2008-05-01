@@ -34,7 +34,7 @@ require_once(PATH_t3lib.'class.t3lib_scbase.php');
 $BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users has no permission for entry.
 // DEFAULT initialization of a module [END]
 
-
+set_include_path(get_include_path() . PATH_SEPARATOR . t3lib_extMgm::extPath('mr_astp'));
 
 /**
  * Module 'astp Database' for the 'mr_astp' extension.
@@ -43,7 +43,7 @@ $BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users
  * @package	TYPO3
  * @subpackage	mr_astp
  */
-class  mr_astp_module1 extends t3lib_SCbase {
+class mr_astp_module1 extends t3lib_SCbase {
     var $pageinfo;
 
     /**
@@ -52,6 +52,9 @@ class  mr_astp_module1 extends t3lib_SCbase {
      */
     function init()	{
         global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA,$CLIENT, $TYPO3_CONF_VARS, $TYPO3_DB;
+
+        $this->include_once[] = 'Zend/Mail.php';
+        $this->include_once[] = 'mod1/Form_Massmail.php';
 
         $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);
         if($this->conf['debug']) {
@@ -125,6 +128,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
                                              '4' => $LANG->getLL('reports'),
                                              '5' => $LANG->getLL('custom_reports'),
                                              '6' => $LANG->getLL('backups'),
+                                             '7' => $LANG->getLL('massmailer'),
                                           ),
                           );
         parent::menuConfig();
@@ -149,6 +153,7 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
             // Draw the header.
             $this->doc = t3lib_div::makeInstance('mediumDoc');
+            $this->doc->styleSheetFile_post = "../".substr(t3lib_extMgm::extPath('mr_astp'),strlen(PATH_site)) . "mod1/style.css";
             $this->doc->backPath = $BACK_PATH;
             $this->doc->form='<form action="" method="POST">';
 
@@ -236,6 +241,8 @@ class  mr_astp_module1 extends t3lib_SCbase {
                 $this->content.=$this->doc->section('Message #3:',$content,0,1);
                 */
                 break;
+            case 7:
+                $this->content.=$this->doc->section($LANG->getLL('massmailer') . ':', $this->createMassmailerView(), 0, 1);
         }
         /*
         $this->content.= '<hr /><br />This is the GET/POST vars sent to the script:<br />'
@@ -556,6 +563,33 @@ class  mr_astp_module1 extends t3lib_SCbase {
 
     function createBackupView() {
         return 'to be done';
+    }
+
+    function createMassmailerView() {
+        global $LANG;
+        $content = '';
+        $form = new Form_Massmail();
+        if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
+            require_once('Zend/Mail.php');
+            $mail = new Zend_Mail();
+            $mail->setReturnPath('rolli@iml.unibe.ch');
+            $mail->setFrom($form->getValue('fromemail'), $form->getValue('fromtext'));
+            $mail->setSubject($form->getValue('subject'));
+            $mail->setBodyText($form->getValue('bodytext'));
+            if ($form->getValue('reallysend')) {
+                // an alle schicken
+                $content.= $LANG->getLL('email_sentreally');
+                $reallysend = $form->getElement('reallysend');
+                $reallysend->setValue(0);
+                
+            } else {
+                $mail->addTo($form->getValue('testemail'));
+                $mail->send();
+                $content.= $LANG->getLL('email_senttest');
+            }
+        }
+        $content.= $form->render();
+        return $content;
     }
 
 	function renderHtmlList($rows, $heading='') {
@@ -927,7 +961,9 @@ $SOBE = t3lib_div::makeInstance('mr_astp_module1');
 $SOBE->init();
 
 // Include files?
-foreach($SOBE->include_once as $INC_FILE) include_once($INC_FILE);
+foreach($SOBE->include_once as $INC_FILE) {
+    require_once($INC_FILE);
+}
 
 $SOBE->main();
 $SOBE->printContent();

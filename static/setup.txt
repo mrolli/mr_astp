@@ -1,0 +1,11 @@
+plugin.tx_mrastp_pi2 {
+    feuserPID = {$plugin.tx_mrastp_pi2.feuserPID}
+    astpdbPID = {$plugin.tx_mrastp_pi2.astpdbPID}
+    pidTitleOverride = {$plugin.tx_mrastp_pi2.pidTitleOverride}
+    registerPID = {$plugin.tx_mrastp_pi2.registerPID}
+    editPID = {$plugin.tx_mrastp_pi2.editPID}
+    confirmPID = {$plugin.tx_mrastp_pi2.confirmPID}
+    loginPID = {$plugin.tx_mrastp_pi2.loginPID}
+    linkToPID = {$plugin.tx_mrastp_pi2.linkToPID}
+    usergroup_before_accept = {$plugin.tx_mrastp_pi2.usergroup_before_accept}
+}

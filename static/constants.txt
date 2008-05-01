@@ -1,0 +1,28 @@
+plugin.tx_mrastp_pi2 {
+    # cat=astp-userregister; type=int+; label= Front end user records PID: If the records edited/created are located in another page than the current, enter the PID of that page here.
+  feuserPID =
+
+    # cat=astp-userregister; type=int+; label= astp Database user records PID: If the records edited/created are located in another page than the current, enter the PID of that page here.
+  astpdbPID =
+
+    # cat=astp-userregister; type=string; label= PID title override: If set, this will be used as the name of the System Folder containing the Front end user records when this name is used in online or email messages.
+  pidTitleOverride =
+
+    # cat=astp-userregister; type=int+; label= Registration page PID: PID of the page on which the plugin is inserted with the intent of serving as the front end user registration page.
+  registerPID =
+
+    # cat=astp-userregister; type=int+; label= Profile editing page PID: PID of the page on which the plugin is inserted with the intent of serving as the front user profile editing page.
+  editPID =
+
+    # cat=astp-userregister; type=int+; label= Confirmation page PID: PID of the page on which the plugin is inserted with the intent of serving as the front end user confirmation page (or setfixed page!).
+  confirmPID =
+
+    # cat=astp-userregister; type=int+; label= Login page PID: PID of the page on which the New login box plugin is inserted with the intent of serving as the front user login page.
+  loginPID =
+
+    # cat=astp-userregister; type=int+; label= Link to after edit PID: PID of the page to be linked to after the user has completed the edition of his/her profile.
+  linkToPID =
+  
+  # cat=astp-userregister; type=int+; label= User group PID: PID of user group to apply before an admin has accepted the registration.
+  usergroup_before_accept = 
+}
