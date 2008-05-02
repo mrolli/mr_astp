@@ -34,7 +34,7 @@ require_once(PATH_t3lib.'class.t3lib_scbase.php');
 $BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users has no permission for entry.
 // DEFAULT initialization of a module [END]
 
-set_include_path(get_include_path() . PATH_SEPARATOR . t3lib_extMgm::extPath('mr_astp'));
+set_include_path(t3lib_extMgm::extPath('mr_astp') . PATH_SEPARATOR . get_include_path());
 
 /**
  * Module 'astp Database' for the 'mr_astp' extension.
@@ -570,17 +570,13 @@ class mr_astp_module1 extends t3lib_SCbase {
         $content = '';
         $form = new Form_Massmail();
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
-//            require_once('Zend/Mail.php');
-//            require_once('Zend/Mail/Transport/Smtp.php');
-//            $tr = new Zend_Mail_Transport_Smtp('smtp.unibe.ch');
-            Zend_Mail::setDefaultTransport($tr);
             $mail = new Zend_Mail('utf-8');
             $mail->setReturnPath('rolli@iml.unibe.ch');
             $mail->setFrom($form->getValue('fromemail'), $form->getValue('fromtext'));
             $mail->setSubject($form->getValue('subject'));
             $mail->setBodyText($form->getValue('bodytext', 'utf-8') . "\r\n\r\n");
             $attachment = $form->getValue('userfile');
-            if (is_array($attachment)) {
+            if (is_array($attachment) && $attachment['error'] == 0) {
                 $at = $mail->createAttachment(file_get_contents($attachment['tmp_name']));
                 $at->filename = $attachment['name'];
             }   

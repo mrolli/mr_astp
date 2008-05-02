@@ -42,7 +42,7 @@ class Form_Massmail extends Zend_Form
         $fromEmail->setLabel($LANG->getLL('email_fromemail'))
                   ->setRequired(true)
                   ->setValue('info@astp.ch')
-                  ->addValidator('Emailaddress');
+                  ->addValidator('EmailAddress');
                   
         $testEmail = $this->createElement('text', 'testemail');
         $testEmail->setLabel($LANG->getLL('email_testemail'))
