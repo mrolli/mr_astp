@@ -155,7 +155,7 @@ class mr_astp_module1 extends t3lib_SCbase {
             $this->doc = t3lib_div::makeInstance('mediumDoc');
             $this->doc->styleSheetFile_post = "../".substr(t3lib_extMgm::extPath('mr_astp'),strlen(PATH_site)) . "mod1/style.css";
             $this->doc->backPath = $BACK_PATH;
-            $this->doc->form='<form action="" method="POST">';
+            //$this->doc->form='<form action="" method="POST">';
 
             // JavaScript
             $this->doc->JScode = '
@@ -566,28 +566,60 @@ class mr_astp_module1 extends t3lib_SCbase {
     }
 
     function createMassmailerView() {
-        global $LANG;
+        global $LANG, $TYPO3_DB;
         $content = '';
         $form = new Form_Massmail();
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
-            require_once('Zend/Mail.php');
-            $mail = new Zend_Mail();
+//            require_once('Zend/Mail.php');
+//            require_once('Zend/Mail/Transport/Smtp.php');
+//            $tr = new Zend_Mail_Transport_Smtp('smtp.unibe.ch');
+            Zend_Mail::setDefaultTransport($tr);
+            $mail = new Zend_Mail('utf-8');
             $mail->setReturnPath('rolli@iml.unibe.ch');
             $mail->setFrom($form->getValue('fromemail'), $form->getValue('fromtext'));
             $mail->setSubject($form->getValue('subject'));
-            $mail->setBodyText($form->getValue('bodytext'));
+            $mail->setBodyText($form->getValue('bodytext', 'utf-8') . "\r\n\r\n");
+            $attachment = $form->getValue('userfile');
+            if (is_array($attachment)) {
+                $at = $mail->createAttachment(file_get_contents($attachment['tmp_name']));
+                $at->filename = $attachment['name'];
+            }   
             if ($form->getValue('reallysend')) {
                 // an alle schicken
-                $content.= $LANG->getLL('email_sentreally');
-                $reallysend = $form->getElement('reallysend');
-                $reallysend->setValue(0);
-                
+                $lang_id = (int) $form->getValue('language_id');
+                $select  = 'uid, firstname, name, email, language_id';
+                $from    = 'tx_mrastp_person';
+                $where   = ' email != \'\'';
+                if ($lang_id > 0) {
+                    $where.= ' AND language_id=' . $lang_id;
+                }
+                $where  .= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
+                $groupBy = '';
+                $orderBy = 'email';
+        
+                // query database, get number of rows and fill in an array
+                $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
+                $num_rows = $TYPO3_DB->sql_num_rows($result);
+                $i = 0;
+                $content.= 'Insgesamt werden ' . $num_rows . ' Emails verschickt:<br />';
+                while ($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+                    $clone = clone $mail;
+                    $clone->addTo($row['email']);
+                    $clone->send();
+                    unset($clone);
+                    $content.= 'Email ' . ++$i . ' gesendet an ' . $row['email'] . '<br />';
+                }
+                $content.= 'Versand fertig';
             } else {
                 $mail->addTo($form->getValue('testemail'));
                 $mail->send();
                 $content.= $LANG->getLL('email_senttest');
             }
         }
+        $reallysend = $form->getElement('reallysend');
+        $reallysend->setValue(0);
+        $userfile = $form->getElement('userfile');
+        $userfile->setValue('');
         $content.= $form->render();
         return $content;
     }

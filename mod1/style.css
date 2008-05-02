@@ -1,2 +1,3 @@
 dt { font-weight: bold; }
-dd { margin: 0 1em 1em 1em; } 
+dd { margin: 0 1em 1em 1em; }
+ul.errors { color: #ff0000; } 

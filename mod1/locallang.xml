@@ -75,11 +75,12 @@
             <label index="work_email">W:Email</label>
             <label index="email_subject">Subject</label>
             <label index="email_bodytext">Body Text</label>
+            <label index="email_attachment">Attachment (optional)</label>
             <label index="email_fromtext">Name of sender</label>
             <label index="email_fromemail">Email of sender</label>
             <label index="email_testemail">Emailaddress to send a test mail to</label>
             <label index="email_reallysend">Mark if email should really be sent to the members.</label>
-            <label index="email_senttest">Test message sent. Please verify and if ok, mark the checkbox below to really send the message to the selected members.</label>
+            <label index="email_senttest">Test message sent. Please verify and if ok, add the file again and mark the checkbox below to really send the message to the selected members.</label>
             <label index="email_sentreally">The message has been sent to all selected members.</label>
         </languageKey>
         <languageKey index="fr" type="array">
@@ -151,10 +152,11 @@
             <label index="work_email">A:Email</label>
             <label index="email_subject">Subject</label>
             <label index="email_bodytext">Texte de Courielle</label>
+            <label index="email_attachment">Attachment (optional)</label>
             <label index="email_fromtext">Nom d'envoyeur</label>
             <label index="email_fromemail">Addresse courielle d'envoyeur</label>
             <label index="email_testemail">Addresse courielle pour un test</label>
-            <label index="email_senttest">Testnachricht verschickt. Bitte kontrollieren und wenn ok, unten Häkchen für definitiven Versand wählen.</label>
+            <label index="email_senttest">Testnachricht verschickt. Bitte kontrollieren und wenn ok, die Datei noch einmal auswählen unten Häkchen für definitiven Versand wählen.</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="show">Anzeigen</label>
@@ -239,12 +241,13 @@
             <label index="ost_iv">Sektion Ostschweiz, IV</label>
             <label index="ost_studi">Sektion Ostschweiz, Studenten</label>
             <label index="email_subject">Betreff</label>
+            <label index="email_attachment">Anhang (optional)</label>
             <label index="email_bodytext">Email-Text</label>
             <label index="email_fromtext">Absendername</label>
             <label index="email_fromemail">Absenderemail</label>
             <label index="email_testemail">Emailadresse für eine Testnachricht</label>
             <label index="email_reallysend">Auswählen, wenn Nachricht wirklich an die Mitglieder verschickt werden soll.</label>
-            <label index="email_senttest">Testnachricht verschickt. Bitte kontrollieren und wenn ok, unten das Häkchen für den definitiven Versand wählen.</label>
+            <label index="email_senttest">Testnachricht verschickt. Bitte kontrollieren und wenn ok, die Datei noch einemal auswählen und unten das Häkchen für den definitiven Versand wählen.</label>
         </languageKey>
     </data>
 </T3locallang>
