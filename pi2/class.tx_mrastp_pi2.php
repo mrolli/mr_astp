@@ -23,7 +23,8 @@
 ***************************************************************/
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
-
+set_include_path(t3lib_extMgm::extPath('mr_astp') . PATH_SEPARATOR . t3lib_extMgm::extPath('mr_astp') . 'pi2/classes' . PATH_SEPARATOR . get_include_path());
+require_once('Zend/Loader.php');
 
 /**
  * Plugin 'Job offers' for the 'mr_astp' extension.
@@ -66,11 +67,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 		            $content .= $this->displayForwardNotices();
 		            break;
     			case 'CREATE':
-    			    if (isset($_POST['submitButton'])) {
-    			        $content .= $this->processRegistration();
-    			    } else {
-    			        $content .= $this->displayRegistrationForm();
-    			    }
+    			    $content .= $this->displayRegistrationForm();
     			    break;
     			case 'EDIT':
     			    $content .= $this->displayEditForm();
@@ -129,7 +126,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 		$code = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'what_to_display', 'sDEF');
 		$this->conf['code'] = $code ? $code : $this->cObj->stdWrap($this->conf['code'], $this->conf['code.']);
 		
-		t3lib_div::debug($this->conf);
+		//t3lib_div::debug($this->conf);
 	}
 
 	public function displayForwardNotices()
@@ -147,43 +144,14 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	
 	public function displayRegistrationForm($errors = array())
 	{
-	    $content = '';
-	    $content.= '<p>' . $this->pi_getLL('required_info_notice') . '</p>';
-	    if (count($errors) != 0) {
-	        $content.='<ul class="required">';
-	        foreach ($errors as $error) {
-	            $content.='<li>' . $error . '</li>';
-	        }
-	        $content.='</ul>';
+	    Zend_Loader::loadClass('Form_Registration');
+	    $registrationForm = new Mrastp_Form_Registration($this);
+	    if (isset($_POST['submitButton']) && $registrationForm->isValid($_POST)) {
+	        // do something
+	        return 'Danke für die Anmeldung';
+	        //$this->processRegistration($registrationForm->getValues());
 	    }
-        $content.= '<form name="newmember" method="post" enctype="multipart/form-data" action="' . $this->pi_getPageLink($GLOBALS['TSFE']->id) . '">';
-        $content.= '<fieldset>';
-        $content.= '<legend>' . $this->pi_getLL('personal_data') . '</legend>';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('salutation_id') . '</label>' . $this->_getSelectSalutation('person[salutation_id]', $this->_getFormValue('person[salutation_id]'));
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('firstname') . '</label><input type="text" name="person[firstname]" value="' . $this->_getFormValue('person[firstname]') . '" size="45" />';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('name') . '</label><input type="text" name="person[name]" value="' . $this->_getFormValue('person[name]') . '" size="45" />';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('street') . '</label><input type="text" name="person[street]" value="' . $this->_getFormValue('person[street]') . '" size="45" />';
-        $content.= '<label>' . $this->pi_getLL('compl') . '</label><input type="text" name="person[compl]" value="' . $this->_getFormValue('person[compl]') . '" size="45" />';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('zip') . '</label><input type="text" name="person[zip]" value="' . $this->_getFormValue('person[zip]') . '" size="5" />';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('city') . '</label><input type="text" name="person[city]" value="' . $this->_getFormValue('person[city]') . '" size="45" />';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('canton_id') . '</label>' . $this->_getSelectCanton('person[canton_id]', $this->_getFormValue('person[canton_id]'));
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('country_id') . '</label>' . $this->_getSelectCountry('person[country_id]', $this->_getFormValue('person[country_id]'));
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('phone') . '</label><input type="text" name="person[phone]" value="' . $this->_getFormValue('person[phone]') . '" size="45" />';
-        $content.= '<label>' . $this->pi_getLL('mobile') . '</label><input type="text" name="person[mobile]" value="' . $this->_getFormValue('person[mobile]') . '" size="45" />';
-        $content.= '<label>' . $this->pi_getLL('fax') . '</label><input type="text" name="person[fax]" value="' . $this->_getFormValue('person[fax]') . '" size="45" />';
-        $content.= '<label>' . $this->pi_getLL('email') . '</label><input type="text" name="person[email]" value="' . $this->_getFormValue('person[email]') . '" size="45" />';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('language_id') . '</label>' . $this->_getSelectLanguage('person[language_id]', $this->_getFormValue('person[language_id]'));
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('section_id') . '</label>' . $this->_getSelectSection('person[section_id]', $this->_getFormValue('person[section_id]'));
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('status') . '</label>' . $this->_getSelectStatus('person[status]', $this->_getFormValue('person[status]'));
-        $content.= '</fieldset>';
-        $content.= '<fieldset>';
-        $content.= '<legend>' . $this->pi_getLL('online_account') . '</legend>';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('username') . '</label><input type="text" name="feuser[username]" value="' . $this->_getFormValue('feuser[username]') . '" size="30" />';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('password') . '</label><input type="password" name="feuser[password]" value="' . $this->_getFormValue('feuser[password]') . '" size="45" />';
-        $content.= '<label><span class="required">* </span>' . $this->pi_getLL('password-repeat') . '</label><input type="password" name="feuser[password-repeat]" value="' . $this->_getFormValue('feuser[password-repeat]]') . '" size="45" />';
-        $content.= '</fieldset>';
-        $content.= '<input type="submit" name="submitButton" value="' . $this->pi_getLL('button_register') . '" />';
-        $content.= '</form>';
+        $content.= $registrationForm->render();
 	    return $content;
 	}
 	
@@ -274,101 +242,85 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	   return $value;
 	}
 	
-	protected function _getSelectSalutation($fieldName, $value)
+	public function getSelectSalutation()
 	{
-	    $code = '<select name ="' . $fieldName . '">';
-	    $code.= '<option value="0">' . $this->pi_getLL('choose_one') . '</option>';
+	    $options = array($this->pi_getLL('choose_one'));
 	    
 	    global $TYPO3_DB;
-        $result = $TYPO3_DB->exec_SELECTquery('uid, label_' . $this->languages[$this->conf['sys_language_content']] . ' as label', 'tx_mrastp_salutation','1=1 ' . $this->cObj->enableFields('tx_mrastp_salutation'));
+        $result = $TYPO3_DB->exec_SELECTquery('uid, label_' . $this->getFeUserLang() . ' as label', 'tx_mrastp_salutation','1=1 ' . $this->cObj->enableFields('tx_mrastp_salutation'));
 
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-            $selected = ($row['uid'] == $value) ? ' selected="selected"' : '';
-            $code.= '<option value="' . $row['uid'] . '"' . $selected . '>' . $row['label'] . '</option>';
+            $options[$row['uid']] = $row['label'];
         }
-        $code.= '</select>';
-        return $code;
+        return $options;
 	}
 
-    protected function _getSelectCanton($fieldName, $value)
+    public function getSelectCanton()
     {
-        $code = '<select name ="' . $fieldName . '">';
-        $code.= '<option value="0">' . $this->pi_getLL('choose_one') . '</option>';
+        $options = array($this->pi_getLL('choose_one'));
         
         global $TYPO3_DB;
-        $label_suffix = $this->languages[$this->conf['sys_language_content']];
+        $label_suffix = $this->getFeUserLang();
         $result = $TYPO3_DB->exec_SELECTquery('uid, abbrevation, CONCAT(abbrevation, " - ",  label_' . $label_suffix . ') as label', 'tx_mrastp_canton','1=1 ' . $this->cObj->enableFields('tx_mrastp_canton'), 'abbrevation ASC');
 
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-            $selected = ($row['uid'] == $value) ? ' selected="selected"' : '';
-            $code.= '<option value="' . $row['uid'] . '"' . $selected . '>' . $row['label'] . '</option>';
+            $options[$row['uid']] = $row['label'];
         }
-        $code.= '</select>';
-        return $code;
+        return $options;
     }
 
-    protected function _getSelectCountry($fieldName, $value)
+    public function getSelectCountry()
     {
-        $code = '<select name ="' . $fieldName . '">';
-        $code.= '<option value="0">' . $this->pi_getLL('choose_one') . '</option>';
+        $options = array($this->pi_getLL('choose_one'));
         
         global $TYPO3_DB;
-        $result = $TYPO3_DB->exec_SELECTquery('uid, cn_short_' . $this->languages[$this->conf['sys_language_content']] . ' as label', 'tx_mrastp_country','1=1 ' . $this->cObj->enableFields('tx_mrastp_country'));
+        $result = $TYPO3_DB->exec_SELECTquery('uid, cn_short_' . $this->getFeUserLang() . ' as label', 'tx_mrastp_country','1=1 ' . $this->cObj->enableFields('tx_mrastp_country'));
 
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-            $selected = ($row['uid'] == $value) ? ' selected="selected"' : '';
-            $code.= '<option value="' . $row['uid'] . '"' . $selected . '>' . $row['label'] . '</option>';
+            $options[$row['uid']] = $row['label'];
         }
-        $code.= '</select>';
-        return $code;
+        return $options;
     }
 
-    protected function _getSelectLanguage($fieldName, $value)
+    public function getSelectLanguage()
     {
-        $code = '<select name ="' . $fieldName . '">';
-        $code.= '<option value="0">' . $this->pi_getLL('choose_one') . '</option>';
+        $options = array($this->pi_getLL('choose_one'));
         
         global $TYPO3_DB;
-        $result = $TYPO3_DB->exec_SELECTquery('uid, label_' . $this->languages[$this->conf['sys_language_content']] . ' as label', 'tx_mrastp_language','1=1 ' . $this->cObj->enableFields('tx_mrastp_language'));
+        $result = $TYPO3_DB->exec_SELECTquery('uid, label_' . $this->getFeUserLang() . ' as label', 'tx_mrastp_language','1=1 ' . $this->cObj->enableFields('tx_mrastp_language'));
 
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-            $selected = ($row['uid'] == $value) ? ' selected="selected"' : '';
-            $code.= '<option value="' . $row['uid'] . '"' . $selected . '>' . $row['label'] . '</option>';
+            $options[$row['uid']] = $row['label'];
         }
-        $code.= '</select>';
-        return $code;
+        return $options;
     }
     
-    protected function _getSelectSection($fieldName, $value)
+    public function getSelectSection()
     {
-        $code = '<select name ="' . $fieldName . '">';
-        $code.= '<option value="0">' . $this->pi_getLL('choose_one') . '</option>';
+        $options = array($this->pi_getLL('choose_one'));
         
         global $TYPO3_DB;
-        $result = $TYPO3_DB->exec_SELECTquery('uid, label_' . $this->languages[$this->conf['sys_language_content']] . ' as label', 'tx_mrastp_section','1=1 ' . $this->cObj->enableFields('tx_mrastp_section'));
+        $result = $TYPO3_DB->exec_SELECTquery('uid, label_' . $this->getFeUserLang() . ' as label', 'tx_mrastp_section','1=1 ' . $this->cObj->enableFields('tx_mrastp_section'));
 
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-            $selected = ($row['uid'] == $value) ? ' selected="selected"' : '';
-            $code.= '<option value="' . $row['uid'] . '"' . $selected . '>' . $row['label'] . '</option>';
+            $options[$row['uid']] = $row['label'];
         }
-        $code.= '</select>';
-        return $code;
+        return $options;
     }
     
-    protected function _getSelectStatus($fieldName, $value)
+    public function getSelectStatus()
     {
-        $code = '<select name ="' . $fieldName . '">';
-        $code.= '<option value="0">' . $this->pi_getLL('choose_one') . '</option>';
+        $options = array($this->pi_getLL('choose_one'));
         
         global $TYPO3_DB;
-        $result = $TYPO3_DB->exec_SELECTquery('uid, label_' . $this->languages[$this->conf['sys_language_content']] . ' as label', 'tx_mrastp_state','1=1 ' . $this->cObj->enableFields('tx_mrastp_state'));
+        $result = $TYPO3_DB->exec_SELECTquery('uid, label_' . $this->getFeUserLang() . ' as label', 'tx_mrastp_state','1=1 ' . $this->cObj->enableFields('tx_mrastp_state'));
 
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
-            $selected = ($row['uid'] == $value) ? ' selected="selected"' : '';
-            $code.= '<option value="' . $row['uid'] . '"' . $selected . '>' . $row['label'] . '</option>';
+            if ($row['uid'] != 3 && $row['uid'] != 4) {
+                $options[$row['uid']] = $row['label'];
+            }
         }
-        $code.= '</select>';
-        return $code;
+        return $options;
     }
 
     protected function _isDuplicateMember($member)
@@ -382,7 +334,6 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $result = $TYPO3_DB->exec_SELECTquery('uid', 'tx_mrastp_person', $where);
         $numRows = mysql_num_rows($result);
         $retval = ($numRows > 0) ? true : false;
-        t3lib_div::debug($retval);
         return $retval;
     }
     
@@ -391,6 +342,11 @@ class tx_mrastp_pi2 extends tslib_pibase {
         require_once 'Zend/Validate/EmailAddress.php';
         $validator = new Zend_Validate_EmailAddress();
         return $validator->isValid($email);
+    }
+    
+    public function getFeUserLang()
+    {
+        return $this->languages[$this->conf['sys_language_content']];
     }
 }
 
