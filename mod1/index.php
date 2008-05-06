@@ -55,6 +55,7 @@ class mr_astp_module1 extends t3lib_SCbase {
 
         $this->include_once[] = 'Zend/Mail.php';
         $this->include_once[] = 'mod1/Form_Massmail.php';
+        $this->include_once[] = 'Zend/Mail/Transport/Sendmail.php';
 
         $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);
         if($this->conf['debug']) {
@@ -142,6 +143,10 @@ class mr_astp_module1 extends t3lib_SCbase {
      */
     function main()	{
         global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+
+        // default mail transport
+        $tr = new Zend_Mail_Transport_Sendmail('-fbounces@astp.ch');
+        Zend_Mail::setDefaultTransport($tr);
 
         // Access check!
         $this->id = $this->conf['pid_astp'];
@@ -571,7 +576,6 @@ class mr_astp_module1 extends t3lib_SCbase {
         $form = new Form_Massmail();
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
             $mail = new Zend_Mail('utf-8');
-            $mail->setReturnPath('rolli@iml.unibe.ch');
             $mail->setFrom($form->getValue('fromemail'), $form->getValue('fromtext'));
             $mail->setSubject($form->getValue('subject'));
             $mail->setBodyText($form->getValue('bodytext', 'utf-8') . "\r\n\r\n");
