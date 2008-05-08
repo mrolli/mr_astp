@@ -12,7 +12,6 @@ class Mrastp_Form_Registration extends Zend_Form
     {
         parent::__construct($options);
         $this->_plugin = $plugin;
-        $this->setView(new Zend_View());
         $translator = new Zend_Translate(
                                 'csv', 
                                 t3lib_extMgm::extPath('mr_astp') . '/lang', 
@@ -21,6 +20,7 @@ class Mrastp_Form_Registration extends Zend_Form
                                 );
         $translator->setLocale($this->_plugin->getFeUserLang());
         $this->setDefaultTranslator($translator);
+        $this->setView(new Zend_View());
         
         $this->setName('registrationform')
              ->setMethod('post')
@@ -88,7 +88,8 @@ class Mrastp_Form_Registration extends Zend_Form
         $email = $this->createElement('text', 'email');
         $email->setRequired(true)
               ->setLabel($this->_plugin->pi_getLL('email'))
-              ->setAttrib('size', 45);
+              ->setAttrib('size', 45)
+              ->addValidator('EmailAddress');
 
         $language = $this->createElement('select', 'language_id');
         $language->setRequired(true)
@@ -109,24 +110,25 @@ class Mrastp_Form_Registration extends Zend_Form
         $username->setRequired(true)
                  ->setLabel($this->_plugin->pi_getLL('username'));
                  
-        $password1 = $this->createElement('password', 'password1');
-        $password1->setRequired(true)
-                  ->setLabel($this->_plugin->pi_getLL('password'))
-                  ->addValidator('StringEquals', true, array('fields' => array('password1', 'password2')));
+        $password = $this->createElement('password', 'password');
+        $password->setRequired(true)
+                 ->setLabel($this->_plugin->pi_getLL('password'))
+                 ->addPrefixPath('Mrastp_Validate', 'Mrastp/Validate', 'validate')
+                 ->addValidator('PasswordConfirmation');
                   
-        $password2 = $this->createElement('password', 'password2');
-        $password2->setRequired(true)
-                  ->setLabel($this->_plugin->pi_getLL('password-repeat'));
+        $password_confirm = $this->createElement('password', 'password_confirm');
+        $password_confirm->setRequired(true)
+                         ->setLabel($this->_plugin->pi_getLL('password-repeat'));
 
         $submitButton = $this->createElement('submit', 'submitButton');
         $submitButton->setLabel($this->_plugin->pi_getLL('button_register'));
         
         $this->addElements(array($salutation, $firstname, $name, $street, $compl, $zip, $city, $canton, $country, $phone, 
-                                 $mobile, $fax, $email, $language, $section, $status, $username, $password1, $password2));
+                                 $mobile, $fax, $email, $language, $section, $status, $username, $password, $password_confirm));
         $this->addDisplayGroup(array('salutation_id', 'firstname', 'name', 'street', 'compl', 'zip', 'city', 'canton_id', 'country_id',
                                      'phone', 'mobile', 'fax', 'email', 'language_id', 'section_id', 'status'),
                                'personal', array('legend' => $this->_plugin->pi_getLL('personal_data')));
-        $this->addDisplayGroup(array('username', 'password1', 'password2'), 'account', array('legend' => $this->_plugin->pi_getLL('online_account')));
+        $this->addDisplayGroup(array('username', 'password', 'password_confirm'), 'account', array('legend' => $this->_plugin->pi_getLL('online_account')));
         $this->addElement($submitButton);
     }
 }

@@ -34,7 +34,7 @@ require_once(PATH_t3lib.'class.t3lib_scbase.php');
 $BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users has no permission for entry.
 // DEFAULT initialization of a module [END]
 
-set_include_path(t3lib_extMgm::extPath('mr_astp') . PATH_SEPARATOR . get_include_path());
+set_include_path(t3lib_extMgm::extPath('mr_astp') . '/library' . PATH_SEPARATOR . t3lib_extMgm::extPath('mr_astp') . '/mod1' . PATH_SEPARATOR . get_include_path());
 
 /**
  * Module 'astp Database' for the 'mr_astp' extension.
@@ -54,7 +54,7 @@ class mr_astp_module1 extends t3lib_SCbase {
         global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA,$CLIENT, $TYPO3_CONF_VARS, $TYPO3_DB;
 
         $this->include_once[] = 'Zend/Mail.php';
-        $this->include_once[] = 'mod1/Form_Massmail.php';
+        $this->include_once[] = 'Form_Massmail.php';
         $this->include_once[] = 'Zend/Mail/Transport/Sendmail.php';
 
         $this->conf = unserialize($TYPO3_CONF_VARS['EXT']['extConf']['mr_astp']);

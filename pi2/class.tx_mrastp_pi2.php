@@ -23,7 +23,7 @@
 ***************************************************************/
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
-set_include_path(t3lib_extMgm::extPath('mr_astp') . PATH_SEPARATOR . t3lib_extMgm::extPath('mr_astp') . 'pi2/classes' . PATH_SEPARATOR . get_include_path());
+set_include_path(t3lib_extMgm::extPath('mr_astp') . '/library' . PATH_SEPARATOR . get_include_path());
 require_once('Zend/Loader.php');
 
 /**
@@ -101,7 +101,24 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	private function init($conf) 
 	{
 	    global $TSFE;
+
         $this->conf = $conf;
+        // db adapter for Zend_Db_Table-Classes
+        Zend_Loader::loadClass('Zend_Db');
+        Zend_Loader::loadClass('Zend_Db_Table_Abstract');
+        $db = Zend_Db::factory('Mysqli', array('host'     => 'localhost',
+                                               'username' => 'typo3admin',
+                                               'password' => 't3pass',
+                                               'dbname'   => 't3_astp'));
+        Zend_Db_Table_Abstract::setDefaultAdapter($db);
+
+        // default mail transport for all mails generated
+        Zend_Loader::loadClass('Zend_Mail');
+        //Zend_Loader::loadClass('Zend_Mail_Transport_Sendmail');
+        //$tr = new Zend_Mail_Transport_Sendmail('-fbounces@astp.ch');
+        Zend_Loader::loadClass('Zend_Mail_Transport_Smtp');
+        $tr = new Zend_Mail_Transport_Smtp('smtp.unibe.ch');
+        Zend_Mail::setDefaultTransport($tr);
 
         $this->pi_USER_INT_obj = 1;
         $this->local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
@@ -114,8 +131,8 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $this->conf['pidRecord'] = t3lib_div::makeInstance('t3lib_pageSelect');
         $this->conf['pidRecord']->init(0);
         $this->conf['pidRecord']->sys_language_uid = $this->conf['sys_language_content'];
-        $this->conf['thePid'] = intval($this->conf['pid']) ? strval(intval($this->conf['pid'])) : $TSFE->id;
-        $row = $this->conf['pidRecord']->getPage($this->conf['thePid']);
+        $this->conf['feuserPID'] = intval($this->conf['feuserPID']) ? strval(intval($this->conf['feuserPID'])) : $TSFE->id;
+        $row = $this->conf['pidRecord']->getPage($this->conf['feuserPID']);
         $this->conf['thePidTitle'] = trim($this->conf['pidTitleOverride']) ? trim($this->conf['pidTitleOverride']) : $row['title'];
         $this->conf['registerPID'] = intval($this->conf['registerPID']) ? strval(intval($this->conf['registerPID'])) : $TSFE->id;
         $this->conf['editPID'] = intval($this->conf['editPID']) ? strval(intval($this->conf['editPID'])) : $TSFE->id;
@@ -144,76 +161,111 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	
 	public function displayRegistrationForm($errors = array())
 	{
-	    Zend_Loader::loadClass('Form_Registration');
+	    Zend_Loader::loadClass('Mrastp_Form_Registration');
 	    $registrationForm = new Mrastp_Form_Registration($this);
 	    if (isset($_POST['submitButton']) && $registrationForm->isValid($_POST)) {
-	        // do something
-	        return 'Danke für die Anmeldung';
-	        //$this->processRegistration($registrationForm->getValues());
+	        $data = $registrationForm->getValues();
+	        if (false) { // $this->_isDuplicateMember($data)) {
+	            $content.= '<p class="errors">' . $this->pi_getLL('member_exists') . '</p>';
+	        } else {
+    	        $this->processRegistration($data);
+    	        $content.= '<div class="box">';
+    	        $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
+    	        $content.= '<p>' . $this->decorateLabel('v_please_confirm', $data) . '</p>';
+    	        $content.= '<p>' . $this->decorateLabel('v_your_account_was_created', $data) . '</p>';
+    	        $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review1', $data) . '</p>';
+    	        $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review2', $data) . '</p>';
+    	        $content.= '<p>' . $this->decorateLabel('kind_regards', $data) . '<br />' . $this->conf['contactName'] . '</p>';
+    	        $content.= '</div>';
+    	        return $content;
+	        }
 	    }
         $content.= $registrationForm->render();
 	    return $content;
 	}
 	
-	public function processRegistration()
+	public function processRegistration($data)
 	{
 	    global $TYPO3_DB;
-	    $errors = array();
 	    $person_row = array();
 	    $feuser_row = array();
-	    
-	    $person = t3lib_div::_POST('person');
-	    $feuser = t3lib_div::_POST('feuser');
 
-	    $person_row['pid'] = $this->conf['astpdbPID'];
 	    $person_row['tstamp'] = time();
 	    $person_row['crdate'] = time();
-	    $person_row['cruser_id'] = 0;
 	    $person_row['hidden'] = 1;
-	    $person_row['salutation_id'] = (int) $person['salutation_id'];
-	    $person_row['firstname'] = trim($person['firstname']);
-	    $person_row['name'] = trim($person['name']);
-	    $person_row['street'] = $person['street'];
-	    $person_row['compl'] = $person['compl'];
-	    $person_row['zip'] = (int) $person['zip'];
-	    $person_row['city'] = $person['city'];
-	    $person_row['canton_id'] = $person['canton_id'];
-	    $person_row['country_id'] = $person['country_id'];
-	    $person_row['phone'] = $person['phone'];
-	    $person_row['mobile'] = $person['mobile'];
-	    $person_row['fax'] = $person['fax'];
-	    $person_row['email'] = $person['email'];
-	    $person_row['language_id'] = $person['language_id'];
-	    $person_row['section_id'] = $person['section_id'];
-	    $person_row['state'] = $person['state'];
+	    $person_row['salutation_id'] = (int) $data['salutation_id'];
+	    $person_row['firstname'] = $data['firstname'];
+	    $person_row['name'] = $data['name'];
+	    $person_row['street'] = $data['street'];
+	    $person_row['compl'] = $data['compl'];
+	    $person_row['zip'] = (int) $data['zip'];
+	    $person_row['city'] = $data['city'];
+	    $person_row['canton_id'] = $data['canton_id'];
+	    $person_row['country_id'] = $data['country_id'];
+	    $person_row['phone'] = $data['phone'];
+	    $person_row['mobile'] = $data['mobile'];
+	    $person_row['fax'] = $data['fax'];
+	    $person_row['email'] = $data['email'];
+	    $person_row['language_id'] = $data['language_id'];
+	    $person_row['section_id'] = $data['section_id'];
+	    $person_row['status'] = $data['status'];
+	    $person_row['entry_date'] = time();
 
-	    $feuser_row['pid'] = $this->conf['feuserPID'];
 	    $feuser_row['tstamp'] = $feuser_row['crdate'] = time();
-	    $feuser_row['username'] = trim($feuser['username']);
-	    $feuser_row['password'] = $feuser['password'];
-	    $feuser_row['usergroup'] = $this->conf['usergroup_before_accept'];
+	    $feuser_row['username'] = trim($data['username']);
+	    $feuser_row['password'] = $data['password'];
+	    $feuser_row['usergroup'] = $this->conf['userGroupUponRegistration'];
 	    $feuser_row['disable'] = 1;
 	    $feuser_row['name'] = $person_row['firstname'] . ' ' . $person_row['name'];
 	    $feuser_row['email'] = $person_row['email'];
 	    $feuser_row['city'] = $person_row['city'];
-	    
-	    t3lib_div::debug($person_row);
-	    t3lib_div::debug($feuser_row);
-	    if (!$person_row['salutation_id'] || !$person_row['firstname'] || !$person_row['name'] || !$person_row['street'] || !preg_match('/[0-9]{3,4}/', $person_row['zip']) || !$person_row['city']
-	        || !$person_row['canton_id'] || !$person_row['country_id'] || !$person_row['phone'] || !$feuser['username'] || !$feuser['password'] || !$feuser['password-repeat']) {
-	        $errors[] = $this->pi_getLL('form_error');
-        }
-        if (!$this->_isEmailAddress($person_row['email'])) {
-            $errors[] = $this->pi_getLL('incorrect_email');
-        }
-        if ($this->_isDuplicateMember($person_row)) {
-            $errors[] = $this->pi_getLL('member_exists');
-        }
-        t3lib_div::debug($errors);
-	    if (count($errors) > 0) {
-	        return $this->displayRegistrationForm($errors);
-	    }
-	    return 'abspitzen!';
+
+        $newFieldList = 'tstamp,username,password,usergroup,disable,name,email,city';	    
+        $this->cObj->DBgetInsert('fe_users', $this->conf['feuserPID'], $feuser_row, $newFieldList, true);
+        $feuserUid = $TYPO3_DB->sql_insert_id();
+
+        $person_row['feuser_id'] = $feuserUid;
+
+	    $newFieldList = 'pid,tstamp,crdate,cruser_id,hidden,salutation_id,firstname,name,street,compl,zip,city,canton_id,country_id,phone,mobile,fax,email,language_id,section_id,status,entry_date,feuser_id';
+        $this->cObj->DBgetInsert('tx_mrastp_person', $this->conf['astpdbPID'], $person_row, $newFieldList, true);
+        $personUid = $TYPO3_DB->sql_insert_id();
+        
+        //setup commands for this user
+        $commands = $this->_setupCommands($personUid);
+        // Mailings
+        require_once('Zend/Mail.php');
+        $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_initiated_review1', $data) . "\r\n";        
+        $body.= '<a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $commands['CONFIRM']['hash'] . '">' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $commands['CONFIRM']['hash'] . "</a>\r\n";
+        $body.= $this->decorateLabel('copy_paste_link', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_initiated_review2', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_initiated_message2', $data) . "\r\n";
+        $body.= '<a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $commands['DELETE']['hash'] . '">' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $commands['DELETE']['hash'] . "</a>\r\n";
+        $body.= $this->decorateLabel('copy_paste_link', $data) . "\r\n";
+        $body.= $this->decorateLabel('excuse_us', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_initiated_message3', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('kind_regards_ini', $data) . "\r\n";
+        $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+        $cust_email = new Zend_Mail('utf-8');
+        $cust_email->setSubject($this->reduceSubject($this->decorateLabel('v_please_confirm', $data)));
+        $cust_email->setBodyHtml(nl2br($body));
+        $cust_email->setBodyText(strip_tags($body));
+        $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $cust_email->addTo($data['email']);
+        $cust_email->send();
+        
+        // an astp
+        $body = $this->decorateLabel('v_registration_initiated', $data) . "\r\n\r\n";
+        $body.= $this->pi_getLL('name') . ' ' . $data['firstname'] . ' ' . $data['name'] . "\r\n";
+        $body.= $this->pi_getLL('email') . ' ' . $data['email'] . "\r\n";
+        $body.= $this->pi_getLL('username') . ' ' . $data['username'] . "\r\n\r\n";
+        $body.= $this->pi_getLL('kind_regards') . "\r\n" . $this->conf['contactName'];
+        $astp_email = new Zend_Mail('utf-8');
+        $astp_email->setSubject($this->reduceSubject($this->decorateLabel('v_notification', $data) . ' ' . $this->decorateLabel('v_registration_initiated', $data)));
+        $astp_email->setBodyText($body);
+        $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $astp_email->addTo($this->conf['contactEmail']);
+        $astp_email->send();
 	}
 
 	public function displayEditForm()
@@ -223,25 +275,278 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	
 	public function handleConfirmation()
 	{
-	    return 'Confirmation message';
+	    $content = '';
+	    $pi1_getVars = t3lib_div::_GET('tx_mrastp_pi2');
+	    $hash = isset($pi1_getVars['hash']) ? $pi1_getVars['hash'] : false;
+	    if ($hash) {
+	        Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
+	        $hashTable = new Mrastp_Db_Table_Hashes();
+	        $hashRow = $hashTable->fetchRow(array('hash = ?' => $hash));
+	        switch ($hashRow->command) {
+	            case 'CONFIRM':
+	                $content .= $this->processConfirmation($hashRow->parentuid);
+	                break;
+	            case 'DELETE':
+	                $content .= $this->processDeletion($hashRow->parentuid);
+	                break;
+                case 'ACCEPT':
+                    $content .= $this->processAcceptation($hashRow->parentuid);
+                    break;
+	            case 'REFUSE':
+	                $content .= $this->processRefusal($hashRow->parentuid);
+	                break;
+	            default:
+	                $content.= '<div class="box">ERROR<br /><br />URL not found or not valid anymore.</div>';
+	        }
+	        return $content;
+	    } else {
+	       return '<div class="box">ERROR<br /><br />No hash set.</div>';
+	    }
 	}
 	
-	protected function _getFormValue($fieldName)
+	public function processConfirmation($uid)
 	{
-	   $fieldName = str_replace(']', '', $fieldName);
-	   $fieldParts = explode('[', $fieldName);
-	   $numParts = count($fieldParts);
-	   $value = $_POST;
-	   while ($key = array_shift($fieldParts)) {
-	       if (isset($value[$key])) {
-	           $value = $value[$key];
-	       } else {
-	           return '';
-	       }
-	   }
-	   return $value;
+	    Zend_Loader::loadClass('Mrastp_Db_Table_Person');
+	    Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
+	    $personTable = new Mrastp_Db_Table_Person();
+	    $feuserTable = new Mrastp_Db_Table_Feuser();
+	    $person = $personTable->fetchRow(array('uid = ?' => $uid));
+	    $feuser = $feuserTable->fetchRow(array('uid = ?' => $person->feuser_id));
+	    $feuser->usergroup = $this->conf['userGroupAfterConfirmation'];
+	    $feuser->save();
+	    $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
+	    
+	    // Mailings
+        require_once('Zend/Mail.php');
+        $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_confirmed_subject', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_confirmed_review1', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_confirmed_review2', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('kind_regards_ini', $data) . "\r\n";
+        $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+        $cust_email = new Zend_Mail('utf-8');
+        $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_confirmed_subject', $data))));
+        $cust_email->setBodyHtml(nl2br($body));
+        $cust_email->setBodyText(strip_tags($body));
+        $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $cust_email->addTo($data['email']);
+        $cust_email->send();
+        
+        // an astp
+        Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
+        $hashTable = new Mrastp_Db_Table_Hashes();
+        $hashes = $hashTable->fetchAll(array('parentuid = ?' => $person->uid));
+        foreach ($hashes as $hash) {
+            if ($hash->command == 'ACCEPT') {
+                $acceptHash = $hashTable->fetchRow(array('parentuid = ?' => $uid, 'command = ?' => 'ACCEPT'));
+            } elseif ($hash->command == 'REFUSE') {
+                $refuseHash = $hashTable->fetchRow(array('parentuid = ?' => $uid, 'command = ?' => 'REFUSE'));
+            } else {
+                $hash->delete();
+            }
+        }
+        $body = $this->decorateLabel('v_to_the_administrator', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_confirmed', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_review_message3', $data) . "\r\n";
+        $body.= $this->pi_getLL('name') . ' ' . $person->firstname . ' ' . $person->name . "\r\n";
+        $body.= $this->pi_getLL('street') . ': ' . $person->street . "\r\n";
+        $body.= $this->pi_getLL('city') . ' ' . $person->zip . ' ' . $person->city . "\r\n";
+        $body.= $this->pi_getLL('phone') . ': ' . $person->phone . "\r\n";
+        $body.= $this->pi_getLL('email') . ' ' . $person->email . "\r\n";
+        $body.= $this->pi_getLL('username') . ' ' . $feuser->username . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_review_message1', $data) . "\r\n";
+        $body.= '<a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $acceptHash->hash . '">' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $acceptHash->hash . "</a>\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_review_message2', $data) . "\r\n";
+        $body.= '<a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $refuseHash->hash . '">' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $refuseHash->hash . "</a>\r\n\r\n";
+        $body.= $this->pi_getLL('kind_regards') . "\r\n" . $this->conf['contactName'];
+        $astp_email = new Zend_Mail('utf-8');
+        $astp_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_notification', $data) . ' ' . $this->decorateLabel('v_registration_review_subject', $data))));
+        $astp_email->setBodyText(strip_tags($body));
+        $astp_email->setBodyHtml(nl2br($body));
+        $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $astp_email->addTo($this->conf['contactEmail']);
+        $astp_email->send();
+        
+        $content.= '<div class="box">';
+        $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_confirmed_subject', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_confirmed_review1', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_confirmed_review2', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('kind_regards', $data) . '<br />' . $this->conf['contactName'] . '</p>';
+        $content.= '</div>';
+        return $content;
 	}
 	
+	public function processDeletion($uid)
+	{
+        Zend_Loader::loadClass('Mrastp_Db_Table_Person');
+        Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
+        $personTable = new Mrastp_Db_Table_Person();
+        $feuserTable = new Mrastp_Db_Table_Feuser();
+        $person = $personTable->fetchRow(array('uid = ?' => $uid));
+        $feuser = $feuserTable->fetchRow(array('uid = ?' => $person->feuser_id));
+        $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
+        $person->delete();
+        $feuser->delete();
+        Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
+        $hashTable = new Mrastp_Db_Table_Hashes();
+        $hashTable->delete(array('parentuid = ?' => $uid));
+        
+        // Mailings
+        require_once('Zend/Mail.php');
+        $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_cancelled_subject', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_cancelled_message1', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_cancelled_message2', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('kind_regards_del', $data) . "\r\n";
+        $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+        $cust_email = new Zend_Mail('utf-8');
+        $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_cancelled_subject', $data))));
+        $cust_email->setBodyHtml(nl2br($body));
+        $cust_email->setBodyText(strip_tags($body));
+        $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $cust_email->addTo($data['email']);
+        $cust_email->send();
+        
+        // an astp
+        $body = $this->decorateLabel('v_registration_cancelled', $data) . "\r\n\r\n";
+        $body.= $this->pi_getLL('name') . ': ' . $data['firstname'] . ' ' . $data['name'] . "\r\n";
+        $body.= $this->pi_getLL('email') . ' ' . $data['email'] . "\r\n";
+        $body.= $this->pi_getLL('username') . ': ' . $data['username'] . "\r\n\r\n";
+        $body.= $this->pi_getLL('kind_regards') . "\r\n" . $this->conf['contactName'];
+        $astp_email = new Zend_Mail('utf-8');
+        $astp_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_notification', $data) . ' ' . $this->decorateLabel('v_registration_cancelled', $data))));
+        $astp_email->setBodyText(strip_tags($body));
+        $astp_email->setBodyHtml(nl2br($body));
+        $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $astp_email->addTo($this->conf['contactEmail']);
+        $astp_email->send();
+        
+        $content.= '<div class="box">';
+        $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_cancelled_subject', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_cancelled_message1', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_cancelled_message2', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('kind_regards_del', $data) . '<br />' . $this->conf['contactName'] . '</p>';
+        $content.= '</div>';
+        return $content;
+    }
+
+    public function processAcceptation($uid)
+    {
+        Zend_Loader::loadClass('Mrastp_Db_Table_Person');
+        Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
+        $personTable = new Mrastp_Db_Table_Person();
+        $feuserTable = new Mrastp_Db_Table_Feuser();
+        $person = $personTable->fetchRow(array('uid = ?' => $uid));
+        $person->hidden = 0;
+        $person->save();
+        $feuser = $feuserTable->fetchRow(array('uid = ?' => $person->feuser_id));
+        $feuser->usergroup = $this->conf['userGroupAfterAcceptation'];
+        $feuser->disable = 0;
+        $feuser->save();
+        $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
+
+        Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
+        $hashTable = new Mrastp_Db_Table_Hashes();
+        $hashTable->delete(array('parentuid = ?' => $uid));
+        
+        // Mailings
+        require_once('Zend/Mail.php');
+        $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_accepted_subject2', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_accepted_message3', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_accepted_message4', $data);
+        $body.= '<a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['loginPID'] . '&L=' . $this->conf['sys_language_content'] . '">' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['loginPID'] . '&L=' . $this->conf['sys_language_content'] . "</a>\r\n\r\n";
+        $body.= $this->decorateLabel('kind_regards_cre', $data) . "\r\n";
+        $body.= $this->conf['contactName'] . "\r\n" . $this->conf['siteUrl'] . "\r\n" . $this->conf['contactEmail'];
+        $cust_email = new Zend_Mail('utf-8');
+        $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_accepted_subject2', $data))));
+        $cust_email->setBodyHtml(nl2br($body));
+        $cust_email->setBodyText(strip_tags($body));
+        $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $cust_email->addTo($data['email']);
+        $cust_email->send();
+        
+        // an astp
+        $body = $this->decorateLabel('v_registration_accepted', $data) . "\r\n\r\n";
+        $body.= $this->pi_getLL('name') . ': ' . $data['firstname'] . ' ' . $data['name'] . "\r\n";
+        $body.= $this->pi_getLL('email') . ' ' . $data['email'] . "\r\n";
+        $body.= $this->pi_getLL('username') . ': ' . $data['username'] . "\r\n\r\n";
+        $body.= $this->pi_getLL('kind_regards') . "\r\n" . $this->conf['contactName'];
+        $astp_email = new Zend_Mail('utf-8');
+        $astp_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_notification', $data) . ' ' . $this->decorateLabel('v_registration_accepted', $data))));
+        $astp_email->setBodyText(strip_tags($body));
+        $astp_email->setBodyHtml(nl2br($body));
+        $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $astp_email->addTo($this->conf['contactEmail']);
+        $astp_email->send();
+        
+        $content.= '<div class="box">';
+        $content.= '<p>' . $this->decorateLabel('v_to_the_administrator', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_accepted_subject', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_accepted_message1', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_accepted_message2', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('kind_regards', $data) . '<br />' . $this->conf['contactName'] . '</p>';
+        $content.= '</div>';
+        return $content;
+    }
+
+    public function processRefusal($uid)
+    {
+        Zend_Loader::loadClass('Mrastp_Db_Table_Person');
+        Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
+        $personTable = new Mrastp_Db_Table_Person();
+        $feuserTable = new Mrastp_Db_Table_Feuser();
+        $person = $personTable->fetchRow(array('uid = ?' => $uid));
+        $feuser = $feuserTable->fetchRow(array('uid = ?' => $person->feuser_id));
+        $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
+        $person->delete();
+        $feuser->delete();
+        Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
+        $hashTable = new Mrastp_Db_Table_Hashes();
+        $hashTable->delete(array('parentuid = ?' => $uid));
+        
+        // Mailings
+        require_once('Zend/Mail.php');
+        $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_refused_subject2', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_refused_message3', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('v_registration_refused_message4', $data) . "\r\n\r\n";
+        $body.= $this->decorateLabel('kind_regards_del', $data) . "\r\n";
+        $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+        $cust_email = new Zend_Mail('utf-8');
+        $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_refused_subject2', $data))));
+        $cust_email->setBodyHtml(nl2br($body));
+        $cust_email->setBodyText(strip_tags($body));
+        $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $cust_email->addTo($data['email']);
+        $cust_email->send();
+        
+        // an astp
+        $body = $this->decorateLabel('v_registration_refused_subject', $data) . "\r\n\r\n";
+        $body.= $this->pi_getLL('name') . ': ' . $data['firstname'] . ' ' . $data['name'] . "\r\n";
+        $body.= $this->pi_getLL('email') . ' ' . $data['email'] . "\r\n";
+        $body.= $this->pi_getLL('username') . ': ' . $data['username'] . "\r\n\r\n";
+        $body.= $this->pi_getLL('kind_regards') . "\r\n" . $this->conf['contactName'];
+        $astp_email = new Zend_Mail('utf-8');
+        $astp_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_notification', $data) . ' ' . $this->decorateLabel('v_registration_refused_subject', $data))));
+        $astp_email->setBodyText(strip_tags($body));
+        $astp_email->setBodyHtml(nl2br($body));
+        $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
+        $astp_email->addTo($this->conf['contactEmail']);
+        $astp_email->send();
+        
+        $content.= '<div class="box">';
+        $content.= '<p>' . $this->decorateLabel('v_to_the_administrator', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_refused', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_refused_message1', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('v_registration_refused_message2', $data) . '</p>';
+        $content.= '<p>' . $this->decorateLabel('kind_regards', $data) . '<br />' . $this->conf['contactName'] . '</p>';
+        $content.= '</div>';
+        return $content;
+    }
+
 	public function getSelectSalutation()
 	{
 	    $options = array($this->pi_getLL('choose_one'));
@@ -347,6 +652,43 @@ class tx_mrastp_pi2 extends tslib_pibase {
     public function getFeUserLang()
     {
         return $this->languages[$this->conf['sys_language_content']];
+    }
+    
+    public function decorateLabel($label, $data)
+    {
+        return sprintf($this->pi_getLL($label), $this->conf['thePidTitle'], $data['username'], $data['firstname'] . ' ' . $data['name'], $data['email']);
+    }
+    
+    public function _setupCommands($uid)
+    {
+        //CONFIRM: email bestätigt
+        //ACCEPT: als Mitglied aufgenommen
+        //REFUSE: Aufnahme abgelehnt
+        //DELETE: Mitglied hat gelöscht
+        //APPROVE: ???
+        $commands = array();
+        $commands['CONFIRM'] = array('hash' => md5('CONFIRM' . $uid), 'parentuid' => $uid, 'command' => 'CONFIRM');
+        $commands['ACCEPT'] = array('hash' => md5('ACCEPT' . $uid), 'parentuid' => $uid, 'command' => 'ACCEPT');
+        $commands['REFUSE'] = array('hash' => md5('REFUSE' . $uid), 'parentuid' => $uid, 'command' => 'REFUSE');
+        $commands['DELETE'] = array('hash' => md5('DELETE' . $uid), 'parentuid' => $uid, 'command' => 'DELETE');
+        
+        Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
+        $hashesTable = new Mrastp_Db_Table_Hashes();
+        foreach ($commands as $comand) {
+            $row = $hashesTable->createRow($comand);
+            $row->crdate = time();
+            $row->save();
+        }
+        unset($hashesTable);
+        return $commands; 
+    }
+    
+    public function reduceSubject($subject)
+    {
+        if (mb_strlen($subject) > 65) {
+            $subject = substr($subject, 0, 62) . '...'; 
+        }
+        return $subject;
     }
 }
 

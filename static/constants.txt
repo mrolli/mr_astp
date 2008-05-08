@@ -23,6 +23,21 @@ plugin.tx_mrastp_pi2 {
     # cat=astp-userregister; type=int+; label= Link to after edit PID: PID of the page to be linked to after the user has completed the edition of his/her profile.
   linkToPID =
   
-  # cat=astp-userregister; type=int+; label= User group PID: PID of user group to apply before an admin has accepted the registration.
-  usergroup_before_accept = 
+  # cat=astp-userregister; type=string; label= User group(s) upon registration: The value of the user group field. Must be a list of integers WITHOUT spaces between the comma separated values! Furthermore these integer MUST point to actual fe_groups records!
+  userGroupUponRegistration = 
+
+  # cat=astp-userregister; type=string; label= User group(s) after confirmation: The value of the user group(s) assigned to the front end user after receipt of his(her) confirmation.
+  userGroupAfterConfirmation = 
+  
+  # cat=astp-userregister; type=string; label= User group(s) after acceptation: The value of the user group(s) assigned to the front end user after acceptation of his(her) registration when the administrative review is enabled.
+  userGroupAfterAcceptation =
+  
+  # cat=astp-userregister; type=string; label= Administration email: Enter the administration email address here. This email address will be the sender email and also receive administration notifications.
+  contactEmail =
+
+  # cat=astp-userregister; type=string; label= Site name: Enter the name of the registering site here. If set, this will be used as the email address name in the mails sent as well as signature on the mails.
+  contactName = 
+  
+  # cat=astp-userregister, type=string; label= Website Address to generate Links back to it; form: http://www.example.com/
+  siteUrl =
 }

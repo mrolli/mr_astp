@@ -7,5 +7,10 @@ plugin.tx_mrastp_pi2 {
     confirmPID = {$plugin.tx_mrastp_pi2.confirmPID}
     loginPID = {$plugin.tx_mrastp_pi2.loginPID}
     linkToPID = {$plugin.tx_mrastp_pi2.linkToPID}
-    usergroup_before_accept = {$plugin.tx_mrastp_pi2.usergroup_before_accept}
+    userGroupUponRegistration = {$plugin.tx_mrastp_pi2.userGroupUponRegistration}
+    userGroupAfterConfirmation = {$plugin.tx_mrastp_pi2.userGroupAfterConfirmation}
+    userGroupAfterAcceptation = {$plugin.tx_mrastp_pi2.userGroupAfterAcceptation}
+    contactEmail = {$plugin.tx_mrastp_pi2.contactEmail}
+    contactName = {$plugin.tx_mrastp_pi2.contactName}
+    siteUrl = {$plugin.tx_mrastp_pi2.siteUrl}
 }
