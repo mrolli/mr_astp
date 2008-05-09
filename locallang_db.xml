@@ -22,7 +22,7 @@
 			<label index="tx_mrastp_person.phone">Phone</label>
 			<label index="tx_mrastp_person.mobile">Mobile</label>
 			<label index="tx_mrastp_person.fax">Fax</label>
-			<label index="tx_mrastp_person.email">Email</label>
+			<label index="tx_mrastp_person.email">astp correspondence email</label>
 			<label index="tx_mrastp_person.language_id">Language</label>
 			<label index="tx_mrastp_person.section_id">Section</label>
 			<label index="tx_mrastp_person.status">State</label>
@@ -98,7 +98,7 @@
 			<label index="tx_mrastp_person.phone">Téléphone</label>
 			<label index="tx_mrastp_person.mobile">Mobile</label>
 			<label index="tx_mrastp_person.fax">Fax</label>
-			<label index="tx_mrastp_person.email">Courielle</label>
+			<label index="tx_mrastp_person.email">astp Courielle de correspondance</label>
 			<label index="tx_mrastp_person.language_id">Langue</label>
 			<label index="tx_mrastp_person.section_id">Section</label>
 			<label index="tx_mrastp_person.status">Status</label>
@@ -171,7 +171,7 @@
 			<label index="tx_mrastp_person.phone">Telefon</label>
 			<label index="tx_mrastp_person.mobile">Mobile</label>
 			<label index="tx_mrastp_person.fax">Fax</label>
-			<label index="tx_mrastp_person.email">Email</label>
+			<label index="tx_mrastp_person.email">astp Korrespondenzemailadresse</label>
 			<label index="tx_mrastp_person.language_id">Sprache</label>
 			<label index="tx_mrastp_person.section_id">Sektion</label>
 			<label index="tx_mrastp_person.status">Status</label>

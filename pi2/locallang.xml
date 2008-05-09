@@ -38,7 +38,7 @@
             <label index="phone">Phone (i.e. 031 352 25 12)</label>
             <label index="mobile">Mobile (i.e. 079 243 12 15)</label>
             <label index="fax">Fax (i.e. 031 352 25 12)</label>
-            <label index="email">Email</label>
+            <label index="email">astp correspondence email</label>
             <label index="language_id">Language</label>
             <label index="section_id">Section</label>
             <label index="status">State</label>
@@ -444,7 +444,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
             <label index="phone">Telefon (z.B. 031 352 25 12)</label>
             <label index="mobile">Mobile (z.B. 079 243 12 15)</label>
             <label index="fax">Fax (z.B. 031 352 25 12)</label>
-            <label index="email">Email</label>
+            <label index="email">astp Korrestondenzemailadresse</label>
             <label index="language_id">Sprache</label>
             <label index="section_id">Sektion</label>
             <label index="status">Status</label>
@@ -837,7 +837,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
             <label index="phone">Téléphone (p.e. 031 352 25 12)</label>
             <label index="mobile">Mobile (p.e. 079 243 12 15)</label>
             <label index="fax">Fax (p.e. 031 352 25 12)</label>
-            <label index="email">Courielle</label>
+            <label index="email">astp Courielle de correspondance</label>
             <label index="language_id">Langue</label>
             <label index="section_id">Section</label>
             <label index="status">State</label>
