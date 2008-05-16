@@ -10,6 +10,9 @@ plugin.tx_mrastp_pi2 {
 
     # cat=astp-userregister; type=int+; label= Registration page PID: PID of the page on which the plugin is inserted with the intent of serving as the front end user registration page.
   registerPID =
+  
+    # cat=astp-userregister; type=int+; label= Getusername page PID: PID of the page where a form to get a username is on
+  getusernamePID = 
 
     # cat=astp-userregister; type=int+; label= Profile editing page PID: PID of the page on which the plugin is inserted with the intent of serving as the front user profile editing page.
   editPID =

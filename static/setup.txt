@@ -3,6 +3,7 @@ plugin.tx_mrastp_pi2 {
     astpdbPID = {$plugin.tx_mrastp_pi2.astpdbPID}
     pidTitleOverride = {$plugin.tx_mrastp_pi2.pidTitleOverride}
     registerPID = {$plugin.tx_mrastp_pi2.registerPID}
+    getusernamePID = {$plugin.tx_mrastp_pi2.getusernamePID}
     editPID = {$plugin.tx_mrastp_pi2.editPID}
     confirmPID = {$plugin.tx_mrastp_pi2.confirmPID}
     loginPID = {$plugin.tx_mrastp_pi2.loginPID}
