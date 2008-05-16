@@ -176,17 +176,24 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	        $data = $registrationForm->getValues();
 	        if ($this->_isDuplicateMember($data)) {
 	            $content.= '<p class="errors">' . $this->pi_getLL('member_exists') . '</p>';
-	        } else {
-    	        $this->processRegistration($data);
-    	        $content.= '<div class="box">';
-    	        $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
-    	        $content.= '<p>' . $this->decorateLabel('v_please_confirm', $data) . '</p>';
-    	        $content.= '<p>' . $this->decorateLabel('v_your_account_was_created', $data) . '</p>';
-    	        $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review1', $data) . '</p>';
-    	        $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review2', $data) . '</p>';
-    	        $content.= '<p>' . $this->decorateLabel('kind_regards', $data) . '<br />' . $this->conf['contactName'] . '</p>';
-    	        $content.= '</div>';
-    	        return $content;
+            } else {
+                Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
+                $feuserTable = new Mrastp_Db_Table_Feuser();
+                $feusers = $feuserTable->fetchAll(array('username = ?' => $data['username']));
+                if (count($feusers) != 0) {
+                    $content.= '<p class="errors">' . $this->pi_getLL('user_exists') . '</p>';
+                } else {
+    	            $this->processRegistration($data);
+    	            $content.= '<div class="box">';
+    	            $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
+    	            $content.= '<p>' . $this->decorateLabel('v_please_confirm', $data) . '</p>';
+    	            $content.= '<p>' . $this->decorateLabel('v_your_account_was_created', $data) . '</p>';
+    	            $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review1', $data) . '</p>';
+    	            $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review2', $data) . '</p>';
+    	            $content.= '<p>' . $this->decorateLabel('kind_regards', $data) . '<br />' . $this->conf['contactName'] . '</p>';
+    	            $content.= '</div>';
+    	            return $content;
+                }
 	        }
 	    }
         $content.= $registrationForm->render();
@@ -331,7 +338,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    $content = '';
 	    Zend_Loader::loadClass('Mrastp_Db_Table_Person');
 	    Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
-	    Zend_Loader::loadClass('Mrastp_db_Table_Workaddress');
+	    Zend_Loader::loadClass('Mrastp_Db_Table_Workaddress');
         Zend_Loader::loadClass('Mrastp_Form_Person');
         $personTable = new Mrastp_Db_Table_Person();
         $person = $personTable->fetchRow(array('feuser_id = ?' => $feuser_id));

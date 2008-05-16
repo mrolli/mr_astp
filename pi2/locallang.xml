@@ -29,6 +29,7 @@ HfH Zürch, ERP /IES Genf, GDS Basel, FRA Bologna</label>
             <label index="choose_one">Choose one</label>
             <label index="online_account">Online Account</label>
             <label index="member_exists">A member with given firstname, lastname, city or given email already exists.</label>
+            <label index="user_exists">A ember with the given username already exists. Please choose another.</label>
             <label index="incorrect_email">The given email address is not a valid email address.</label>
             <label index="account_overview">Account Overview</label>
             <label index="save_changes">Save data</label>
@@ -416,6 +417,7 @@ If you wish to accept our invitation and confirm your registration, please follo
             <label index="choose_one">Wählen</label>
             <label index="online_account">Online-Konto</label>
             <label index="member_exists">Ein Mitglied mit diesen Namen, Vornamen und Stadt oder dieser Email-Adresse existiert bereits.</label>
+            <label index="user_exists">Ein Mtiglied mit diesem Benutzernamen existiert bereits. Wählen Sie einen anderen Benutzernamen.</label>
             <label index="incorrect_email">Die eingegebene Email ist keine gültige Email.</label>
             <label index="account_overview">Kontoübersicht</label>
             <label index="save_changes">Daten speichern</label>
@@ -812,6 +814,7 @@ If you wish to accept our invitation and confirm your registration, please follo
             <label index="choose_one">Choississez</label>
             <label index="online_account">Compte online</label>
             <label index="member_exists">Une person avec ce prénom, nom et lieu ou courielle existe déja.</label>
+            <label index="user_exists">Une perosn avec ce nom d'utilisateur existe déja. Svp. choississez un autre.</label>
             <label index="account_overview">Aperçu du compte</label>
             <label index="save_changes">Enregistrer les données</label>
             <label index="change_data">Changer les données</label>
