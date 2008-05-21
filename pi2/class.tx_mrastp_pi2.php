@@ -174,27 +174,16 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    $registrationForm = new Mrastp_Form_Registration($this);
 	    if (isset($_POST['submitButton']) && $registrationForm->isValid($_POST)) {
 	        $data = $registrationForm->getValues();
-	        if ($this->_isDuplicateMember($data)) {
-	            $content.= '<p class="errors">' . $this->pi_getLL('member_exists') . '</p>';
-            } else {
-                Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
-                $feuserTable = new Mrastp_Db_Table_Feuser();
-                $feusers = $feuserTable->fetchAll(array('username = ?' => $data['username']));
-                if (count($feusers) != 0) {
-                    $content.= '<p class="errors">' . $this->pi_getLL('user_exists') . '</p>';
-                } else {
-    	            $this->processRegistration($data);
-    	            $content.= '<div class="box">';
-    	            $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
-    	            $content.= '<p>' . $this->decorateLabel('v_please_confirm', $data) . '</p>';
-    	            $content.= '<p>' . $this->decorateLabel('v_your_account_was_created', $data) . '</p>';
-    	            $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review1', $data) . '</p>';
-    	            $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review2', $data) . '</p>';
-    	            $content.= '<p>' . $this->decorateLabel('kind_regards', $data) . '<br />' . $this->conf['contactName'] . '</p>';
-    	            $content.= '</div>';
-    	            return $content;
-                }
-	        }
+            $this->processRegistration($data);
+            $content.= '<div class="box">';
+            $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
+            $content.= '<p>' . $this->decorateLabel('v_please_confirm', $data) . '</p>';
+            $content.= '<p>' . $this->decorateLabel('v_your_account_was_created', $data) . '</p>';
+            $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review1', $data) . '</p>';
+            $content.= '<p>' . $this->decorateLabel('v_follow_instructions_review2', $data) . '</p>';
+            $content.= '<p>' . $this->decorateLabel('kind_regards', $data) . '<br />' . $this->conf['contactName'] . '</p>';
+            $content.= '</div>';
+            return $content;
 	    }
         $content.= $registrationForm->render();
 	    return $content;
@@ -487,6 +476,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $feuserTable = new Mrastp_Db_Table_Feuser();
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $feuser_id));
         $form = new Mrastp_Form_Account($this);
+        $_POST['uid'] = $feuser_id;
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
             $origValues = $feuser->toArray();
             $newValues = $form->getValues();
@@ -1182,19 +1172,6 @@ class tx_mrastp_pi2 extends tslib_pibase {
         return $options;
     }
 
-    protected function _isDuplicateMember($member)
-    {
-        global $TYPO3_DB;
-        $TYPO3_DB->debugOutput = 1;
-        $where = "(firstname='" . $member['firstname'] . "' AND name='" . $member['name'] . "' AND city='" . $member['city'] . "')";
-        if (!empty($member['email'])) {
-            $where.= " OR email='" . $member['email'] . "'";
-        }
-        $result = $TYPO3_DB->exec_SELECTquery('uid', 'tx_mrastp_person', $where);
-        $numRows = mysql_num_rows($result);
-        $retval = ($numRows > 0) ? true : false;
-        return $retval;
-    }
     
     protected function _isEmailAddress($email)
     {

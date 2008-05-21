@@ -1,2 +1,21 @@
-isEmpty;Svp. remplir.
-NOT_MATCH;Mot de passe et le contrôle ne sont pas égale.
+isEmpty;Il faut remplir la colonne au-dessus.
+notMatch;Le mot de passe ne correspond pas à sa répétition.
+stringLengthTooShort; Le mot de passe est trop court. %min% caractères sont nécessaires.
+stringLengthTooLong;Le mot de passe est trop long. Seulment %max% caractères sont admissibles.
+usernameExists;Ce nom d'utilisateur existe déjà. Il faut en choisir un autre.
+memberExists;Un membre avec ce prénom, nom et lieu est déjà enregistré.
+emailExists;Ce courrier électronique est déjà enregistré.
+emailAddressInvalid;'%value%' n'est pas une courrier éléctronique valide.
+emailAddressInvalidHostname;'%value%' n'est pas une courrier éléctronique valide.
+emailAddressInvalidMxRecord;'%value%' n'est pas une courrier éléctronique valide.
+emailAddressDotAtom;'%value%' n'est pas une courrier éléctronique valide.
+emailAddressQuotedString;'%value%' n'est pas une courrier éléctronique valide.
+emailAddressInvalidLocalPart;'%value%' n'est pas une courrier éléctronique valide.
+hostnameIpAddressNotAllowed;'%value%' n'est pas un nom de serveur valide.
+hostnameUnknownTld;'%value%' n'est pas un nom de serveur valide.
+hostnameDashCharacter;'%value%' n'est pas un nom de serveur valide.
+hostnameInvalidHostnameSchema;'%value%' n'est pas un nom de serveur valide.
+hostnameUndecipherableTld;'%value%' n'est pas un nom de serveur valide.
+hostnameInvalidHostname;'%value%' n'est pas un nom de serveur valide.
+hostnameInvalidLocalName;'%value%' n'est pas un nom de serveur valide.
+hostnameLocalNameNotAllowed;'%value%' n'est pas un nom de serveur valide.

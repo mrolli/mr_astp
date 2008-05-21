@@ -39,7 +39,9 @@ class Mrastp_Form_Registration extends Zend_Form
         $name = $this->createElement('text', 'name');
         $name->setRequired(true)
              ->setLabel($this->_plugin->pi_getLL('name'))
-             ->setAttrib('size', 45);
+             ->setAttrib('size', 45)
+             ->addPrefixPath('Mrastp_Validate', 'Mrastp/Validate', 'validate')
+             ->addValidator('DuplicateMemberCheck', true);
              
         $street = $this->createElement('text', 'street');
         $street->setRequired(true)
@@ -89,7 +91,9 @@ class Mrastp_Form_Registration extends Zend_Form
         $email->setRequired(true)
               ->setLabel($this->_plugin->pi_getLL('email'))
               ->setAttrib('size', 45)
-              ->addValidator('EmailAddress');
+              ->addPrefixPath('Mrastp_Validate', 'Mrastp/Validate', 'validate')
+              ->addValidator('EmailAddress', true)
+              ->addValidator('DuplicateEmailAddressCheck', true);
 
         $language = $this->createElement('select', 'language_id');
         $language->setRequired(true)
@@ -108,13 +112,17 @@ class Mrastp_Form_Registration extends Zend_Form
         
         $username = $this->createElement('text', 'username');
         $username->setRequired(true)
-                 ->setLabel($this->_plugin->pi_getLL('username'));
+                 ->setLabel($this->_plugin->pi_getLL('username'))
+                 ->addPrefixPath('Mrastp_Validate', 'Mrastp/Validate', 'validate')
+                 ->addValidator('StringLength', true, array(4, 12))
+                 ->addValidator('DuplicateFeuserCheck', true);
                  
         $password = $this->createElement('password', 'password');
         $password->setRequired(true)
                  ->setLabel($this->_plugin->pi_getLL('password'))
                  ->addPrefixPath('Mrastp_Validate', 'Mrastp/Validate', 'validate')
-                 ->addValidator('PasswordConfirmation');
+                 ->addValidator('PasswordConfirmation')
+                 ->addValidator('StringLength', false, array(6, 8));;
                   
         $password_confirm = $this->createElement('password', 'password_confirm');
         $password_confirm->setRequired(true)

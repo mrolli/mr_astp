@@ -1,2 +1,21 @@
-isEmpty;Bitte ausfüllen!
-NOT_MATCH;Passwort und Wiederholung stimmen nicht überein.
+isEmpty;Das obige Feld muss zwingend ausgefüllt werden.
+notMatch;Passwort und Wiederholung stimmen nicht überein.
+stringLengthTooShort;'%value%' ist kürzer als %min% Zeichen.
+stringLengthTooLong;'%value%' ist länger als %max% Zeichen.
+usernameExists;Der gewünschte Benutzername existiert bereits. Bitte wählen Sie einen anderen.
+memberExists;Ein Mitglied mit diesem Vornamen, Nachnamen und Stadt ist bereits registriert.
+emailExists;Die angegebene Emailadresse ist bereits bei einem Mitglied eingetragen.
+emailAddressInvalid;'%value%' ist keine gültige Emailaddresse.
+emailAddressInvalidHostname;'%value%' ist keine gültige Emailaddresse.
+emailAddressInvalidMxRecord;'%value%' ist keine gültige Emailaddresse.
+emailAddressDotAtom;'%value%' ist keine gültige Emailaddresse.
+emailAddressQuotedString;'%value%' ist keine gültige Emailaddresse.
+emailAddressInvalidLocalPart;'%value%' ist keine gültige Emailaddresse.
+hostnameIpAddressNotAllowed;'%value%' ist keine gültige Serveraddresse.
+hostnameUnknownTld;'%value%' ist keine gültige Serveraddresse.
+hostnameDashCharacter;'%value%' ist keine gültige Serveraddresse.
+hostnameInvalidHostnameSchema;'%value%' ist keine gültige Serveraddresse.
+hostnameUndecipherableTld;'%value%' ist keine gültige Serveraddresse.
+hostnameInvalidHostname;'%value%' ist keine gültige Serveraddresse.
+hostnameInvalidLocalName;'%value%' ist keine gültige Serveraddresse.
+hostnameLocalNameNotAllowed;'%value%' ist keine gültige Serveraddresse.

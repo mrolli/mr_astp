@@ -28,7 +28,10 @@ class Mrastp_Form_Account extends Zend_Form
 
         $username = $this->createElement('text', 'username');
         $username->setRequired(true)
-                 ->setLabel($this->_plugin->pi_getLL('username'));
+                 ->setLabel($this->_plugin->pi_getLL('username'))
+                 ->addPrefixPath('Mrastp_Validate', 'Mrastp/Validate', 'validate')
+                 ->addValidator('StringLength', true, array(4, 12))
+                 ->addValidator('DuplicateFeuserCheck', true);
                  
         $password = $this->createElement('password', 'password');
         $password->setRequired(false)

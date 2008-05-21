@@ -39,7 +39,9 @@ class Mrastp_Form_Person extends Zend_Form
         $name = $this->createElement('text', 'name');
         $name->setRequired(true)
              ->setLabel($this->_plugin->pi_getLL('name'))
-             ->setAttrib('size', 45);
+             ->setAttrib('size', 45)
+             ->addPrefixPath('Mrastp_Validate', 'Mrastp/Validate', 'validate')
+             ->addValidator('DuplicateMemberCheck', true);
              
         $street = $this->createElement('text', 'street');
         $street->setRequired(true)
@@ -89,7 +91,9 @@ class Mrastp_Form_Person extends Zend_Form
         $email->setRequired(true)
               ->setLabel($this->_plugin->pi_getLL('email'))
               ->setAttrib('size', 45)
-              ->addValidator('EmailAddress');
+              ->addPrefixPath('Mrastp_Validate', 'Mrastp/Validate', 'validate')
+              ->addValidator('EmailAddress', true)
+              ->addValidator('DuplicateEmailAddressCheck', true);
 
         $language = $this->createElement('select', 'language_id');
         $language->setRequired(true)
