@@ -417,7 +417,7 @@ If you wish to accept our invitation and confirm your registration, please follo
             <label index="choose_one">Wählen</label>
             <label index="online_account">Online-Konto</label>
             <label index="member_exists">Ein Mitglied mit diesen Namen, Vornamen und Stadt oder dieser Email-Adresse existiert bereits.</label>
-            <label index="user_exists">Ein Mtiglied mit diesem Benutzernamen existiert bereits. Wählen Sie einen anderen Benutzernamen.</label>
+            <label index="user_exists">Ein Mitglied mit diesem Benutzernamen existiert bereits. Wählen Sie einen anderen Benutzernamen.</label>
             <label index="incorrect_email">Die eingegebene Email ist keine gültige Email.</label>
             <label index="account_overview">Kontoübersicht</label>
             <label index="save_changes">Daten speichern</label>
@@ -798,8 +798,8 @@ If you wish to accept our invitation and confirm your registration, please follo
 
         </languageKey>
         <languageKey index="fr" type="array">
-            <label index="click_here_to_register">Sie möchten Mitglied werden? Dann melden Sie sich hier an.</label>
-            <label index="click_here_to_getusername">Sie sind schon Mitglied, haben aber noch keinen Benutzernamen? Dann füllen Sie das Formular auf dieser Seite aus</label>
+            <label index="click_here_to_register">Vous souhaitez devenir membre? Inscrivez-vous ici.</label>
+            <label index="click_here_to_getusername">Vous êtes déjà membre, mais vous n'avez pas encore de nom d'utilisateur? Remplissez ce formulaire.</label>
             <label index="click_here_to_edit">Cliquez ici pour mettre à jour votre profil.</label>
             <label index="required_info_notice">N.B.: Les champs marqués d'un * doivent être complétés!</label>
             <label index="button_register">Envoyer l'enregistrement</label>
