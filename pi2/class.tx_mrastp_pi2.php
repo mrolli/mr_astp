@@ -1050,8 +1050,10 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $person = $personTable->fetchRow(array('uid = ?' => $uid));
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $person->feuser_id));
         $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
-        $person->delete();
-        $feuser->delete();
+        $person->deleted = 1;
+        $person->save();
+        $feuser->usergroup = 6;
+        $feuser->save();
         Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
         $hashTable = new Mrastp_Db_Table_Hashes();
         $hashTable->delete(array('parentuid = ?' => $uid));
