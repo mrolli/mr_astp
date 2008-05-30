@@ -18,8 +18,11 @@ class Mrastp_Validate_DuplicateMemberCheck extends Zend_Validate_Abstract
 
         $personTable = new Mrastp_Db_Table_Person();
         if (!empty($context['firstname']) && !empty($context['city'])) {
-            $persons1 = $personTable->fetchAll(array('firstname = ?' => $context['firstname'], 'name = ?' => $value, 'city = ?' => $context['city']));
-            if (count($persons1) == 0 && count($persons2) == 0) {
+            $persons = $personTable->fetchAll(array('firstname = ?' => $context['firstname'], 'name = ?' => $value, 'city = ?' => $context['city']));
+            if (count($persons) == 0) {
+                return true;
+            }
+            if (isset($context['uid']) && $persons->current()->uid == $context['uid']) {
                 return true;
             }
             $this->_error(self::MEMBER_EXISTS);

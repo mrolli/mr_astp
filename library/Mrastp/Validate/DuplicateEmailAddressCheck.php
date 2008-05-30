@@ -21,6 +21,9 @@ class Mrastp_Validate_DuplicateEmailAddressCheck extends Zend_Validate_Abstract
         if (count($persons) == 0) {
             return true;
         }
+        if (isset($context['uid']) && $persons->current()->uid == $context['uid']) {
+            return true;
+        }
         $this->_error(self::EMAIL_EXISTS);
         return false;
     }
