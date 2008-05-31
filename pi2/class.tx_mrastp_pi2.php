@@ -38,6 +38,8 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	var $scriptRelPath = 'pi2/class.tx_mrastp_pi2.php';	// Path to this script relative to the extension dir.
 	var $extKey        = 'mr_astp';	// The extension key.
 	var $pi_checkCHash = true;
+	var $feuser_id = 0;
+	var $_logger = null;
 
 	var $config = array();
 	var $pageArray = array(); // Is initialized with an array of the pages in the pid-list
@@ -60,25 +62,30 @@ class tx_mrastp_pi2 extends tslib_pibase {
 		    $noCode = true;
         }
 
-		foreach($codes as $code) {
-		    $code = $this->theCode = (string)strtoupper(trim($code));
-		    switch($code) {
-		        case 'FORWARD':
-		            $content .= $this->displayForwardNotices();
-		            break;
-    			case 'CREATE':
-    			    $content .= $this->displayRegistrationForm();
-    			    break;
-    			case 'EDIT':
-    			    $content .= $this->displayEditForm();
-    			    break;
-    			case 'CONFIRM':
-    			    $content .= $this->handleConfirmation();
-    			    break;
-		        default:
-		            $content .= $this->pi_getLL('no_view_selected');
+        try {
+    		foreach($codes as $code) {
+    		    $code = $this->theCode = (string)strtoupper(trim($code));
+    		    switch($code) {
+    		        case 'FORWARD':
+    		            $content .= $this->displayForwardNotices();
+    		            break;
+        			case 'CREATE':
+        			    $content .= $this->displayRegistrationForm();
+        			    break;
+        			case 'EDIT':
+        			    $content .= $this->displayEditForm();
+        			    break;
+        			case 'CONFIRM':
+        			    $content .= $this->handleConfirmation();
+        			    break;
+    		        default:
+    		            $content .= $this->pi_getLL('no_view_selected');
+        		}
     		}
-		}
+        } catch (Exception $e) {
+            $this->_logger->crit($e->getMessage() . ":\n" . $e->getTraceAsString() . "\n\n");
+            $content = '<div class="box">Ein Systemfehler ist aufgetreten. Entsprechende Daten wurden für den Systemadministrator aufgezeichnet. Versuchen Sie es später erneut</div>';
+        }
 
 		/*$content='
 			<strong>This is a few paragraphs:</strong><br />
@@ -101,6 +108,18 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	private function init($conf) 
 	{
 	    global $TSFE;
+	    
+	    // first we need a logger
+	    Zend_Loader::loadClass('Zend_Log');
+	    $this->_logger = new Zend_Log();
+	    $loggerConf = t3lib_extMgm::extPath('mr_astp') . '/logger.conf.php';
+	    // fetch logger conf from external file if readable
+	    if (is_readable($loggerConf)) {
+	        include_once $loggerConf;
+	    } else {
+	        Zend_Loader::loadClass('Zend_Log_Writer_Null');
+	        $this->_logger->addWriter(new Zend_Log_Writer_Null());
+	    }
 
         $this->conf = $conf;
         // db adapter for Zend_Db_Table-Classes
@@ -152,6 +171,11 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $this->conf['labels']['section_long'] = 'label_' . $this->languages[$this->conf['sys_language_content']];
         $this->conf['labels']['status_long'] = 'label_' . $this->languages[$this->conf['sys_language_content']];
 		//t3lib_div::debug($this->conf);
+		
+        // current loggedin user, 0 if no user logged in
+        if ($TSFE->loginUser) {
+            $this->feuser_id = $TSFE->fe_user->user['uid'];
+        }
 	}
 
 	public function displayForwardNotices()
@@ -238,7 +262,6 @@ class tx_mrastp_pi2 extends tslib_pibase {
         //setup commands for this user
         $commands = $this->_setupCommands($personUid);
         // Mailings
-        require_once('Zend/Mail.php');
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_initiated_review1', $data) . "\r\n";        
         $body.= '<a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $commands['CONFIRM']['hash'] . '">' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['confirmPID'] . '&L=' . $this->conf['sys_language_content'] . '&tx_mrastp_pi2[hash]=' . $commands['CONFIRM']['hash'] . "</a>\r\n";
@@ -251,6 +274,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $body.= $this->decorateLabel('v_registration_initiated_message3', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('kind_regards_ini', $data) . "\r\n";
         $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+        Zend_Loader::loadClass('Zend_Mail');
         $cust_email = new Zend_Mail('utf-8');
         $cust_email->setSubject($this->reduceSubject($this->decorateLabel('v_please_confirm', $data)));
         $cust_email->setBodyHtml(nl2br($body));
@@ -275,9 +299,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 
 	public function displayEditForm()
 	{
-	    global $TSFE;
-	    $feuser_id = $TSFE->fe_user->user['uid'];
-	    if (empty($feuser_id)) {
+	    if (!$this->feuser_id) {
 	        return '<div class="box">ERROR<br />No frontend user logged in. Action cancelled';
 	    }
 	    $pi2_getVars = t3lib_div::_GET('tx_mrastp_pi2');
@@ -294,28 +316,28 @@ class tx_mrastp_pi2 extends tslib_pibase {
         }
         switch ($action) {
             case 'editPersonal':
-                $content = $this->editPersonal($feuser_id);
+                $content = $this->editPersonal();
                 break;
             case 'editAccount':
-                $content = $this->editAccount($feuser_id);
+                $content = $this->editAccount();
                 break;
             case 'newWorkaddress':
-                $content = $this->newWorkaddress($feuser_id);
+                $content = $this->newWorkaddress();
                 break;
             case 'editWorkaddress':
-                $content = $this->editWorkaddress($feuser_id, $pi2_getVars['uid']);
+                $content = $this->editWorkaddress($pi2_getVars['uid']);
                 break;
             case 'deleteWorkaddress':
-                $content = $this->deleteWorkaddress($feuser_id, $pi2_getVars['uid']);
+                $content = $this->deleteWorkaddress($pi2_getVars['uid']);
                 break;
             default:
-                $content = $this->showAccountDetails($feuser_id);
+                $content = $this->showAccountDetails();
                 break;
         }
         return $content;
 	}
 
-	public function showAccountDetails($feuser_id)
+	public function showAccountDetails()
 	{
 	    $label['salutation'] = $this->conf['labels']['salutation'];
 	    $label['canton'] = $this->conf['labels']['canton_long'];
@@ -330,9 +352,9 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    Zend_Loader::loadClass('Mrastp_Db_Table_Workaddress');
         Zend_Loader::loadClass('Mrastp_Form_Person');
         $personTable = new Mrastp_Db_Table_Person();
-        $person = $personTable->fetchRow(array('feuser_id = ?' => $feuser_id));
+        $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
         $feuserTable = new Mrastp_Db_Table_Feuser();
-        $feuser = $feuserTable->fetchRow(array('uid = ?' => $feuser_id));
+        $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
         $workaddressTable = new Mrastp_Db_Table_Workaddress();
         $workaddresses = $workaddressTable->fetchAll(array('parentuid = ?' => $person->uid, 'deleted = ?' => 0));
         
@@ -386,7 +408,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         return $content;
 	}
 
-	public function editPersonal($feuser_id)
+	public function editPersonal()
 	{
 	    $content = '';
         $label['salutation'] = $this->conf['labels']['salutation'];
@@ -399,7 +421,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    Zend_Loader::loadClass('Mrastp_Form_Person');
 	    Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
 	    $personTable = new Mrastp_Db_Table_Person();
-	    $person = $personTable->fetchRow(array('feuser_id = ?' => $feuser_id));
+	    $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
 	    $form = new Mrastp_Form_Person($this);
 	    $_POST['uid'] = $person->uid;
 	    if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
@@ -410,7 +432,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	            $person->setFromArray($changeset);
 	            $person->save();
 	            $feuserTable = new Mrastp_Db_Table_Feuser();
-                $feuser = $feuserTable->fetchRow(array('uid = ?' => $feuser_id));
+                $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
                 $data = array('email' => $person->email, 'name' => $person->firstname . ' ' . $person->name, 'city' => $person->city);
                 $feuser->setFromArray($data);
                 $feuser->save();
@@ -418,7 +440,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	            $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => '');
 
 	            // Mailings
-                require_once('Zend/Mail.php');
+                Zend_Loader::loadClass('Zend_Mail');
                 $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
                 $body.= $this->decorateLabel('v_registration_updated_subject', $data) . "\r\n\r\n";
                 $body.= $this->decorateLabel('v_registration_updated_message1', $data) . "\r\n\r\n";
@@ -473,15 +495,15 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    return $content;
 	}
 
-	public function editAccount($feuser_id)
+	public function editAccount()
 	{
         $content = '';
         Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
         Zend_Loader::loadClass('Mrastp_Form_Account');
         $feuserTable = new Mrastp_Db_Table_Feuser();
-        $feuser = $feuserTable->fetchRow(array('uid = ?' => $feuser_id));
+        $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
         $form = new Mrastp_Form_Account($this);
-        $_POST['uid'] = $feuser_id;
+        $_POST['uid'] = $this->feuser_id;
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
             $origValues = $feuser->toArray();
             $newValues = $form->getValues();
@@ -496,12 +518,12 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $feuser->save();
                 $data = array('firstname' => '', 'name' => $feuser->name, 'email' => $feuser->email, 'username' => $feuser->username);
                 // Mailings
-                require_once('Zend/Mail.php');
                 $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
                 $body.= $this->decorateLabel('v_registration_updated_subject', $data) . "\r\n\r\n";
                 $body.= $this->decorateLabel('v_registration_updated_message1', $data) . "\r\n\r\n";
                 $body.= $this->decorateLabel('kind_regards', $data) . "\r\n";
                 $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+                Zend_Loader::loadClass('Zend_Mail');
                 $cust_email = new Zend_Mail('utf-8');
                 $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_updated_subject', $data))));
                 $cust_email->setBodyHtml(nl2br($body));
@@ -544,7 +566,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         return $content;
 	}
 
-	public function newWorkaddress($feuser_id)
+	public function newWorkaddress()
 	{
 	    $content = '';
         $label['canton'] = $this->conf['labels']['canton_long'];
@@ -555,7 +577,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
             Zend_Loader::loadClass('Mrastp_Db_Table_Workaddress');
             Zend_Loader::loadClass('Mrastp_Db_Table_Person');
             $personTable = new Mrastp_Db_Table_Person();
-            $person = $personTable->fetchRow(array('feuser_id = ?' => $feuser_id));
+            $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
             $workaddressTable = new Mrastp_Db_Table_Workaddress();
             $newRow = $workaddressTable->createRow($form->getValues());
             $newRow->pid = $this->conf['astpdbPID'];
@@ -574,12 +596,12 @@ class tx_mrastp_pi2 extends tslib_pibase {
             $newRow->save();
             $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => '');
             // Mailings
-            require_once('Zend/Mail.php');
             $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
             $body.= $this->decorateLabel('v_registration_updated_subject', $data) . "\r\n\r\n";
             $body.= $this->decorateLabel('v_registration_updated_message1', $data) . "\r\n\r\n";
             $body.= $this->decorateLabel('kind_regards', $data) . "\r\n";
             $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+            Zend_Loader::loadClass('Zend_Mail');
             $cust_email = new Zend_Mail('utf-8');
             $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_updated_subject', $data))));
             $cust_email->setBodyHtml(nl2br($body));
@@ -641,7 +663,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         return $content;
 	}
 
-	public function editWorkaddress($feuser_id, $uid)
+	public function editWorkaddress($uid)
 	{
         $content = '';
         $label['canton'] = $this->conf['labels']['canton_long'];
@@ -651,7 +673,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $workaddressTable = new Mrastp_Db_Table_Workaddress();
         $workaddress = $workaddressTable->fetchRow(array('uid = ?' => $uid));
         $person = $workaddress->findParentRow('Mrastp_Db_Table_Person');
-        if ($person->feuser_id != $feuser_id) {
+        if ($person->feuser_id != $this->feuser_id) {
             return '<div class="box">ERROR:<br /><br />Your are not allowed to edit this address!</div>';
         }
         $form = new Mrastp_Form_Workaddress($this);
@@ -672,12 +694,12 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => '');
 
                 // Mailings
-                require_once('Zend/Mail.php');
                 $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
                 $body.= $this->decorateLabel('v_registration_updated_subject', $data) . "\r\n\r\n";
                 $body.= $this->decorateLabel('v_registration_updated_message1', $data) . "\r\n\r\n";
                 $body.= $this->decorateLabel('kind_regards', $data) . "\r\n";
                 $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+                Zend_Loader::loadClass('Zend_Mail');
                 $cust_email = new Zend_Mail('utf-8');
                 $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_updated_subject', $data))));
                 $cust_email->setBodyHtml(nl2br($body));
@@ -741,7 +763,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         return $content;
 	}
 
-	public function deleteWorkaddress($feuser_id, $uid)
+	public function deleteWorkaddress($uid)
     {
         $content = '';
         $label['canton'] = $this->conf['labels']['canton_long'];
@@ -751,7 +773,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $workaddressTable = new Mrastp_Db_Table_Workaddress();
         $workaddress = $workaddressTable->fetchRow(array('uid = ?' => $uid));
         $person = $workaddress->findParentRow('Mrastp_Db_Table_Person');
-        if ($person->feuser_id != $feuser_id) {
+        if ($person->feuser_id != $this->feuser_id) {
             return '<div class="box">ERROR:<br /><br />Your are not allowed to edit this address!</div>';
         }
         $changeset = array('deleted' => 1);
@@ -760,12 +782,12 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => '');
 
         // Mailings
-        require_once('Zend/Mail.php');
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_updated_subject', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_updated_message1', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('kind_regards', $data) . "\r\n";
         $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+        Zend_Loader::loadClass('Zend_Mail');
         $cust_email = new Zend_Mail('utf-8');
         $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_updated_subject', $data))));
         $cust_email->setBodyHtml(nl2br($body));
@@ -865,13 +887,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
 	    
 	    // Mailings
-        require_once('Zend/Mail.php');
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_confirmed_subject', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_confirmed_review1', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_confirmed_review2', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('kind_regards_ini', $data) . "\r\n";
         $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+        Zend_Loader::loadClass('Zend_Mail');
         $cust_email = new Zend_Mail('utf-8');
         $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_confirmed_subject', $data))));
         $cust_email->setBodyHtml(nl2br($body));
@@ -941,13 +963,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $hashTable->delete(array('parentuid = ?' => $uid));
         
         // Mailings
-        require_once('Zend/Mail.php');
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_cancelled_subject', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_cancelled_message1', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_cancelled_message2', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('kind_regards_del', $data) . "\r\n";
         $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+        Zend_Loader::loadClass('Zend_Mail');
         $cust_email = new Zend_Mail('utf-8');
         $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_cancelled_subject', $data))));
         $cust_email->setBodyHtml(nl2br($body));
@@ -1001,7 +1023,6 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $hashTable->delete(array('parentuid = ?' => $uid));
         
         // Mailings
-        require_once('Zend/Mail.php');
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_accepted_subject2', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_accepted_message3', $data) . "\r\n\r\n";
@@ -1023,6 +1044,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $body.= $this->pi_getLL('email') . ' ' . $data['email'] . "\r\n";
         $body.= $this->pi_getLL('username') . ': ' . $data['username'] . "\r\n\r\n";
         $body.= $this->pi_getLL('kind_regards') . "\r\n" . $this->conf['contactName'];
+        Zend_Loader::loadClass('Zend_Mail');
         $astp_email = new Zend_Mail('utf-8');
         $astp_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_notification', $data) . ' ' . $this->decorateLabel('v_registration_accepted', $data))));
         $astp_email->setBodyText(strip_tags($body));
@@ -1059,13 +1081,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $hashTable->delete(array('parentuid = ?' => $uid));
         
         // Mailings
-        require_once('Zend/Mail.php');
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_refused_subject2', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_refused_message3', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_refused_message4', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('kind_regards_del', $data) . "\r\n";
         $body.= $this->conf['contactName'] . "\r\nhttp://www.astp.ch/\r\n" . $this->conf['contactEmail'];
+        Zend_Loader::loadClass('Zend_Mail');
         $cust_email = new Zend_Mail('utf-8');
         $cust_email->setSubject($this->reduceSubject(strip_tags($this->decorateLabel('v_registration_refused_subject2', $data))));
         $cust_email->setBodyHtml(nl2br($body));
@@ -1177,13 +1199,6 @@ class tx_mrastp_pi2 extends tslib_pibase {
             }
         }
         return $options;
-    }
-
-    protected function _isEmailAddress($email)
-    {
-        require_once 'Zend/Validate/EmailAddress.php';
-        $validator = new Zend_Validate_EmailAddress();
-        return $validator->isValid($email);
     }
     
     public function getFeUserLang()
