@@ -198,6 +198,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    $registrationForm = new Mrastp_Form_Registration($this);
 	    if (isset($_POST['submitButton']) && $registrationForm->isValid($_POST)) {
 	        $data = $registrationForm->getValues();
+	        $this->_logger->debug("Valid member registration form: \n" . print_r($data) . "\n");
             $this->processRegistration($data);
             $content.= '<div class="box">';
             $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
@@ -252,15 +253,18 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $newFieldList = 'tstamp,username,password,usergroup,disable,name,email,city';	    
         $this->cObj->DBgetInsert('fe_users', $this->conf['feuserPID'], $feuser_row, $newFieldList, true);
         $feuserUid = $TYPO3_DB->sql_insert_id();
+        $this->_logger->debug("New fe_user (" . $feuserUid . ") created: \n" . print_r($feuser_row) . "\n");
 
         $person_row['feuser_id'] = $feuserUid;
 
 	    $newFieldList = 'pid,tstamp,crdate,cruser_id,hidden,salutation_id,firstname,name,street,compl,zip,city,canton_id,country_id,phone,mobile,fax,email,language_id,section_id,status,entry_date,feuser_id';
         $this->cObj->DBgetInsert('tx_mrastp_person', $this->conf['astpdbPID'], $person_row, $newFieldList, true);
         $personUid = $TYPO3_DB->sql_insert_id();
+        $this->_logger->debug("New member (" . $personUid . ") created: \n" . print_r($person_row) . "\n");
         
         //setup commands for this user
         $commands = $this->_setupCommands($personUid);
+        $this->_logger->debug("Commands for new member: \n" . print_r($commands) . "\n");
         // Mailings
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_initiated_review1', $data) . "\r\n";        
@@ -282,6 +286,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $cust_email->addTo($data['email']);
         $cust_email->send();
+        $this->_logger->debug("Mail sent to " . $data['email'] . ": \n" . print_r($cust_email) . "\n");
         
         // an astp
         $body = $this->decorateLabel('v_registration_initiated', $data) . "\r\n\r\n";
@@ -295,6 +300,8 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $astp_email->addTo($this->conf['contactEmail']);
         $astp_email->send();
+        $this->_logger->debug("Mail sent to astp: \n" . print_r($cust_email) . "\n");
+        $this->_logger->inform('New member registered: (' . $personUid . ') ' . $data['firstname'] . ' ' . $data['name'] . ', ' . $data['city']);
 	}
 
 	public function displayEditForm()
@@ -316,21 +323,27 @@ class tx_mrastp_pi2 extends tslib_pibase {
         }
         switch ($action) {
             case 'editPersonal':
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') entering editPersonal.');
                 $content = $this->editPersonal();
                 break;
             case 'editAccount':
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') entering editAccount.');
                 $content = $this->editAccount();
                 break;
             case 'newWorkaddress':
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') entering newWorkaddress.');
                 $content = $this->newWorkaddress();
                 break;
             case 'editWorkaddress':
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') entering editWorkaddress (' . $pi2_getVars['uid'] . ').');
                 $content = $this->editWorkaddress($pi2_getVars['uid']);
                 break;
             case 'deleteWorkaddress':
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') entering deleteWorkaddress (' . $pi2_getVars['uid'] . ').');
                 $content = $this->deleteWorkaddress($pi2_getVars['uid']);
                 break;
             default:
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') entering showAccountDetails.');
                 $content = $this->showAccountDetails();
                 break;
         }
@@ -357,6 +370,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
         $workaddressTable = new Mrastp_Db_Table_Workaddress();
         $workaddresses = $workaddressTable->fetchAll(array('parentuid = ?' => $person->uid, 'deleted = ?' => 0));
+        $this->_logger->debug('feuser (' . $feuser->uid . ') (person ' . $person->uid . ') has ' . count($workaddresses) . ' workaddress(es).');
         
         // Personendetails
         $content.= '<h2>' . $this->pi_getLL('account_overview') . '</h2>';
@@ -396,6 +410,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $content.= '<table cellspacing="5">';
         if (count($workaddresses) > 0) {
             foreach ($workaddresses as $workaddress) {
+                $this->_logger->debug('feuser (' . $feuser->uid . ') (person ' . $person->uid . ') owns workaddress ' . $workaddress->uid);
                 $content.= '<tr><td><a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=editWorkaddress&tx_mrastp_pi2[uid]=' . $workaddress->uid . '"><img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/edit2.gif" title="' . $this->pi_getLL('change_data') . '" /></a>';
                 $content.= '&nbsp;&nbsp;<a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=deleteWorkaddress&tx_mrastp_pi2[uid]=' . $workaddress->uid . '"><img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/delete_record.gif" title="' . $this->pi_getLL('delete_workaddress') . '" /></a></td>';
             	$content.= '<td>&nbsp;' . $workaddress->name_practice . ', ' . $workaddresses->supplement . '</td><td>' . $workaddress->address1 . ', ' . $workaddress->zip . ' ' . $workaddress->city . '</td></tr>';
