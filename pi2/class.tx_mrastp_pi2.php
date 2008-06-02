@@ -83,7 +83,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         		}
     		}
         } catch (Exception $e) {
-            $this->_logger->crit($e->getMessage() . ":\n" . $e->getTraceAsString() . "\n\n");
+            $this->_logger->crit($e->getMessage() . ":\nFEuser: " . $this->feuser_id . "\n"  . $e->getTraceAsString() . "\n\n");
             $content = '<div class="box">Ein Systemfehler ist aufgetreten. Entsprechende Daten wurden für den Systemadministrator aufgezeichnet. Versuchen Sie es später erneut</div>';
         }
 
@@ -366,6 +366,10 @@ class tx_mrastp_pi2 extends tslib_pibase {
         Zend_Loader::loadClass('Mrastp_Form_Person');
         $personTable = new Mrastp_Db_Table_Person();
         $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
+        if (!$person) {
+            Zend_Loader::loadClass('Zend_Exception');
+            throw new Zend_Exception('FEuser without astp_person: feuser.uid=' . $this->feuser_id);
+        }
         $feuserTable = new Mrastp_Db_Table_Feuser();
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
         $workaddressTable = new Mrastp_Db_Table_Workaddress();

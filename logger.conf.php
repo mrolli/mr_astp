@@ -11,7 +11,7 @@
  * - INFO
  * - DEBUG
  */
-$logfile = '/Users/mrolli/Zend/workspaces/rollisch/log/mr_astp.log';
+$logfile = '/srv/www/www.astp.ch/log/mr_astp.log';
 $minPrioFile = Zend_Log::DEBUG;
 $minPrioMail = Zend_Log::CRIT;
 $mailto = 'michael@rollis.ch';
