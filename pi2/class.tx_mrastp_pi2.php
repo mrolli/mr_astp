@@ -368,7 +368,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
         if (!$person) {
             Zend_Loader::loadClass('Zend_Exception');
-            throw new Zend_Exception('FEuser without astp_person: feuser.uid=' . $this->feuser_id);
+            throw new Zend_Exception('feuser (' . $feuser->uid . ') has no astp_person!');
         }
         $feuserTable = new Mrastp_Db_Table_Feuser();
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
