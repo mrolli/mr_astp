@@ -83,7 +83,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         		}
     		}
         } catch (Exception $e) {
-            $this->_logger->crit($e->getMessage() . ":\nFEuser: " . $this->feuser_id . "\n"  . $e->getTraceAsString() . "\n\n");
+            $this->_logger->crit('feuser (' . $this->feuser_id . ') ' . $e->getMessage() . ":\n"  . $e->getTraceAsString() . "\n\n");
             $content = '<div class="box">Ein Systemfehler ist aufgetreten. Entsprechende Daten wurden für den Systemadministrator aufgezeichnet. Versuchen Sie es später erneut</div>';
         }
 
@@ -137,6 +137,8 @@ class tx_mrastp_pi2 extends tslib_pibase {
         Zend_Loader::loadClass('Zend_Mail_Transport_Sendmail');
         $tr = new Zend_Mail_Transport_Sendmail('-fbounces@astp.ch');
         Zend_Mail::setDefaultTransport($tr);
+        
+        Zend_Loader::loadClass('Zend_Debug');
 
         $this->pi_USER_INT_obj = 1;
         $this->local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
@@ -260,7 +262,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    $newFieldList = 'pid,tstamp,crdate,cruser_id,hidden,salutation_id,firstname,name,street,compl,zip,city,canton_id,country_id,phone,mobile,fax,email,language_id,section_id,status,entry_date,feuser_id';
         $this->cObj->DBgetInsert('tx_mrastp_person', $this->conf['astpdbPID'], $person_row, $newFieldList, true);
         $personUid = $TYPO3_DB->sql_insert_id();
-        $this->_logger->debug("New member (" . $personUid . ") created: \n" . print_r($person_row) . "\n");
+        $this->_logger->debug("New person (" . $personUid . ") created: \n" . print_r($person_row) . "\n");
         
         //setup commands for this user
         $commands = $this->_setupCommands($personUid);
@@ -285,8 +287,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $cust_email->setBodyText(strip_tags($body));
         $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $cust_email->addTo($data['email']);
-        $cust_email->send();
-        $this->_logger->debug("Mail sent to " . $data['email'] . ": \n" . print_r($cust_email) . "\n");
+        try {
+            $cust_email->send();
+            $this->_logger->info("Customer confirmation mail sent to " . $data['email']);
+            $this->_logger->debug(print_r($cust_email) . "\n");
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('Customer confirmation mail not sent to ' . $data['email'] . ' (person ' . $personUid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         // an astp
         $body = $this->decorateLabel('v_registration_initiated', $data) . "\r\n\r\n";
@@ -299,9 +306,14 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $astp_email->setBodyText($body);
         $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $astp_email->addTo($this->conf['contactEmail']);
-        $astp_email->send();
-        $this->_logger->debug("Mail sent to astp: \n" . print_r($cust_email) . "\n");
-        $this->_logger->inform('New member registered: (' . $personUid . ') ' . $data['firstname'] . ' ' . $data['name'] . ', ' . $data['city']);
+	    try {
+            $astp_email->send();
+            $this->_logger->info('astp begin registration mail sent to ' . $this->conf['contactEmail']);
+            $this->_logger->debug(print_r($astp_email) . "\n");
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('astp begin registration mail not sent to ' . $data['contactEmail'] . ' (person ' . $personUid . "\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
+        $this->_logger->info('New member saved to db: (' . $personUid . ') ' . $data['firstname'] . ' ' . $data['name'] . ', ' . $data['city'] . ', feuser_id=' . $person_row['feuser_id']);
 	}
 
 	public function displayEditForm()
@@ -368,7 +380,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
         if (!$person) {
             Zend_Loader::loadClass('Zend_Exception');
-            throw new Zend_Exception('feuser (' . $feuser->uid . ') has no astp_person!');
+            throw new Zend_Exception('feuser (' . $this->feuser_uid . ') has no astp_person!');
         }
         $feuserTable = new Mrastp_Db_Table_Feuser();
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
@@ -441,6 +453,10 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    Zend_Loader::loadClass('Mrastp_Db_Table_Feuser');
 	    $personTable = new Mrastp_Db_Table_Person();
 	    $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
+	    if (!$person) {
+            Zend_Loader::loadClass('Zend_Exception');
+            throw new Zend_Exception('feuser (' . $this->feuser_uid . ') has no astp_person!');
+        }
 	    $form = new Mrastp_Form_Person($this);
 	    $_POST['uid'] = $person->uid;
 	    if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
@@ -448,15 +464,20 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	        $newValues = $form->getValues();
 	        $changeset = array_diff_assoc($newValues, $origValues);
 	        if (count($changeset) > 0) {
+	            $this->_logger->debug('feuser (' . $this->feuser_id . ') (person ' . $person->uid . ") has changed personals:\n" . var_export($changeset, true));
 	            $person->setFromArray($changeset);
-	            $person->save();
+	            $record_id = $person->save();
+	            $this->_logger->debug('feuser (' . $this->feuser_id . ') saved row tx_mrastp_person.' . (string) $record_id);
+	            // updating corresponding feuser record to the person values (name, firstname, city, email)
 	            $feuserTable = new Mrastp_Db_Table_Feuser();
                 $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
                 $data = array('email' => $person->email, 'name' => $person->firstname . ' ' . $person->name, 'city' => $person->city);
                 $feuser->setFromArray($data);
-                $feuser->save();
+                $record_id = $feuser->save();
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') saved row fe_users.' . (string) $record_id);
 
 	            $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => '');
+	            $this->_logger->info('feuser (' . $this->feuser_id . '), (person ' . $person->uid . ') updated his/her personal information');
 
 	            // Mailings
                 Zend_Loader::loadClass('Zend_Mail');
@@ -471,7 +492,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $cust_email->setBodyText(strip_tags($body));
                 $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
                 $cust_email->addTo($data['email']);
-                $cust_email->send();
+	            try {
+                    $cust_email->send();
+                    $this->_logger->info('feuser (' . $this->feuser_id . ') Customer mail "personals updated" sent to ' . $data['email']);
+                    $this->_logger->debug(var_export($cust_email, true));
+                } catch (Zend_Mail_Transport_Exception $e) {
+                    $this->_logger->alert('Customer mail "personals updated" not sent to ' . $data['email'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+                }
                 
                 // an astp
                 $body = $this->decorateLabel('v_registration_updated', $data) . "\r\n\r\n";
@@ -502,9 +529,20 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $astp_email->setBodyHtml(nl2br($body));
                 $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
                 $astp_email->addTo($this->conf['contactEmail']);
-                $astp_email->send();
+	            try {
+                    $astp_email->send();
+                    $this->_logger->info('feuser (' . $this->feuser_id . ') astp mail "personals updated" sent to ' . $this->conf['contactEmail']);
+                    $this->_logger->debug(var_export($astp_email, true));
+                } catch (Zend_Mail_Transport_Exception $e) {
+                    $this->_logger->alert('astp mail "personals updated" not sent to ' . $this->conf['contactEmail'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+                }
 	        }
 	        header('Location: /' . $form->getAction());
+	    }
+	    if (count($form->getMessages()) > 0) {
+	        foreach ($form->getMessages() as $key => $message) {
+	            $this->_logger->debug('feuser (' . $this->feuser_id . '): ' . $key . ' ' . implode(', ', array_keys($message)));
+	        }
 	    }
 	    $action = $form->getAction() . '?' . $this->prefixId . '[action]=editPersonal';
 	    $form->setAction($action);
