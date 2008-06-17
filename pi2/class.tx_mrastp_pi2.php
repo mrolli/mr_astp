@@ -108,7 +108,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	private function init($conf) 
 	{
 	    global $TSFE;
-	    
+	    Zend_Loader::loadClass('Zend_Exception');
 	    // first we need a logger
 	    Zend_Loader::loadClass('Zend_Log');
 	    $this->_logger = new Zend_Log();
@@ -137,8 +137,6 @@ class tx_mrastp_pi2 extends tslib_pibase {
         Zend_Loader::loadClass('Zend_Mail_Transport_Sendmail');
         $tr = new Zend_Mail_Transport_Sendmail('-fbounces@astp.ch');
         Zend_Mail::setDefaultTransport($tr);
-        
-        Zend_Loader::loadClass('Zend_Debug');
 
         $this->pi_USER_INT_obj = 1;
         $this->local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
@@ -379,7 +377,6 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $personTable = new Mrastp_Db_Table_Person();
         $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
         if (!$person) {
-            Zend_Loader::loadClass('Zend_Exception');
             throw new Zend_Exception('feuser (' . $this->feuser_uid . ') has no astp_person!');
         }
         $feuserTable = new Mrastp_Db_Table_Feuser();
@@ -454,7 +451,6 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    $personTable = new Mrastp_Db_Table_Person();
 	    $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
 	    if (!$person) {
-            Zend_Loader::loadClass('Zend_Exception');
             throw new Zend_Exception('feuser (' . $this->feuser_uid . ') has no astp_person!');
         }
 	    $form = new Mrastp_Form_Person($this);
@@ -466,6 +462,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	        if (count($changeset) > 0) {
 	            $this->_logger->debug('feuser (' . $this->feuser_id . ') (person ' . $person->uid . ") has changed personals:\n" . var_export($changeset, true));
 	            $person->setFromArray($changeset);
+	            $person->tstamp = time();
 	            $record_id = $person->save();
 	            $this->_logger->debug('feuser (' . $this->feuser_id . ') saved row tx_mrastp_person.' . (string) $record_id);
 	            // updating corresponding feuser record to the person values (name, firstname, city, email)
@@ -473,6 +470,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
                 $data = array('email' => $person->email, 'name' => $person->firstname . ' ' . $person->name, 'city' => $person->city);
                 $feuser->setFromArray($data);
+                $feuser->tstamp = time();
                 $record_id = $feuser->save();
                 $this->_logger->debug('feuser (' . $this->feuser_id . ') saved row fe_users.' . (string) $record_id);
 
@@ -541,7 +539,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    }
 	    if (count($form->getMessages()) > 0) {
 	        foreach ($form->getMessages() as $key => $message) {
-	            $this->_logger->debug('feuser (' . $this->feuser_id . '): ' . $key . ' ' . implode(', ', array_keys($message)));
+	            $this->_logger->debug('feuser (' . $this->feuser_id . ') ' . $key . ' ' . implode(', ', array_keys($message)));
 	        }
 	    }
 	    $action = $form->getAction() . '?' . $this->prefixId . '[action]=editPersonal';
@@ -559,8 +557,11 @@ class tx_mrastp_pi2 extends tslib_pibase {
         Zend_Loader::loadClass('Mrastp_Form_Account');
         $feuserTable = new Mrastp_Db_Table_Feuser();
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $this->feuser_id));
+	    if (!$feuser) {
+            throw new Zend_Exception('feuser (' . $this->feuser_uid . ') was unable to fetch his fe_users row');
+        }
         $form = new Mrastp_Form_Account($this);
-        $_POST['uid'] = $this->feuser_id;
+        $_POST['uid'] = $feuser->uid; // for testing for duplicates in Validators
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
             $origValues = $feuser->toArray();
             $newValues = $form->getValues();
@@ -571,9 +572,14 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $changeset['password'] = $newValues['password'];
             }
             if (count($changeset) > 0) {
+                $this->_logger->debug('feuser (' . $this->feuser_id . ") has changed personals:\n" . var_export($changeset, true));
                 $feuser->setFromArray($changeset);
-                $feuser->save();
+                $feuser->tstamp = time();
+                $record_id = $feuser->save();
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') saved row fe_users.' . (string) $record_id);
                 $data = array('firstname' => '', 'name' => $feuser->name, 'email' => $feuser->email, 'username' => $feuser->username);
+                $this->_logger->info('feuser (' . $this->feuser_id . ') updated his/her account details');
+
                 // Mailings
                 $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
                 $body.= $this->decorateLabel('v_registration_updated_subject', $data) . "\r\n\r\n";
@@ -587,7 +593,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $cust_email->setBodyText(strip_tags($body));
                 $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
                 $cust_email->addTo($data['email']);
-                $cust_email->send();
+                try {
+                    $cust_email->send();
+                    $this->_logger->info('feuser (' . $this->feuser_id . ') Customer mail "account details updated" sent to ' . $data['email']);
+                    $this->_logger->debug(var_export($cust_email, true));
+                } catch (Zend_Mail_Transport_Exception $e) {
+                    $this->_logger->alert('Customer mail "account details updated" not sent to ' . $data['email'] . ', feuser ' . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+                }
                 
                 // an astp
                 $body = $this->decorateLabel('v_registration_updated', $data) . "\r\n\r\n";
@@ -609,9 +621,20 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $astp_email->setBodyHtml(nl2br($body));
                 $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
                 $astp_email->addTo($this->conf['contactEmail']);
-                $astp_email->send();
+                try {
+                    $astp_email->send();
+                    $this->_logger->info('feuser (' . $this->feuser_id . ') astp mail "account details updated" sent to ' . $this->conf['contactEmail']);
+                    $this->_logger->debug(var_export($astp_email, true));
+                } catch (Zend_Mail_Transport_Exception $e) {
+                    $this->_logger->alert('astp mail "account details updated" not sent to ' . $this->conf['contactEmail'] . ', feuser ' . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+                }
             }
             header('Location: /' . $form->getAction());
+        }
+	    if (count($form->getMessages()) > 0) {
+            foreach ($form->getMessages() as $key => $message) {
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') ' . $key . ' ' . implode(', ', array_keys($message)));
+            }
         }
         $action = $form->getAction() . '?' . $this->prefixId . '[action]=editAccount';
         $form->setAction($action);
@@ -635,6 +658,9 @@ class tx_mrastp_pi2 extends tslib_pibase {
             Zend_Loader::loadClass('Mrastp_Db_Table_Person');
             $personTable = new Mrastp_Db_Table_Person();
             $person = $personTable->fetchRow(array('feuser_id = ?' => $this->feuser_id));
+            if (!$person) {
+                throw new Zend_Exception('feuser (' . $this->feuser_uid . ') has no astp_person!');
+            }
             $workaddressTable = new Mrastp_Db_Table_Workaddress();
             $newRow = $workaddressTable->createRow($form->getValues());
             $newRow->pid = $this->conf['astpdbPID'];
@@ -650,8 +676,14 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $timestamp = mktime(23, 59, 0, $splitArr[1], $splitArr[0], $splitArr[2]);
             }
             $newRow->startofwork = $timestamp;
-            $newRow->save();
+            $record_id = $newRow->save();
+            $this->_logger->debug('feuser (' . $this->feuser_id . '), (person ' . $person->uid . ') saved row tx_mrastp_workaddress.' . (string) $record_id);
+            $person->workaddress++;
+            $person->save();
+            $this->_logger->debug('Increased workaddress count for feuser (' . $this->feuser_id . '), (person ' . $person->uid . ') tx_mrasp_person.workaddress.');
             $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => '');
+            $this->_logger->info('feuser (' . $this->feuser_id . '), (person ' . $person->uid . ') added a new workaddress');
+
             // Mailings
             $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
             $body.= $this->decorateLabel('v_registration_updated_subject', $data) . "\r\n\r\n";
@@ -665,7 +697,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
             $cust_email->setBodyText(strip_tags($body));
             $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
             $cust_email->addTo($data['email']);
-            $cust_email->send();
+            try {
+                $cust_email->send();
+                $this->_logger->info('feuser (' . $this->feuser_id . ') Customer mail "new workaddress" sent to ' . $data['email']);
+                $this->_logger->debug(var_export($cust_email, true));
+            } catch (Zend_Mail_Transport_Exception $e) {
+                $this->_logger->alert('Customer mail "new workaddress" not sent to ' . $data['email'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+            }
                 
             // an astp
             $body = $this->decorateLabel('v_registration_updated', $data) . "\r\n\r\nNeue Arbeitsaddresse erfasst:\r\n";
@@ -710,8 +748,19 @@ class tx_mrastp_pi2 extends tslib_pibase {
             $astp_email->setBodyHtml(nl2br($body));
             $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
             $astp_email->addTo($this->conf['contactEmail']);
-            $astp_email->send();
+            try {
+                $astp_email->send();
+                $this->_logger->info('feuser (' . $this->feuser_id . ') astp mail "new workaddress" sent to ' . $this->conf['contactEmail']);
+                $this->_logger->debug(var_export($astp_email, true));
+            } catch (Zend_Mail_Transport_Exception $e) {
+                $this->_logger->alert('astp mail "new workaddress" not sent to ' . $this->conf['contactEmail'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+            }
             header('Location: /' . $form->getAction());
+        }
+	    if (count($form->getMessages()) > 0) {
+            foreach ($form->getMessages() as $key => $message) {
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') ' . $key . ' ' . implode(', ', array_keys($message)));
+            }
         }
         $action = $form->getAction() . '?' . $this->prefixId . '[action]=newWorkaddress';
         $form->setAction($action);
@@ -730,7 +779,11 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $workaddressTable = new Mrastp_Db_Table_Workaddress();
         $workaddress = $workaddressTable->fetchRow(array('uid = ?' => $uid));
         $person = $workaddress->findParentRow('Mrastp_Db_Table_Person');
+	    if (!$person) {
+            throw new Zend_Exception('feuser (' . $this->feuser_uid . ') has no astp_person!');
+        }
         if ($person->feuser_id != $this->feuser_id) {
+            $this->_logger->warn('feuser (' . $this->_feuser_id . ') tried to edit workaddress ' . $uid . ' which belongs to person ' . $person->uid . ' (feuser ' . $person->feuser_id . ')');
             return '<div class="box">ERROR:<br /><br />Your are not allowed to edit this address!</div>';
         }
         $form = new Mrastp_Form_Workaddress($this);
@@ -746,9 +799,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
             $newValues['startofwork'] = $timestamp;
             $changeset = array_diff_assoc($newValues, $origValues);
             if (count($changeset) > 0) {
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') (person ' . $person->uid . ") has changed workaddress " . $workaddress->uid . ":\n" . var_export($changeset, true));
                 $workaddress->setFromArray($changeset);
-                $workaddress->save();
+                $workaddress->tstamp = time();
+                $record_id = $workaddress->save();
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') saved row tx_mrastp_workaddress.' . (string) $record_id);
                 $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => '');
+                $this->_logger->info('feuser (' . $this->feuser_id . '), (person ' . $person->uid . ') updated workaddress ' . $uid);
 
                 // Mailings
                 $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
@@ -763,7 +820,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $cust_email->setBodyText(strip_tags($body));
                 $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
                 $cust_email->addTo($data['email']);
-                $cust_email->send();
+                try {
+                    $cust_email->send();
+                    $this->_logger->info('feuser (' . $this->feuser_id . ') Customer mail "workaddress updated" sent to ' . $data['email']);
+                    $this->_logger->debug(var_export($cust_email, true));
+                } catch (Zend_Mail_Transport_Exception $e) {
+                    $this->_logger->alert('Customer mail "workaddress updated" not sent to ' . $data['email'] . ' (person ' . $person->uid . ", feuser " . $this->feuser_id . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+                }
                 
                 // an astp
                 $body = $this->decorateLabel('v_registration_updated', $data) . "\r\n\r\n";
@@ -807,9 +870,20 @@ class tx_mrastp_pi2 extends tslib_pibase {
                 $astp_email->setBodyHtml(nl2br($body));
                 $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
                 $astp_email->addTo($this->conf['contactEmail']);
-                $astp_email->send();
+                try {
+                    $astp_email->send();
+                    $this->_logger->info('feuser (' . $this->feuser_id . ') astp mail "workaddress updated" sent to ' . $this->conf['contactEmail']);
+                    $this->_logger->debug(var_export($astp_email, true));
+                } catch (Zend_Mail_Transport_Exception $e) {
+                    $this->_logger->alert('astp mail "workaddress updated" not sent to ' . $this->conf['contactEmail'] . ' (person ' . $person->uid . ", feuser " . $this->feuser_id . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+                }
             }
             header('Location: /' . $form->getAction());
+        }
+        if (count($form->getMessages()) > 0) {
+            foreach ($form->getMessages() as $key => $message) {
+                $this->_logger->debug('feuser (' . $this->feuser_id . ') ' . $key . ' ' . implode(', ', array_keys($message)));
+            }
         }
         $action = $form->getAction() . '?' . $this->prefixId . '[action]=editWorkaddress&' . $this->prefixId . '[uid]=' . $uid;
         $form->setAction($action);
@@ -830,13 +904,19 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $workaddressTable = new Mrastp_Db_Table_Workaddress();
         $workaddress = $workaddressTable->fetchRow(array('uid = ?' => $uid));
         $person = $workaddress->findParentRow('Mrastp_Db_Table_Person');
+        if (!$person) {
+            throw new Zend_Exception('feuser (' . $this->feuser_uid . ') has no astp_person!');
+        }
         if ($person->feuser_id != $this->feuser_id) {
-            return '<div class="box">ERROR:<br /><br />Your are not allowed to edit this address!</div>';
+            $this->_logger->warn('feuser (' . $this->_feuser_id . ') tried to delete workaddress ' . $uid . ' which belongs to person ' . $person->uid . ' (feuser ' . $person->feuser_id . ')');
+            return '<div class="box">ERROR:<br /><br />Your are not allowed to delete this address!</div>';
         }
         $changeset = array('deleted' => 1);
         $workaddress->setFromArray($changeset);
-        $workaddress->save();
+        $record_id = $workaddress->save();
+        $this->_logger->debug('feuser (' . $this->feuser_id . ') saved row tx_mrastp_workaddress.' . (string) $record_id);
         $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => '');
+        $this->_logger->info('feuser (' . $this->feuser_id . '), (person ' . $person->uid . ') deleted workaddress ' . $uid);
 
         // Mailings
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
@@ -851,7 +931,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $cust_email->setBodyText(strip_tags($body));
         $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $cust_email->addTo($data['email']);
-        $cust_email->send();
+        try {
+            $cust_email->send();
+            $this->_logger->info('feuser (' . $this->feuser_id . ') Customer mail "workaddress deleted" sent to ' . $data['email']);
+            $this->_logger->debug(var_export($cust_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('Customer mail "workaddress deleted" not sent to ' . $data['email'] . ' (person ' . $person->uid . ", feuser " . $this->feuser_id . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         // an astp
         $body = $this->decorateLabel('v_registration_updated', $data) . "\r\n\r\nArbeitsaddresse gelöscht:\r\n";
@@ -896,7 +982,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $astp_email->setBodyHtml(nl2br($body));
         $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $astp_email->addTo($this->conf['contactEmail']);
-        $astp_email->send();
+        try {
+            $astp_email->send();
+            $this->_logger->info('feuser (' . $this->feuser_id . ') astp mail "workaddress updated" sent to ' . $this->conf['contactEmail']);
+            $this->_logger->debug(var_export($astp_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('astp mail "workaddress updated" not sent to ' . $this->conf['contactEmail'] . ' (person ' . $person->uid . ", feuser " . $this->feuser_id . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         header('Location: /' . $this->pi_getPageLink($GLOBALS['TSFE']->id));
     }
 	
@@ -911,18 +1003,23 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	        $hashRow = $hashTable->fetchRow(array('hash = ?' => $hash));
 	        switch ($hashRow->command) {
 	            case 'CONFIRM':
+	                $this->_logger->debug('Entering account confirmation for member ' . $hashRow->parentuid . ':');
 	                $content .= $this->processConfirmation($hashRow->parentuid);
 	                break;
 	            case 'DELETE':
+	                $this->_logger->debug('Entering account deletion' . $hashRow->parentuid . ':');
 	                $content .= $this->processDeletion($hashRow->parentuid);
 	                break;
                 case 'ACCEPT':
+                    $this->_logger->debug('Entering account acceptation' . $hashRow->parentuid . ':');
                     $content .= $this->processAcceptation($hashRow->parentuid);
                     break;
 	            case 'REFUSE':
+	                $this->_logger->debug('Entering account refusal' . $hashRow->parentuid . ':');
 	                $content .= $this->processRefusal($hashRow->parentuid);
 	                break;
 	            default:
+	                $this->_logger->notice('Invalid hash specified, maybe not valid anymore or hash guessing');
 	                $content.= '<div class="box">ERROR<br /><br />URL not found or not valid anymore.</div>';
 	        }
 	        return $content;
@@ -938,10 +1035,18 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    $personTable = new Mrastp_Db_Table_Person();
 	    $feuserTable = new Mrastp_Db_Table_Feuser();
 	    $person = $personTable->fetchRow(array('uid = ?' => $uid));
+	    if (!$person) {
+	        throw new Zend_Exception('processConfirmation: Unable to find member ' . $uid);
+	    }
 	    $feuser = $feuserTable->fetchRow(array('uid = ?' => $person->feuser_id));
+	    if (!$feuser) {
+	        throw new Zend_Exception('processConfirmation: Unable to find frontend user for member ' . $uid);
+	    }
 	    $feuser->usergroup = $this->conf['userGroupAfterConfirmation'];
-	    $feuser->save();
+	    $record_id = $feuser->save();
+	    $this->_logger->debug('processConfirmation: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') saved row fe_users.' . $record_id);
 	    $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
+	    $this->_logger->info('processConfirmation: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') successfully confirmed his/her email.');
 	    
 	    // Mailings
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
@@ -957,7 +1062,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $cust_email->setBodyText(strip_tags($body));
         $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $cust_email->addTo($data['email']);
-        $cust_email->send();
+	    try {
+            $cust_email->send();
+            $this->_logger->info('processConfirmation: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') Customer mail sent to ' . $data['email']);
+            $this->_logger->debug(var_export($cust_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('processConfirmation: Customer mail not sent to ' . $data['email'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         // an astp
         Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
@@ -992,7 +1103,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $astp_email->setBodyHtml(nl2br($body));
         $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $astp_email->addTo($this->conf['contactEmail']);
-        $astp_email->send();
+	    try {
+            $astp_email->send();
+            $this->_logger->info('processConfirmation: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') astp mail sent to ' . $this->conf['contactEmail']);
+            $this->_logger->debug(var_export($astp_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('processConfirmation: astp mail not sent to ' . $this->conf['contactEmail'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         $content.= '<div class="box">';
         $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
@@ -1011,13 +1128,22 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $personTable = new Mrastp_Db_Table_Person();
         $feuserTable = new Mrastp_Db_Table_Feuser();
         $person = $personTable->fetchRow(array('uid = ?' => $uid));
+        if (!$person) {
+            throw new Zend_Exception('processDeletion: Unable to find member ' . $uid);
+        }
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $person->feuser_id));
+        if (!$feuser) {
+            throw new Zend_Exception('processDeletion: Unable to find frontend user for member ' . $uid);
+        }
         $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
-        $person->delete();
-        $feuser->delete();
+        $record_id = $person->delete();
+        $this->_logger->debug('processDeletion: Successfully deleted row tx_mrastp_person.' . $record_id);
+        $record_id = $feuser->delete();
+        $this->_logger->debug('processDeletion: Successfully deleted row fe_users.' . $record_id);
         Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
         $hashTable = new Mrastp_Db_Table_Hashes();
         $hashTable->delete(array('parentuid = ?' => $uid));
+        $this->_logger->info('processDeletion: Member ' . $uid . ' successfully deleted registration');
         
         // Mailings
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
@@ -1033,7 +1159,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $cust_email->setBodyText(strip_tags($body));
         $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $cust_email->addTo($data['email']);
-        $cust_email->send();
+	    try {
+            $cust_email->send();
+            $this->_logger->info('processDeletion: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') Customer mail sent to ' . $data['email']);
+            $this->_logger->debug(var_export($cust_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('processDeletion: Customer mail not sent to ' . $data['email'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         // an astp
         $body = $this->decorateLabel('v_registration_cancelled', $data) . "\r\n\r\n";
@@ -1047,7 +1179,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $astp_email->setBodyHtml(nl2br($body));
         $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $astp_email->addTo($this->conf['contactEmail']);
-        $astp_email->send();
+	    try {
+            $astp_email->send();
+            $this->_logger->info('processDeletion: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') astp mail sent to ' . $this->conf['contactEmail']);
+            $this->_logger->debug(var_export($astp_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('processDeletion: astp mail not sent to ' . $this->conf['contactEmail'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         $content.= '<div class="box">';
         $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
@@ -1066,18 +1204,27 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $personTable = new Mrastp_Db_Table_Person();
         $feuserTable = new Mrastp_Db_Table_Feuser();
         $person = $personTable->fetchRow(array('uid = ?' => $uid));
+        if (!$person) {
+            throw new Zend_Exception('processAcceptation: Unable to find member ' . $uid);
+        }
         $person->hidden = 0;
         $person->entry_date = time();
-        $person->save();
+        $record_id = $person->save();
+        $this->_logger->debug('processAcceptation: Successfully saved row tx_mrastp_person.' . $record_id);
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $person->feuser_id));
+        if (!$feuser) {
+            throw new Zend_Exception('processAcceptation: Unable to find frontend user for member ' . $uid);
+        }
         $feuser->usergroup = $this->conf['userGroupAfterAcceptation'];
         $feuser->disable = 0;
-        $feuser->save();
+        $record_id = $feuser->save();
+        $this->_logger->debug('processAcceptation: Successfully saved row fe_users.' . $record_id . ' for member ' . $person->uid);
         $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
 
         Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
         $hashTable = new Mrastp_Db_Table_Hashes();
         $hashTable->delete(array('parentuid = ?' => $uid));
+        $this->_logger->info('processAcceptation: Member ' . $person->uid . ' was successfully accepted');
         
         // Mailings
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
@@ -1093,7 +1240,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $cust_email->setBodyText(strip_tags($body));
         $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $cust_email->addTo($data['email']);
-        $cust_email->send();
+        try {
+            $cust_email->send();
+            $this->_logger->info('processAcceptation: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') Customer mail sent to ' . $data['email']);
+            $this->_logger->debug(var_export($cust_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('processAcceptation: Customer mail not sent to ' . $data['email'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         // an astp
         $body = $this->decorateLabel('v_registration_accepted', $data) . "\r\n\r\n";
@@ -1108,7 +1261,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $astp_email->setBodyHtml(nl2br($body));
         $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $astp_email->addTo($this->conf['contactEmail']);
-        $astp_email->send();
+        try {
+            $astp_email->send();
+            $this->_logger->info('processAcceptation: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') astp mail sent to ' . $this->conf['contactEmail']);
+            $this->_logger->debug(var_export($astp_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('processAcceptation: astp mail not sent to ' . $this->conf['contactEmail'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         $content.= '<div class="box">';
         $content.= '<p>' . $this->decorateLabel('v_to_the_administrator', $data) . '</p>';
@@ -1127,15 +1286,24 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $personTable = new Mrastp_Db_Table_Person();
         $feuserTable = new Mrastp_Db_Table_Feuser();
         $person = $personTable->fetchRow(array('uid = ?' => $uid));
+        if (!$person) {
+            throw new Zend_Exception('processRefusal: Unable to find member ' . $uid);
+        }
         $feuser = $feuserTable->fetchRow(array('uid = ?' => $person->feuser_id));
+        if (!$feuser) {
+            throw new Zend_Exception('processRefusal: Unable to find frontend user for member ' . $uid);
+        }
         $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
         $person->deleted = 1;
-        $person->save();
+        $record_id = $person->save();
+        $this->_logger->debug('processRefusal: Successfully saved row tx_mrastp_person.' . $record_id);
         $feuser->usergroup = 6;
-        $feuser->save();
+        $record_id = $feuser->save();
+        $this->_logger->debug('processRefusal: Successfully saved row fe_users.' . $record_id);
         Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
         $hashTable = new Mrastp_Db_Table_Hashes();
         $hashTable->delete(array('parentuid = ?' => $uid));
+        $this->_logger->info('processRefusal: Member ' . $person->uid . ' was successfully refused');
         
         // Mailings
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
@@ -1151,7 +1319,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $cust_email->setBodyText(strip_tags($body));
         $cust_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $cust_email->addTo($data['email']);
-        $cust_email->send();
+        try {
+            $cust_email->send();
+            $this->_logger->info('processRefusal: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') Customer mail sent to ' . $data['email']);
+            $this->_logger->debug(var_export($cust_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('processRefusal: Customer mail not sent to ' . $data['email'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         // an astp
         $body = $this->decorateLabel('v_registration_refused_subject', $data) . "\r\n\r\n";
@@ -1165,7 +1339,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $astp_email->setBodyHtml(nl2br($body));
         $astp_email->setFrom($this->conf['contactEmail'], $this->conf['contactName']);
         $astp_email->addTo($this->conf['contactEmail']);
-        $astp_email->send();
+        try {
+            $astp_email->send();
+            $this->_logger->info('processRefusal: feuser (' . $feuser->uid . ') (person ' . $person->uid . ') astp mail sent to ' . $this->conf['contactEmail']);
+            $this->_logger->debug(var_export($astp_email, true));
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $this->_logger->alert('processRefusal: astp mail not sent to ' . $this->conf['contactEmail'] . ' (person ' . $person->uid . ", feuser " . $feuser->uid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
+        }
         
         $content.= '<div class="box">';
         $content.= '<p>' . $this->decorateLabel('v_to_the_administrator', $data) . '</p>';
@@ -1286,7 +1466,8 @@ class tx_mrastp_pi2 extends tslib_pibase {
         foreach ($commands as $comand) {
             $row = $hashesTable->createRow($comand);
             $row->crdate = time();
-            $row->save();
+            $record_id = $row->save();
+            $this->_logger->debug('Person (' . $uid . ') saved new hashes on registration.');
         }
         unset($hashesTable);
         return $commands; 
