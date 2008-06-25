@@ -332,7 +332,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
                 break;
         }
         $where.= $this->cObj->enableFields('tx_mrastp_workaddress');
-        $groupby = 'name_practice, canton_id';
+        $groupby = 'name_practice, city';
         $orderby = 'canton_id, zip, name_practice ASC';
         $limit = '';
         $i=0;
