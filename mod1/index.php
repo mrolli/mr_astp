@@ -412,7 +412,9 @@ class mr_astp_module1 extends t3lib_SCbase {
                                  $this->colorize($row['name_supplement'], $row['hidden'], $row['usergroup']),
                                  $this->colorize($row['zip'], $row['uid'], $row['hidden'], $row['usergroup']),
                                  $this->colorize($row['city'], $row['uid'], $row['hidden'], $row['usergroup']),
-                                 $this->colorize('(' . $row['person_uid'] . ') ' . $row['name'] . ', ' . $row['firstname'], $row['hidden'], $row['usergroup']),
+                                 '<a href="#" onclick="' .
+                                     htmlspecialchars(t3lib_BEfunc::editOnClick('&edit[tx_mrastp_person]['.$row['person_uid'].']=edit', '/' . TYPO3_mainDir, '')) . '">' .
+                                 $this->colorize($row['name'] . ', ' . $row['firstname'], $row['hidden'], $row['usergroup']) . '</a>',
                                  );
         }
 
