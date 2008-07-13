@@ -573,8 +573,11 @@ class mr_astp_module1 extends t3lib_SCbase {
     function createMassmailerView() {
         global $LANG, $TYPO3_DB;
         $content = '';
-        $form = new Form_Massmail();
+        $form = new Form_Massmail($this);
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
+            if($this->conf['debug']) {
+                t3lib_div::debug($_POST);
+            }
             $mail = new Zend_Mail('utf-8');
             $mail->setFrom($form->getValue('fromemail'), $form->getValue('fromtext'));
             $mail->setSubject($form->getValue('subject'));
@@ -587,18 +590,45 @@ class mr_astp_module1 extends t3lib_SCbase {
             if ($form->getValue('reallysend')) {
                 // an alle schicken
                 $lang_id = (int) $form->getValue('language_id');
-                $select  = 'uid, firstname, name, email, language_id';
-                $from    = 'tx_mrastp_person';
-                $where   = ' email != \'\'';
+                $canton_ids = $form->getValue('canton_id');
+                $section_ids = $form->getValue('section_id');
+                $group_ids = $form->getValue('group_id');
+                $select = 'p.uid, firstname, name, email, language_id';
+                $from   = 'tx_mrastp_person as p';
+                $join   = '';
+                $where  = 'email != \'\'';
                 if ($lang_id > 0) {
                     $where.= ' AND language_id=' . $lang_id;
                 }
-                $where  .= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
+                if (is_array($canton_ids)) {
+                    foreach ($canton_ids as $canton_id) {
+                        $canton_where[] = 'p.canton_id = ' . (int) $canton_id;
+                    }
+                    $where.= ' AND (' . implode(' OR ', $canton_where) . ')';
+                }
+                if (is_array($section_ids)) {
+                    foreach ($section_ids as $section_id) {
+                        $section_where[] = 'section_id = ' . (int) $section_id;
+                    }
+                    $where.= ' AND (' . implode(' OR ', $section_where) . ')';
+                }
+                if (is_array($group_ids)) {
+                    foreach ($group_ids as $group_id) {
+                        $group_where[] = 'groupid = ' . (int) $group_id;
+                    }
+                    $where.= ' AND (' . implode(' OR ', $group_where) . ')';
+                    $join.= ' LEFT JOIN tx_mrastp_persons_groups_rel as r ON p.uid = r.personid';
+                }
+                $where  .= ' AND p.hidden=0 AND p.deleted=0';
                 $groupBy = '';
-                $orderBy = 'email';
+                $orderBy = ' ORDER BY email';
         
                 // query database, get number of rows and fill in an array
-                $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
+                $sql = 'SELECT ' . $select . ' FROM ' . $from . $join . ' WHERE ' . $where . $orderBy;
+                if($this->conf['debug']) {
+                    echo $sql;
+                }
+                $result = $TYPO3_DB->admin_query($sql);
                 $num_rows = $TYPO3_DB->sql_num_rows($result);
                 $i = 0;
                 $content.= 'Insgesamt werden ' . $num_rows . ' Emails verschickt:<br />';
