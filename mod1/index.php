@@ -273,15 +273,20 @@ class mr_astp_module1 extends t3lib_SCbase {
         $content.= $this->helperMembersAlphabet();
 
         // define statement parts
-        $select  = 'uid, firstname, name, zip, city, hidden';
+        $select  = 'fe_users.usergroup, tx_mrastp_person.uid, tx_mrastp_person.firstname, tx_mrastp_person.name, tx_mrastp_person.zip, tx_mrastp_person.city, tx_mrastp_person.hidden';
         $from    = 'tx_mrastp_person';
-        $where   = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? " name like '" . t3lib_div::_GET('show') . "%'" : '1=1';
+        $where   = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? " tx_mrastp_person.name like '" . t3lib_div::_GET('show') . "%'" : '1=1';
         $where  .= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
+        $join   .= ' LEFT JOIN fe_users ON tx_mrastp_person.feuser_id = fe_users.uid ';
         $groupBy = '';
-        $orderBy = 'name, firstname';
+        $orderBy = ' ORDER BY name, firstname';
 
         // query database, get number of rows and fill in an array
-        $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
+        $sql = 'SELECT ' . $select . ' FROM ' . $from . $join . ' WHERE ' . $where . $orderBy;
+        if($this->conf['debug']) {
+            echo $sql;
+        }
+        $result = $TYPO3_DB->admin_query($sql);
         $num_rows = $TYPO3_DB->sql_num_rows($result);
 
         $tableRows = array();
@@ -296,15 +301,16 @@ class mr_astp_module1 extends t3lib_SCbase {
             $tableRows[] = array('<a href="#" onclick="' .
                                      htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')) . '">' .
                                      '<img' . t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"') . ' title="' . $LANG->getLL('edit',1) . '" class="absmiddle" alt="" /></a>',
-                                 $this->grayout($row['name'], $row['hidden']),
-                                 $this->grayout($row['firstname'], $row['hidden']),
-                                 $this->grayout($row['zip'], $row['hidden']),
-                                 $this->grayout($row['city'], $row['hidden']),
+                                 $this->colorize($row['name'], $row['hidden'], $row['usergroup']),
+                                 $this->colorize($row['firstname'], $row['hidden'], $row['usergroup']),
+                                 $this->colorize($row['zip'], $row['hidden'], $row['usergroup']),
+                                 $this->colorize($row['city'], $row['hidden'], $row['usergroup']),
                                  );
         }
 
         // assemble output
         $content.= '<p><b>' . $LANG->getLL('members_found') . ': ' . $num_rows . '</b><br />';
+        $content.= $this->printColorLegend();
         $content.= $this->doc->table($tableRows, $this->tableLayout['zebra']);
         $content.= '</p>';
 
@@ -364,24 +370,29 @@ class mr_astp_module1 extends t3lib_SCbase {
     {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
         $userlang = $BE_USER->uc['lang'];
-
+        $content = '';
 
         $params='&edit[tx_mrastp_workaddress][' . $this->id . ']=new';
-        $content = '<a href="#" onclick="'.
+        $content.= '<a href="#" onclick="'.
                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
         $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
         $content.= $this->helperCantonsAlphabet();
 
         // define statement parts
-        $select  = 'uid, name_practice, name_supplement, zip, city, hidden';
+        $select  = 'fe_users.usergroup, tx_mrastp_workaddress.uid, name_practice, name_supplement, tx_mrastp_workaddress.zip, tx_mrastp_workaddress.city, tx_mrastp_workaddress.hidden';
         $from    = 'tx_mrastp_workaddress';
-        $where   = (isset($_GET['canton_id']) && t3lib_div::_GET('canton_id') > -1) ? ' canton_id=' . (int) t3lib_div::_GET('canton_id') : '1=1';
+        $where   = (isset($_GET['canton_id']) && t3lib_div::_GET('canton_id') > -1) ? ' tx_mrastp_workaddress.canton_id=' . (int) t3lib_div::_GET('canton_id') : '1=1';
         $where  .= t3lib_BEfunc::deleteClause('tx_mrastp_workaddress');
+        $join   .= ' LEFT JOIN tx_mrastp_person ON tx_mrastp_workaddress.parentuid = tx_mrastp_person.uid LEFT JOIN fe_users ON tx_mrastp_person.feuser_id = fe_users.uid ';
         $groupBy = '';
-        $orderBy = 'zip, name_practice ASC';
+        $orderBy = ' ORDER BY zip, name_practice ASC';
 
         // query database, get number of rows and fill in an array
-        $result = $TYPO3_DB->exec_SELECTquery($select, $from, $where, $groupBy, $orderBy);
+        $sql = 'SELECT ' . $select . ' FROM ' . $from . $join . ' WHERE ' . $where . $orderBy;
+        if($this->conf['debug']) {
+            echo $sql;
+        }
+        $result = $TYPO3_DB->admin_query($sql);
         $num_rows = $TYPO3_DB->sql_num_rows($result);
 
         $tableRows = array();
@@ -396,15 +407,16 @@ class mr_astp_module1 extends t3lib_SCbase {
             $tableRows[] = array('<a href="#" onclick="' .
                                      htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')) . '">' .
                                      '<img' . t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"') . ' title="' . $LANG->getLL('edit',1) . '" class="absmiddle" alt="" /></a>',
-                                 $this->grayout($row['name_practice'], $row['hidden']),
-                                 $this->grayout($row['name_supplement'], $row['hidden']),
-                                 $this->grayout($row['zip'], $row['hidden']),
-                                 $this->grayout($row['city'], $row['hidden']),
+                                 $this->colorize($row['name_practice'], $row['hidden'], $row['usergroup']),
+                                 $this->colorize($row['name_supplement'], $row['uid'], 'workaddress'),
+                                 $this->colorize($row['zip'], $row['uid'], 'workaddress'),
+                                 $this->colorize($row['city'], $row['uid'], 'workaddress'),
                                  );
         }
 
         // assemble output
         $content.= '<p><b>' . $LANG->getLL('addresses_found') . ': ' . $num_rows . '</b><br />';
+        $content.= $this->printColorLegend();
         $content.= $this->doc->table($tableRows, $this->tableLayout['zebra']);
         $content.= '</p>';
 
@@ -1001,12 +1013,33 @@ class mr_astp_module1 extends t3lib_SCbase {
         return str_replace('|', '.', $string);
     }
 
-    function grayout($value, $do = 1) {
-        if ($do == 1) {
+    function colorize($value, $hidden, $usergroups) {
+        if (null != $usergroups) {
+            $usergroups = explode(',', $usergroups);
+            if (in_array(5, $usergroups)) {
+                // registration started, nicht bestätigt
+                return '<span style="color: #aa0000">' . $value . '</span>';
+            } elseif (in_array(3, $usergroups)) {
+                // confirmed, but not accepted
+                return '<span style="color: #00aa00">' . $value . '</span>';
+            }
+        }
+        if ($hidden == 1) {
             return '<span style="color: #aaaaaa">' . $value . '</span>'; 
         } else {
             return $value;
         }
+    }
+    
+    function printColorLegend()
+    {
+        $code = '<ul>';
+        $code.= '<li><span style="color: #000000">Ordentliches Mitglied.</span>';
+        $code.= '<li><span style="color: #aa0000">Neuanmeldung, nicht bestätigt, nicht freigeschaltet.</span>';
+        $code.= '<li><span style="color: #00aa00">Neuanmeldung, bestätigt, nicht freigeschaltet.</span>';
+        $code.= '<li><span style="color: #aaaaaa">Ausgetretenes Mitglied.</span>';
+        $code.= '</ul';
+        return $code;
     }
 }
 
