@@ -82,6 +82,7 @@ class mr_astp_module1 extends t3lib_SCbase {
         $this->db['field_groups']['group_status'] = array('tx_mrastp_state.label_%s as state_label');
         $this->db['field_groups']['group_language'] = array('tx_mrastp_language.label_%s as language_label');
         $this->db['field_groups']['group_auditval'] = array('tx_mrastp_person.uid', 'tx_mrastp_section.label_%s as section_label', 'tx_mrastp_state.label_%s as state_label', 'tx_mrastp_salutation.label_%s as salutation_label', 'tx_mrastp_person.firstname', 'tx_mrastp_person.name', 'tx_mrastp_person.street', 'tx_mrastp_person.compl', 'tx_mrastp_person.zip as private_zip', 'tx_mrastp_person.city as private_city', 'pc.label_%s as private_canton', 'pl.cn_short_%s as private_country', 'tx_mrastp_person.phone as private_phone', 'tx_mrastp_person.mobile as private_mobile', 'tx_mrastp_person.fax as private_fax', 'tx_mrastp_person.email as private_email');
+        $this->db['field_groups']['group_swica'] = array('tx_mrastp_person.name', 'tx_mrastp_person.firstname', 'IF(tx_mrastp_workaddress.name_supplement != "", CONCAT(tx_mrastp_workaddress.name_practice, ", ", tx_mrastp_workaddress.name_supplement), tx_mrastp_workaddress.name_practice) as name_practice', 'tx_mrastp_workaddress.address1', 'tx_mrastp_workaddress.address2', 'tx_mrastp_workaddress.zip as work_zip', 'tx_mrastp_workaddress.city as work_city', 'wc.label_%s as work_canton');
         $this->db['field_groups']['group_employment'] = array('tx_mrastp_workaddress.employment');
         $this->db['sortable_fields'] = array('private_canton', 'work_canton', 'tx_mrastp_language.label_%s', 'tx_mrastp_state.label_%s');
 
@@ -437,6 +438,7 @@ class mr_astp_module1 extends t3lib_SCbase {
                                             'rom_aktiv', 'rom_passiv', 'rom_ehren', 'rom_iv', 'rom_studi',
                                             'ost_aktiv', 'ost_passiv', 'ost_ehren', 'ost_iv', 'ost_studi', 
                                             ),
+                        'Swica' => array('swica_general'),
                        );
         if (count($_GET) > 0) {
             $get = t3lib_div::_GET();
@@ -524,6 +526,11 @@ class mr_astp_module1 extends t3lib_SCbase {
                     $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 5);
                     $sortings = array();
                     break;
+                case 'swica_general':
+                    $selects = array('group_swica' => 1);
+                    $filters = array();
+                    $sortings = array();
+                    break;
             }
             if(isset($get['format'])) {
                 switch($get['format']) {
@@ -547,6 +554,8 @@ class mr_astp_module1 extends t3lib_SCbase {
                 $table_rows[] = array($LANG->getLL($list), '<a href="?list=' . $list . '&format=html">' . $LANG->getLL('preview') . '</a>', '<a href="?list=' . $list . '&format=xls">Excel</a>');
             }
             $pre_content.= $this->doc->table($table_rows, $this->tableLayout['zebra']);
+            $table_rows = array();
+            $table_rows[] = array();
         }
         return $pre_content . $content;
     }
@@ -841,14 +850,19 @@ class mr_astp_module1 extends t3lib_SCbase {
             }
         }
 
+        t3lib_div::debug($selects);
         foreach ($selects as $field => $value) {
             if((int) $value == 1) {
                 if(preg_match('/^group_/', $field)) {
                     foreach ($this->db['field_groups'][$field] as $real_field) {
                         $select.= ($select == '') ? sprintf($real_field, $BE_USER->uc['lang']) : ', ' . sprintf($real_field, $BE_USER->uc['lang']);
-                        list($table, $column) = explode('.', $real_field);
-                        if($table != 'tx_mrastp_person' && !preg_match('/' . $table . '/', $join)) {
-                            $join.= $this->getRelationWhere($table);
+                        if (preg_match('/CONCAT/', $real_field)) {
+                            // do nothing and hope :-)
+                        } else {
+                            list($table, $column) = explode('.', $real_field);
+                            if($table != 'tx_mrastp_person' && !preg_match('/' . $table . '/', $join)) {
+                                $join.= $this->getRelationWhere($table);
+                            }
                         }
                     }
                 } else {
@@ -893,7 +907,10 @@ class mr_astp_module1 extends t3lib_SCbase {
             $fieldParts = explode('.', $tableField);
             $tableName = $fieldParts[0];
             $fieldName = preg_replace('/.* as (.*)/', '\1', $fieldParts[1]);
-            $tableRows[0][] = utf8_encode($this->getDbLL($BE_USER->uc['lang'], $tableName, $fieldName));
+            $label = utf8_encode($this->getDbLL($BE_USER->uc['lang'], $tableName, $fieldName));
+            if (!empty($label)) {
+                $tableRows[0][] = $label;
+            }
         }
         while ($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $tableRows[] = $row;

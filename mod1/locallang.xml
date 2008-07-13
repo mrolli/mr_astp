@@ -240,6 +240,7 @@
             <label index="ost_ehren">Sektion Ostschweiz, Ehrenmitglieder</label>
             <label index="ost_iv">Sektion Ostschweiz, IV</label>
             <label index="ost_studi">Sektion Ostschweiz, Studenten</label>
+            <label index="swica_general">SWICA Liste alle Mitglieder</label>
             <label index="email_subject">Betreff</label>
             <label index="email_attachment">Anhang (optional)</label>
             <label index="email_bodytext">Email-Text</label>
