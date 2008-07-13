@@ -379,7 +379,7 @@ class mr_astp_module1 extends t3lib_SCbase {
         $content.= $this->helperCantonsAlphabet();
 
         // define statement parts
-        $select  = 'fe_users.usergroup, tx_mrastp_workaddress.uid, name_practice, name_supplement, tx_mrastp_workaddress.zip, tx_mrastp_workaddress.city, tx_mrastp_workaddress.hidden';
+        $select  = 'fe_users.usergroup, tx_mrastp_workaddress.uid, name_practice, name_supplement, tx_mrastp_workaddress.zip, tx_mrastp_workaddress.city, tx_mrastp_workaddress.hidden, tx_mrastp_person.firstname, tx_mrastp_person.name, tx_mrastp_person.uid as person_uid';
         $from    = 'tx_mrastp_workaddress';
         $where   = (isset($_GET['canton_id']) && t3lib_div::_GET('canton_id') > -1) ? ' tx_mrastp_workaddress.canton_id=' . (int) t3lib_div::_GET('canton_id') : '1=1';
         $where  .= t3lib_BEfunc::deleteClause('tx_mrastp_workaddress');
@@ -401,6 +401,7 @@ class mr_astp_module1 extends t3lib_SCbase {
                              '<b>' . $this->getDbLL($userlang, 'tx_mrastp_workaddress', 'name_supplement') . '</b>',
                              '<b>' . $this->getDbLL($userlang, 'tx_mrastp_workaddress', 'zip') .       '</b>',
                              '<b>' . $this->getDbLL($userlang, 'tx_mrastp_workaddress', 'city') .      '</b>',
+                             '<b>' . $LANG->getLL('lastname') .      '</b>',
                             );
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $params='&edit[tx_mrastp_workaddress]['.$row['uid'].']=edit';
@@ -408,9 +409,10 @@ class mr_astp_module1 extends t3lib_SCbase {
                                      htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')) . '">' .
                                      '<img' . t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/edit2.gif','width="11" height="12"') . ' title="' . $LANG->getLL('edit',1) . '" class="absmiddle" alt="" /></a>',
                                  $this->colorize($row['name_practice'], $row['hidden'], $row['usergroup']),
-                                 $this->colorize($row['name_supplement'], $row['uid'], 'workaddress'),
-                                 $this->colorize($row['zip'], $row['uid'], 'workaddress'),
-                                 $this->colorize($row['city'], $row['uid'], 'workaddress'),
+                                 $this->colorize($row['name_supplement'], $row['hidden'], $row['usergroup']),
+                                 $this->colorize($row['zip'], $row['uid'], $row['hidden'], $row['usergroup']),
+                                 $this->colorize($row['city'], $row['uid'], $row['hidden'], $row['usergroup']),
+                                 $this->colorize('(' . $row['person_uid'] . ') ' . $row['name'] . ', ' . $row['firstname'], $row['hidden'], $row['usergroup']),
                                  );
         }
 
