@@ -23,6 +23,7 @@ class Form_Massmail extends Zend_Form
         $subject = $this->createElement('text', 'subject');
         $subject->setLabel($LANG->getLL('email_subject'))
                 ->setRequired(true)
+                ->addValidator('StringLength', true, array('min' => 5, 'max' => 60))
                 ->setAttrib('size', 80);
                 
         $bodyText = $this->createElement('textarea', 'bodytext');
