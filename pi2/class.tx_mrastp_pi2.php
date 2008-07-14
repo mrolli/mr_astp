@@ -1141,6 +1141,10 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $record_id = $feuser->delete();
         $this->_logger->debug('processDeletion: Successfully deleted row fe_users.' . $record_id);
         Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
+        $hashes = $hashTable->fetchAll(array('parentuid = ?' => $uid));
+        foreach ($hashes as $hash) {
+            $hash->delete();
+        }
         $hashTable = new Mrastp_Db_Table_Hashes();
         $hashTable->delete(array('parentuid = ?' => $uid));
         $this->_logger->info('processDeletion: Member ' . $uid . ' successfully deleted registration');
@@ -1222,8 +1226,10 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $data = array('firstname' => $person->firstname, 'name' => $person->name, 'email' => $person->email, 'username' => $feuser->username);
 
         Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
-        $hashTable = new Mrastp_Db_Table_Hashes();
-        $hashTable->delete(array('parentuid = ?' => $uid));
+        $hashes = $hashTable->fetchAll(array('parentuid = ?' => $uid));
+        foreach ($hashes as $hash) {
+            $hash->delete();
+        }
         $this->_logger->info('processAcceptation: Member ' . $person->uid . ' was successfully accepted');
         
         // Mailings
@@ -1301,8 +1307,10 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $record_id = $feuser->save();
         $this->_logger->debug('processRefusal: Successfully saved row fe_users.' . $record_id);
         Zend_Loader::loadClass('Mrastp_Db_Table_Hashes');
-        $hashTable = new Mrastp_Db_Table_Hashes();
-        $hashTable->delete(array('parentuid = ?' => $uid));
+        $hashes = $hashTable->fetchAll(array('parentuid = ?' => $uid));
+        foreach ($hashes as $hash) {
+            $hash->delete();
+        }
         $this->_logger->info('processRefusal: Member ' . $person->uid . ' was successfully refused');
         
         // Mailings
