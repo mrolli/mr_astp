@@ -442,7 +442,7 @@ class mr_astp_module1 extends t3lib_SCbase {
                        );
         if (count($_GET) > 0) {
             $get = t3lib_div::_GET();
-            if ($this->config['debug']) {
+            if ($this->conf['debug']) {
                 t3lib_div::debug($get);
             }
             switch ($get['list']) {
@@ -850,7 +850,6 @@ class mr_astp_module1 extends t3lib_SCbase {
             }
         }
 
-        t3lib_div::debug($selects);
         foreach ($selects as $field => $value) {
             if((int) $value == 1) {
                 if(preg_match('/^group_/', $field)) {
