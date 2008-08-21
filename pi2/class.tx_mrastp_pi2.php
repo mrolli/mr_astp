@@ -1486,8 +1486,8 @@ class tx_mrastp_pi2 extends tslib_pibase {
     
     public function reduceSubject($subject)
     {
-        if (mb_strlen($subject) > 65) {
-            $subject = substr($subject, 0, 62) . '...'; 
+        if (mb_strlen($subject) > 60) {
+            $subject = substr($subject, 0, 57) . '...'; 
         }
         return $subject;
     }
