@@ -75,7 +75,7 @@
             <label index="work_email">W:Email</label>
             <label index="email_subject">Subject</label>
             <label index="email_bodytext">Body Text</label>
-            <label index="email_attachment">Attachment (optional)</label>
+            <label index="email_attachment">Attachment</label>
             <label index="email_fromtext">Name of sender</label>
             <label index="email_fromemail">Email of sender</label>
             <label index="email_testemail">Emailaddress to send a test mail to</label>
@@ -152,7 +152,7 @@
             <label index="work_email">A:Email</label>
             <label index="email_subject">Subject</label>
             <label index="email_bodytext">Texte de Courielle</label>
-            <label index="email_attachment">Attachment (optional)</label>
+            <label index="email_attachment">Attachment</label>
             <label index="email_fromtext">Nom d'envoyeur</label>
             <label index="email_fromemail">Addresse courielle d'envoyeur</label>
             <label index="email_testemail">Addresse courielle pour un test</label>
@@ -242,7 +242,7 @@
             <label index="ost_studi">Sektion Ostschweiz, Studenten</label>
             <label index="swica_general">SWICA Liste alle Mitglieder</label>
             <label index="email_subject">Betreff</label>
-            <label index="email_attachment">Anhang (optional)</label>
+            <label index="email_attachment">Anhang</label>
             <label index="email_bodytext">Email-Text</label>
             <label index="email_fromtext">Absendername</label>
             <label index="email_fromemail">Absenderemail</label>

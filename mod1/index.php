@@ -598,20 +598,33 @@ class mr_astp_module1 extends t3lib_SCbase {
     function createMassmailerView() {
         global $LANG, $TYPO3_DB;
         $content = '';
+        $notSent = false;
         $form = new Form_Massmail($this);
+        $attachesGroup = $form->getDisplayGroup('attachments');
+        $attaches = (isset($_POST['attaches'])) ? $_POST['attaches'] : 0;
+        for ($i=1; $i<=$attaches; $i++) {
+            $file = new Form_Element_File('userfile' . $i);
+            $file->setLabel($LANG->getLL('email_attachment') . ' #' . $i)
+                 ->setRequired(true)
+                 ->addValidator('NotEmpty');
+            $attachesGroup->addElements(array($file));
+        }
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
             if($this->conf['debug']) {
-                t3lib_div::debug($_POST);
+                t3lib_div::debug($_FILES);
+                t3lib_div::debug($form->getValues());
             }
             $mail = new Zend_Mail('utf-8');
             $mail->setFrom($form->getValue('fromemail'), $form->getValue('fromtext'));
             $mail->setSubject($form->getValue('subject'));
             $mail->setBodyText($form->getValue('bodytext', 'utf-8') . "\r\n\r\n");
-            foreach (array(1, 2, 3) as $n) {
-                $attachment = $form->getValue('userfile' . $n);
+            for ($i=1; $i<=$form->getValue('attaches'); $i++) {
+                $attachment = $_FILES['userfile' . $i];
                 if (is_array($attachment) && $attachment['error'] == 0) {
                     $at = $mail->createAttachment(file_get_contents($attachment['tmp_name']));
                     $at->filename = $attachment['name'];
+                } else {
+                    die('Feher im attachment upload. Wurde vergessen, die Datei auszuwählen? Oder defekte Datei?');
                 }
             }
             if ($form->getValue('reallysend')) {
@@ -667,20 +680,16 @@ class mr_astp_module1 extends t3lib_SCbase {
                     $content.= 'Email ' . ++$i . ' gesendet an ' . $row['email'] . '<br />';
                 }
                 $content.= 'Versand fertig';
+                $notSent = false;
             } else {
                 $mail->addTo($form->getValue('testemail'));
                 $mail->send();
                 $content.= $LANG->getLL('email_senttest');
             }
         }
+        if (!$notSent) { $form->populate($_POST); }
         $reallysend = $form->getElement('reallysend');
         $reallysend->setValue(0);
-        $userfile1 = $form->getElement('userfile1');
-        $userfile1->setValue('');
-        $userfile2 = $form->getElement('userfile2');
-        $userfile2->setValue('');
-        $userfile3 = $form->getElement('userfile3');
-        $userfile3->setValue('');
         $content.= $form->render();
         return $content;
     }

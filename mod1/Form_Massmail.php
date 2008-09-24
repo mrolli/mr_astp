@@ -29,25 +29,7 @@ class Form_Massmail extends Zend_Form
         $bodyText = $this->createElement('textarea', 'bodytext');
         $bodyText->setLabel($LANG->getLL('email_bodytext'))
                  ->setRequired(true);
-                 
-        $file1 = new Form_Element_File('userfile1');
-        $file1->setLabel($LANG->getLL('email_attachment'))
-              ->setRequired(false)
-              ->setAllowEmpty(true)
-              ->addValidator('NotEmpty');
-              
-        $file2 = new Form_Element_File('userfile2');
-        $file2->setLabel($LANG->getLL('email_attachment'))
-              ->setRequired(false)
-              ->setAllowEmpty(true)
-              ->addValidator('NotEmpty');
-        
-        $file3 = new Form_Element_File('userfile3');
-        $file3->setLabel($LANG->getLL('email_attachment'))
-              ->setRequired(false)
-              ->setAllowEmpty(true)
-              ->addValidator('NotEmpty');
-                 
+
         $fromText = $this->createElement('text', 'fromtext');
         $fromText->setLabel($LANG->getLL('email_fromtext'))
                  ->setRequired(true)
@@ -106,6 +88,10 @@ class Form_Massmail extends Zend_Form
                $group_options[$row['uid']] = $row['label'];
         }
         $group_id->addMultiOptions($group_options);
+        
+        $attaches = $this->createElement('select', 'attaches');
+        $attaches->setAttrib('onchange', 'document.forms.' . $this->getName() . '.submit()')
+                 ->addMultiOptions(array(0=>0, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5, 6=>6, 7=>7, 8=>8, 9=>9));
                   
         $reallySend = $this->createElement('checkbox', 'reallysend');
         $reallySend->setLabel($LANG->getLL('email_reallysend'));
@@ -113,10 +99,10 @@ class Form_Massmail extends Zend_Form
         $submit = $this->createElement('submit', 'submitButton');
         $submit->setLabel('Email abschicken.');
         
-        $this->addElements(array($lang_id, $group_id, $section_id, $canton_id, $subject, $bodyText, $file1, $file2, $file3, $fromText, $fromEmail, $testEmail, $reallySend, $submit));
+        $this->addElements(array($lang_id, $group_id, $section_id, $canton_id, $subject, $bodyText, $fromText, $fromEmail, $testEmail, $attaches, $reallySend, $submit));
         $this->addDisplayGroup(array('language_id', 'group_id', 'section_id', 'canton_id'), 'filters', array('legend' => 'Filters'));
         $this->addDisplayGroup(array('subject', 'bodytext', 'fromtext', 'fromemail', 'testemail'), 'email', array('legend' => 'Email'));
-        $this->addDisplayGroup(array('userfile1', 'userfile2', 'userfile3'), 'attachments', array('legend' => 'Attachments'));
+        $this->addDisplayGroup(array('attaches'), 'attachments', array('legend' => 'Attachments'));
         $this->addDisplayGroup(array('reallysend', 'submitButton'), 'therest');
     }
 }
