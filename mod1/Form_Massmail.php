@@ -30,11 +30,23 @@ class Form_Massmail extends Zend_Form
         $bodyText->setLabel($LANG->getLL('email_bodytext'))
                  ->setRequired(true);
                  
-        $file = new Form_Element_File('userfile');
-        $file->setLabel($LANG->getLL('email_attachment'))
-             ->setRequired(false)
-             ->setAllowEmpty(true)
-             ->addValidator('NotEmpty');
+        $file1 = new Form_Element_File('userfile1');
+        $file1->setLabel($LANG->getLL('email_attachment'))
+              ->setRequired(false)
+              ->setAllowEmpty(true)
+              ->addValidator('NotEmpty');
+              
+        $file2 = new Form_Element_File('userfile2');
+        $file2->setLabel($LANG->getLL('email_attachment'))
+              ->setRequired(false)
+              ->setAllowEmpty(true)
+              ->addValidator('NotEmpty');
+        
+        $file3 = new Form_Element_File('userfile3');
+        $file3->setLabel($LANG->getLL('email_attachment'))
+              ->setRequired(false)
+              ->setAllowEmpty(true)
+              ->addValidator('NotEmpty');
                  
         $fromText = $this->createElement('text', 'fromtext');
         $fromText->setLabel($LANG->getLL('email_fromtext'))
@@ -101,9 +113,10 @@ class Form_Massmail extends Zend_Form
         $submit = $this->createElement('submit', 'submitButton');
         $submit->setLabel('Email abschicken.');
         
-        $this->addElements(array($lang_id, $group_id, $section_id, $canton_id, $subject, $bodyText, $file, $fromText, $fromEmail, $testEmail, $reallySend, $submit));
+        $this->addElements(array($lang_id, $group_id, $section_id, $canton_id, $subject, $bodyText, $file1, $file2, $file3, $fromText, $fromEmail, $testEmail, $reallySend, $submit));
         $this->addDisplayGroup(array('language_id', 'group_id', 'section_id', 'canton_id'), 'filters', array('legend' => 'Filters'));
-        $this->addDisplayGroup(array('subject', 'bodytext', 'userfile', 'fromtext', 'fromemail', 'testemail'), 'email', array('legend' => 'Email'));
+        $this->addDisplayGroup(array('subject', 'bodytext', 'fromtext', 'fromemail', 'testemail'), 'email', array('legend' => 'Email'));
+        $this->addDisplayGroup(array('userfile1', 'userfile2', 'userfile3'), 'attachments', array('legend' => 'Attachments'));
         $this->addDisplayGroup(array('reallysend', 'submitButton'), 'therest');
     }
 }

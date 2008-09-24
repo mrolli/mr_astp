@@ -607,11 +607,13 @@ class mr_astp_module1 extends t3lib_SCbase {
             $mail->setFrom($form->getValue('fromemail'), $form->getValue('fromtext'));
             $mail->setSubject($form->getValue('subject'));
             $mail->setBodyText($form->getValue('bodytext', 'utf-8') . "\r\n\r\n");
-            $attachment = $form->getValue('userfile');
-            if (is_array($attachment) && $attachment['error'] == 0) {
-                $at = $mail->createAttachment(file_get_contents($attachment['tmp_name']));
-                $at->filename = $attachment['name'];
-            }   
+            foreach (array(1, 2, 3) as $n) {
+                $attachment = $form->getValue('userfile' . $n);
+                if (is_array($attachment) && $attachment['error'] == 0) {
+                    $at = $mail->createAttachment(file_get_contents($attachment['tmp_name']));
+                    $at->filename = $attachment['name'];
+                }
+            }
             if ($form->getValue('reallysend')) {
                 // an alle schicken
                 $lang_id = (int) $form->getValue('language_id');
@@ -673,8 +675,12 @@ class mr_astp_module1 extends t3lib_SCbase {
         }
         $reallysend = $form->getElement('reallysend');
         $reallysend->setValue(0);
-        $userfile = $form->getElement('userfile');
-        $userfile->setValue('');
+        $userfile1 = $form->getElement('userfile1');
+        $userfile1->setValue('');
+        $userfile2 = $form->getElement('userfile2');
+        $userfile2->setValue('');
+        $userfile3 = $form->getElement('userfile3');
+        $userfile3->setValue('');
         $content.= $form->render();
         return $content;
     }
