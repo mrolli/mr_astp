@@ -217,6 +217,14 @@ t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi2', 'FILE:EXT:mr_astp/pi2/flexform
 // add frontend plugins
 t3lib_extMgm::addPlugin(array('LLL:EXT:' . $_EXTKEY . '/pi2/locallang.xml:plugin_name.pi2', $_EXTKEY.'_pi2'));
 
+// plugin3
+// add FlexForm field to tt_content
+$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi3']='pi_flexform';
+// add flexform definition
+t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi3', 'FILE:EXT:mr_astp/pi3/flexform_ds.xml');
+// add frontend plugins
+t3lib_extMgm::addPlugin(array('LLL:EXT:' . $_EXTKEY . '/pi3/locallang.xml:plugin_name.pi3', $_EXTKEY.'_pi3'));
+
 t3lib_extMgm::addStaticFile($_EXTKEY,'static/', 'astp Database');
 
 ?>

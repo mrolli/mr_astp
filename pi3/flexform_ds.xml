@@ -1,0 +1,35 @@
+<T3DataStructure>
+	<meta>
+		<langDisable>1</langDisable>
+	</meta>
+	<sheets>
+		<sDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:mr_astp/pi3/locallang.xml:mr_astp.pi_flexform.sheet_general</sheetTitle>
+				</TCEforms>
+				<type>array</type>
+				<el>
+					<store_name>
+						<TCEforms>
+							<label>LLL:EXT:mr_astp/pi3/locallang.xml:mr_astp.pi_flexform.store_name</label>
+							<config>
+								<type>input</type>
+								<size>30</size>
+						    </config>
+					   </TCEforms>
+				    </store_name>
+					<fields>
+                        <TCEforms>
+                            <label>LLL:EXT:mr_astp/pi3/locallang.xml:mr_astp.pi_flexform.fields</label>
+                            <config>
+                                <type>input</type>
+                                <size>30</size>
+                            </config>
+                       </TCEforms>
+                    </fields>
+				</el>
+			</ROOT>
+		</sDEF>
+	</sheets>
+</T3DataStructure>

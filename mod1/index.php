@@ -675,7 +675,7 @@ class mr_astp_module1 extends t3lib_SCbase {
                 while ($row = $TYPO3_DB->sql_fetch_assoc($result)) {
                     $clone = clone $mail;
                     $clone->addTo($row['email']);
-                    $clone->send();
+                    //$clone->send();
                     unset($clone);
                     $content.= 'Email ' . ++$i . ' gesendet an ' . $row['email'] . '<br />';
                 }
