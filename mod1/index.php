@@ -274,7 +274,7 @@ class mr_astp_module1 extends t3lib_SCbase {
         $content.= $this->helperMembersAlphabet();
 
         // define statement parts
-        $select  = 'fe_users.usergroup, tx_mrastp_person.uid, tx_mrastp_person.firstname, tx_mrastp_person.name, tx_mrastp_person.zip, tx_mrastp_person.city, tx_mrastp_person.hidden';
+        $select  = 'fe_users.usergroup, tx_mrastp_person.uid, tx_mrastp_person.firstname, tx_mrastp_person.name, tx_mrastp_person.zip, tx_mrastp_person.city, tx_mrastp_person.hidden, tx_mrastp_person.email';
         $from    = 'tx_mrastp_person';
         $where   = (isset($_GET['show']) && t3lib_div::_GET('show') != 'alle') ? " tx_mrastp_person.name like '" . t3lib_div::_GET('show') . "%'" : '1=1';
         $where  .= ' ' . t3lib_BEfunc::deleteClause('tx_mrastp_person');
@@ -296,6 +296,7 @@ class mr_astp_module1 extends t3lib_SCbase {
                              '<b>' . $this->getDbLL($userlang, 'tx_mrastp_person', 'firstname') . '</b>',
                              '<b>' . $this->getDbLL($userlang, 'tx_mrastp_person', 'zip') .       '</b>',
                              '<b>' . $this->getDbLL($userlang, 'tx_mrastp_person', 'city') .      '</b>',
+                             '<b>' . $this->getDbLL($userlang, 'tx_mrastp_person', 'email') .     '</b>',
                             );
         while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
             $params='&edit[tx_mrastp_person]['.$row['uid'].']=edit';
@@ -306,6 +307,7 @@ class mr_astp_module1 extends t3lib_SCbase {
                                  $this->colorize($row['firstname'], $row['hidden'], $row['usergroup']),
                                  $this->colorize($row['zip'], $row['hidden'], $row['usergroup']),
                                  $this->colorize($row['city'], $row['hidden'], $row['usergroup']),
+                                 $this->colorize('<a href="mailto:' . $row['email'] . '">' . $row['email'] . '</a>', $row['hidden'], $row['usergroup']),
                                  );
         }
 
