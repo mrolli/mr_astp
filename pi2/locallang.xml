@@ -387,7 +387,7 @@ If you wish to accept our invitation and confirm your registration, please follo
             <label index="v_registration_accepted_message1">A message is being sent to &lt;b&gt;%3$s&lt;/b&gt; to inform him(her) that his(her) membership with &lt;b&gt;%1$s&lt;/b&gt; was accepted.</label>
             <label index="v_registration_accepted_message2">&lt;b&gt;%3$s&lt;/b&gt; is now able to login.</label>
             <label index="v_registration_accepted_subject2">Your application for membership has been accepted.</label>
-            <label index="v_registration_accepted_message3">We are pleased to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted and that your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</label>
+            <label index="v_registration_accepted_message3">We are pleased to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted and that your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list. You will receive further information about astp by letter in several days.</label>
             <label index="v_registration_accepted_message4">You may now login at:</label>
             <label index="v_registration_accepted">The application of %3$s for membership with %1$s was accepted.</label>
             <label index="v_registration_refused_subject">The application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt; is now refused.</label>
@@ -752,7 +752,7 @@ If you wish to accept our invitation and confirm your registration, please follo
             <label index="v_registration_accepted_message2">&lt;b&gt;%3$s&lt;/b&gt; kann sich jetzt einloggen.</label>
             <label index="v_registration_accepted_subject2">Ihre Mitgliedschaft wurde bestätigt.</label>
 
-            <label index="v_registration_accepted_message3">Wir freuen uns, Ihnen mitteilen zu dürfen, dass ihre Mitgliedschaft &lt;b&gt;%2$s&lt;/b&gt; bestätigt wurde und, dass Ihre E-Mail-Adresse  &lt;b&gt;%4$s&lt;/b&gt; unserer Liste hinzugefügt wurde.</label>
+            <label index="v_registration_accepted_message3">Wir freuen uns, Ihnen mitteilen zu dürfen, dass ihre Mitgliedschaft &lt;b&gt;%2$s&lt;/b&gt; bestätigt wurde und, dass Ihre E-Mail-Adresse  &lt;b&gt;%4$s&lt;/b&gt; unserer Liste hinzugefügt wurde. Sie erhalten in den nächsten Tagen ausführliche Informationen über den astp per Post.</label>
 
             <label index="v_registration_accepted_message4">Sie können sich jetzt einloggen bei:</label>
 
@@ -1071,7 +1071,7 @@ If you wish to accept our invitation and confirm your registration, please follo
             <label index="v_registration_accepted_message1">Un message est envoyé à &lt;b&gt;%3$s&lt;/b&gt; pour l'informer que la demande d'admission de &lt;b&gt;%1$s&lt;/b&gt; a été acceptée.</label>
             <label index="v_registration_accepted_message2">&lt;b&gt;%3$s&lt;/b&gt; peut maintenant accéder à la section &lt;b&gt;%1$s&lt;/b&gt; du site.</label>
             <label index="v_registration_accepted_subject2">La demande d'admission de &lt;b&gt;%1$s&lt;/b&gt; a été acceptée.</label>
-            <label index="v_registration_accepted_message3">Nous avons le plaisir de vous informer que votre demande d'admission a été acceptée et que votre adresse de courrier électronique &lt;b&gt;%4$s&lt;/b&gt; a été ajoutée à nos listes.</label>
+            <label index="v_registration_accepted_message3">Nous avons le plaisir de vous informer que votre demande d'admission a été acceptée et que votre adresse de courrier électronique &lt;b&gt;%4$s&lt;/b&gt; a été ajoutée à nos listes. Sie erhalten in den nächsten Tagen ausführliche Informationen über den astp per Post.</label>
             <label index="v_registration_accepted_message4">Pour accéder à la section &lt;b&gt;%1$s&lt;/b&gt; de notre site, suivez ce lien:</label>
             <label index="v_registration_accepted">La demande d'admission de %1$s a été acceptée.</label>
             <label index="v_registration_refused_subject">La demande d'admission de &lt;b&gt;%1$s&lt;/b&gt; est maintenant refusée.</label>
