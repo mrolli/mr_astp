@@ -198,7 +198,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    $registrationForm = new Mrastp_Form_Registration($this);
 	    if (isset($_POST['submitButton']) && $registrationForm->isValid($_POST)) {
 	        $data = $registrationForm->getValues();
-	        $this->_logger->debug("Valid member registration form: \n" . print_r($data) . "\n");
+	        $this->_logger->debug("Valid member registration form: \n" . print_r($data, true) . "\n");
             $this->processRegistration($data);
             $content.= '<div class="box">';
             $content.= '<p>' . $this->decorateLabel('v_dear', $data) . '</p>';
@@ -253,18 +253,18 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $newFieldList = 'tstamp,username,password,usergroup,disable,name,email,city';	    
         $this->cObj->DBgetInsert('fe_users', $this->conf['feuserPID'], $feuser_row, $newFieldList, true);
         $feuserUid = $TYPO3_DB->sql_insert_id();
-        $this->_logger->debug("New fe_user (" . $feuserUid . ") created: \n" . print_r($feuser_row) . "\n");
+        $this->_logger->debug("New fe_user (" . $feuserUid . ") created: \n" . print_r($feuser_row, true) . "\n");
 
         $person_row['feuser_id'] = $feuserUid;
 
 	    $newFieldList = 'pid,tstamp,crdate,cruser_id,hidden,salutation_id,firstname,name,street,compl,zip,city,canton_id,country_id,phone,mobile,fax,email,language_id,section_id,status,entry_date,feuser_id';
         $this->cObj->DBgetInsert('tx_mrastp_person', $this->conf['astpdbPID'], $person_row, $newFieldList, true);
         $personUid = $TYPO3_DB->sql_insert_id();
-        $this->_logger->debug("New person (" . $personUid . ") created: \n" . print_r($person_row) . "\n");
+        $this->_logger->debug("New person (" . $personUid . ") created: \n" . print_r($person_row, true) . "\n");
         
         //setup commands for this user
         $commands = $this->_setupCommands($personUid);
-        $this->_logger->debug("Commands for new member: \n" . print_r($commands) . "\n");
+        $this->_logger->debug("Commands for new member: \n" . print_r($commands, true) . "\n");
         // Mailings
         $body = $this->decorateLabel('v_dear', $data) . "\r\n\r\n";
         $body.= $this->decorateLabel('v_registration_initiated_review1', $data) . "\r\n";        
@@ -288,7 +288,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         try {
             $cust_email->send();
             $this->_logger->info("Customer confirmation mail sent to " . $data['email']);
-            $this->_logger->debug(print_r($cust_email) . "\n");
+            $this->_logger->debug(var_export($cust_email, true) . "\n");
         } catch (Zend_Mail_Transport_Exception $e) {
             $this->_logger->alert('Customer confirmation mail not sent to ' . $data['email'] . ' (person ' . $personUid . ")\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
         }
@@ -307,7 +307,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
 	    try {
             $astp_email->send();
             $this->_logger->info('astp begin registration mail sent to ' . $this->conf['contactEmail']);
-            $this->_logger->debug(print_r($astp_email) . "\n");
+            $this->_logger->debug(var_export($astp_email, true) . "\n");
         } catch (Zend_Mail_Transport_Exception $e) {
             $this->_logger->alert('astp begin registration mail not sent to ' . $data['contactEmail'] . ' (person ' . $personUid . "\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n");
         }
