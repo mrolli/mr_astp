@@ -181,10 +181,11 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	    $content.= '<div class="box">';
 	    Zend_Loader::loadClass('Mrastp_Form_StoreItem');
 	    $form = new Mrastp_Form_StoreItem($this);
+        $form->setAction($this->createUrl(array('action' => 'add')));
 	    if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
 	        $this->items[] = $form->getValues();
 	        $this->saveStore();
-	        header('Location: ' . $this->pi_getPageLink($GLOBALS['TSFE']->id));
+	        header('Location: /' . $this->pi_getPageLink($GLOBALS['TSFE']->id));
 	        exit;
 	    }
         $content.= $form->render();
@@ -205,7 +206,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
             $this->items[$id] = $form->getValues();
             $this->saveStore();
-            header('Location: ' . $this->pi_getPageLink($GLOBALS['TSFE']->id));
+            header('Location: /' . $this->pi_getPageLink($GLOBALS['TSFE']->id));
             exit;
         }
         $content.= $form->render();
@@ -217,7 +218,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	{
 	    unset($this->items[$id]);
 	    $this->saveStore();
-	    header('Location: ' . $this->pi_getPageLink($GLOBALS['TSFE']->id));
+        header('Location: /' . $this->pi_getPageLink($GLOBALS['TSFE']->id));
         exit;
 	}
 	
@@ -240,7 +241,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	        $fields = $this->config['fields'];
 	        $item = array();
 	        for ($i=0; $i < count($fields); $i++) {
-	            $item[$fields[$i]] = $row[$i];
+	            $item[$fields[$i]] = str_replace(array('\"', "\'"), array('"', "'"), $row[$i]);
 	        }
 	        $this->items[] = $item;
 	        
@@ -253,7 +254,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	    $filename = $this->basePath . 'fileadmin/datastores/' . $this->config['store'] . '.csv';
 	    $fp = fopen($filename, 'wb');
 	    foreach ($this->items as $item) {
-	        fputcsv($fp, $item, ';');
+	        fputcsv($fp, $item, ';', '"');
 	    }
 	    fclose($fp);
 	}
