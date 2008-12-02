@@ -57,13 +57,15 @@ class tx_mrastp_pi3 extends tslib_pibase {
         $this->init($conf);
 
 	    $pi_getVars = t3lib_div::_GET('tx_mrastp_pi3');
+	    if (isset($pi_getVars['dataStore']) && $pi_getVars['dataStore'] != $this->config['dataStore']) {
+	       return '';
+	    }
         if(isset($pi_getVars['action'])) {
             $action = $pi_getVars['action'];
         } else {
             $action = 'show';
         }
         $this->currentAction = $action;
-        $this->loadStore();
 
         try {
 		    switch(strtoupper($action)) {
@@ -71,17 +73,25 @@ class tx_mrastp_pi3 extends tslib_pibase {
 		            $content .= $this->displayStore();
 		            break;
     			case 'EDIT':
-    			    if(isset($pi_getVars['item'])) {
-    			        $content .= $this->editItem((int) $pi_getVars['item']);
+    			    if(isset($pi_getVars['item']) && isset($pi_getVars['dataStore'])) {
+    			        $content .= $this->editItem(basename($pi_getVars['dataStore']), (int) $pi_getVars['item']);
     			    } else {
-    			        throw new Exception('No item id provided.');
+    			        throw new Exception('No item id or dataStore provided.');
     			    }
     			    break;
     			case 'DELETE':
-    			    $content .= $this->deleteItem((int) $pi_getVars['item']);
+    			    if(isset($pi_getVars['dataStore'])) {
+    			        $content .= $this->deleteItem(basename($pi_getVars['dataStore']), (int) $pi_getVars['item']);
+    			    } else {
+                        throw new Exception('No dataStore provided.');
+                    }
     			    break;
     			case 'ADD':
-    			    $content .= $this->addItem();
+    			    if(isset($pi_getVars['dataStore'])) {
+    			        $content .= $this->addItem(basename($pi_getVars['dataStore']));
+    			    } else {
+                        throw new Exception('No dataStore provided.');
+                    }
     			    break;
     			case 'EXPORT':
     			    $content .= $this->exportStore();
@@ -149,6 +159,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	
 	protected function displayStore()
 	{
+	    $this->loadStore();
 	    $content = '<div class="box"><table class="contenttable contenttable-1">';
 	    for ($i=0; $i < count($this->items); $i++) {
 	        $class = ($i%2) ? 'tr-even' : 'tr-odd';
@@ -165,19 +176,20 @@ class tx_mrastp_pi3 extends tslib_pibase {
     	        foreach($item as $value) {
     	            $content.= '<td>' . $value . '</td>';
     	        }
-    	        $content.='<td style="width: 20px; text-align: center">' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/edit2.gif" title="' . $this->pi_getLL('editItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'edit', 'item' => $i)) . '</td>';
-    	        $content.='<td style="width: 20px; text-align: center">' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/delete_record.gif" title="' . $this->pi_getLL('deleteItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'delete', 'item' => $i)) . '</td>';  
+    	        $content.='<td style="width: 20px; text-align: center">' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/edit2.gif" title="' . $this->pi_getLL('editItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'edit', 'dataStore' => $this->config['store'], 'item' => $i)) . '</td>';
+    	        $content.='<td style="width: 20px; text-align: center">' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/delete_record.gif" title="' . $this->pi_getLL('deleteItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'delete', 'dataStore' => $this->config['store'], 'item' => $i)) . '</td>';  
     	        $content.= '</tr>';
             }
 	    }
 	    $content.= '</table></div>';
-	    $content.= '<p>' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/new_record.gif" title="' . $this->pi_getLL('newItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'add')) . '</p>';
-	    $content.= '<p>' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/icon_xls.gif" title="' . $this->pi_getLL('export_xls') . '" />', $GLOBALS['TSFE']->id, array('action' => 'export', 'format' => 'xls')) . '</p>';
+	    $content.= '<p>' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/new_record.gif" title="' . $this->pi_getLL('newItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'add', 'dataStore' => $this->config['store'])) . '</p>';
+	    $content.= '<p>' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/icon_xls.gif" title="' . $this->pi_getLL('export_xls') . '" />', $GLOBALS['TSFE']->id, array('action' => 'export',  'dataStore' => $this->config['store'],'format' => 'xls')) . '</p>';
 	    return $content;
 	}
 	
     protected function addItem()
 	{
+        $this->loadStore();
 	    $content.= '<div class="box">';
 	    Zend_Loader::loadClass('Mrastp_Form_StoreItem');
 	    $form = new Mrastp_Form_StoreItem($this);
@@ -195,6 +207,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	
 	protected function editItem($id)
 	{
+        $this->loadStore();
 	    if (!isset($this->items[$id]) && !is_array($this->item[$id])) {
 	        throw new Exception('Invalid item id ' . $id);
 	    }
@@ -216,6 +229,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	
 	protected function deleteItem($id)
 	{
+        $this->loadStore();
 	    unset($this->items[$id]);
 	    $this->saveStore();
         header('Location: /' . $this->pi_getPageLink($GLOBALS['TSFE']->id));
