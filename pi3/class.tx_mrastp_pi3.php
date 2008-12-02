@@ -57,7 +57,8 @@ class tx_mrastp_pi3 extends tslib_pibase {
         $this->init($conf);
 
 	    $pi_getVars = t3lib_div::_GET('tx_mrastp_pi3');
-	    if (isset($pi_getVars['dataStore']) && $pi_getVars['dataStore'] != $this->config['dataStore']) {
+	    if (isset($pi_getVars['dataStore']) && $pi_getVars['dataStore'] != $this->config['store']) {
+           echo $pi_getVars['dataStore'] . ' vs ' . $this->config['store'];
 	       return '';
 	    }
         if(isset($pi_getVars['action'])) {
@@ -94,7 +95,11 @@ class tx_mrastp_pi3 extends tslib_pibase {
                     }
     			    break;
     			case 'EXPORT':
-    			    $content .= $this->exportStore();
+                    if(isset($pi_getVars['dataStore'])) {
+    			        $content .= $this->exportStore();
+                    } else {
+                        throw new Exception('No dataStore provided.');
+                    }
     			    break;
 		        default:
 		            throw new Exception('Unknown action ' . $action);
@@ -193,7 +198,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	    $content.= '<div class="box">';
 	    Zend_Loader::loadClass('Mrastp_Form_StoreItem');
 	    $form = new Mrastp_Form_StoreItem($this);
-        $form->setAction($this->createUrl(array('action' => 'add', 'dataStore' => $this->config['dataStore'])));
+        $form->setAction($this->createUrl(array('action' => 'add', 'dataStore' => $this->config['store'])));
 	    if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
 	        $this->items[] = $form->getValues();
 	        $this->saveStore();
@@ -215,7 +220,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
         Zend_Loader::loadClass('Mrastp_Form_StoreItem');
         $form = new Mrastp_Form_StoreItem($this);
         $form->setDefaults($this->items[$id]);
-        $form->setAction($this->createUrl(array('action' => $this->currentAction, 'dataStore' => $this->config['dataStore'], 'item' => $id)));
+        $form->setAction($this->createUrl(array('action' => $this->currentAction, 'dataStore' => $this->config['store'], 'item' => $id)));
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
             $this->items[$id] = $form->getValues();
             $this->saveStore();
@@ -302,6 +307,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	
 	protected function exportStore()
 	{
+        $this->loadStore();
 	    $pi_getVars = t3lib_div::_GET('tx_mrastp_pi3');
 	    $format = (isset($pi_getVars['format'])) ? $pi_getVars['format'] : 'xls';
 	    
