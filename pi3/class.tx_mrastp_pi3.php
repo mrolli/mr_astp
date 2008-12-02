@@ -225,7 +225,11 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	protected function splitFields($fieldString)
 	{
 	    $fields = explode(',', $fieldString);
-	    return $fields;
+        $retval = array();
+        foreach ($fields as $field) {
+            $retval[] = array(strtolower(str_replace(' ', '_', $field)), $field);
+        }
+	    return $retval;
 	}
 	
 	protected function loadStore()
@@ -233,20 +237,43 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	    $filename = $this->basePath . 'fileadmin/datastores/' . $this->config['store'] . '.csv';
 	    if (!file_exists($filename)) {
 	        touch($filename);
-	        file_put_contents($filename, implode(';', $this->config['fields']));
+            $rubriken = array();
+            foreach ($this->config[$fields] as $item) {
+                $rubriken[] = $item[1];
+            }
+	        file_put_contents($filename, implode(';', $rubriken));
 	    }
 	    $fp = fopen($filename, 'rb');
+        $changed = false;
+        $rubrik = true;
 	    // @todo: strip escaping!
 	    while ($row = fgetcsv($fp, null, ';')) {
 	        $fields = $this->config['fields'];
-	        $item = array();
-	        for ($i=0; $i < count($fields); $i++) {
-	            $item[$fields[$i]] = str_replace(array('\"', "\'"), array('"', "'"), $row[$i]);
-	        }
+            $item = array();
+            if ($rubrik) {
+                if (count($this->config['fields']) > count($row)) {
+                    // neue Rubriken
+                    $changed = true;
+                }
+                foreach ($fields as $field) {
+                    $item[$field[0]] = $field[1];
+                }
+                $rubrik = false;
+            } else {
+	            for ($i=0; $i < count($fields); $i++) {
+	                $item[$fields[$i][0]] = str_replace(array('\"', "\'"), array('"', "'"), $row[$i]);
+	            }
+            }
 	        $this->items[] = $item;
 	        
 	    }
-	    fclose($fp);
+        fclose($fp);
+        if ($changed) { 
+            foreach ($this->config['fields'] as $field) {
+                $this->items[0][$field] = $field;
+            }
+            $this->saveStore();
+        }
 	}
 	
 	protected function saveStore()

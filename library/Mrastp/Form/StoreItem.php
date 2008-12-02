@@ -26,7 +26,7 @@ class Mrastp_Form_StoreItem extends Zend_Form
              ->setMethod('post');
 
         foreach ($this->_plugin->config['fields'] as $field) {
-            $this->addElement('text', $field, array('required' => true, 'label' => $field, 'size' => 30));
+            $this->addElement('text', $field[0], array('required' => true, 'label' => $field[1], 'size' => 30));
         }
 
         $submitButton = $this->createElement('submit', 'submitButton');
