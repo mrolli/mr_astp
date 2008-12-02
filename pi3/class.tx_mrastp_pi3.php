@@ -74,21 +74,21 @@ class tx_mrastp_pi3 extends tslib_pibase {
 		            break;
     			case 'EDIT':
     			    if(isset($pi_getVars['item']) && isset($pi_getVars['dataStore'])) {
-    			        $content .= $this->editItem(basename($pi_getVars['dataStore']), (int) $pi_getVars['item']);
+    			        $content .= $this->editItem((int) $pi_getVars['item']);
     			    } else {
     			        throw new Exception('No item id or dataStore provided.');
     			    }
     			    break;
     			case 'DELETE':
     			    if(isset($pi_getVars['dataStore'])) {
-    			        $content .= $this->deleteItem(basename($pi_getVars['dataStore']), (int) $pi_getVars['item']);
+    			        $content .= $this->deleteItem((int) $pi_getVars['item']);
     			    } else {
                         throw new Exception('No dataStore provided.');
                     }
     			    break;
     			case 'ADD':
     			    if(isset($pi_getVars['dataStore'])) {
-    			        $content .= $this->addItem(basename($pi_getVars['dataStore']));
+    			        $content .= $this->addItem();
     			    } else {
                         throw new Exception('No dataStore provided.');
                     }
@@ -193,7 +193,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	    $content.= '<div class="box">';
 	    Zend_Loader::loadClass('Mrastp_Form_StoreItem');
 	    $form = new Mrastp_Form_StoreItem($this);
-        $form->setAction($this->createUrl(array('action' => 'add')));
+        $form->setAction($this->createUrl(array('action' => 'add', 'dataStore' => $this->config['dataStore'])));
 	    if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
 	        $this->items[] = $form->getValues();
 	        $this->saveStore();
@@ -215,7 +215,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
         Zend_Loader::loadClass('Mrastp_Form_StoreItem');
         $form = new Mrastp_Form_StoreItem($this);
         $form->setDefaults($this->items[$id]);
-        $form->setAction($this->createUrl(array('action' => $this->currentAction, 'item' => $id)));
+        $form->setAction($this->createUrl(array('action' => $this->currentAction, 'dataStore' => $this->config['dataStore'], 'item' => $id)));
         if (isset($_POST['submitButton']) && $form->isValid($_POST)) {
             $this->items[$id] = $form->getValues();
             $this->saveStore();
