@@ -4,7 +4,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 $TCA["tx_mrastp_person"] = array (
 	"ctrl" => $TCA["tx_mrastp_person"]["ctrl"],
 	"interface" => array (
-		"showRecordFieldList" => "hidden,starttime,endtime,salutation_id,firstname,name,street,compl,zip,city,canton_id,country_id,phone,mobile,fax,email,language_id,section_id,status,entry_date,workaddress,groups,feuser_id"
+		"showRecordFieldList" => "hidden,starttime,endtime,salutation_id,firstname,name,street,compl,zip,city,canton_id,country_id,phone,mobile,fax,email,language_id,section_id,status,entry_date,comments,workaddress,groups,feuser_id"
 	),
 	"feInterface" => $TCA["tx_mrastp_person"]["feInterface"],
 	"columns" => array (
@@ -282,9 +282,18 @@ $TCA["tx_mrastp_person"] = array (
                 ),
             )
         ),
+        "comments" => Array (
+            "exclude" => 1,
+            "label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.comments",
+            "config" => Array (
+                "type" => "text",
+                "cols" => "40",
+                "rows" => "15"
+            ),
+        ),
 	),
 	"types" => array (
-		"0" => array("showitem" => "hidden;;1;;1-1-1, salutation_id, firstname, name, street, compl, zip, city, canton_id, country_id, phone, mobile, fax, email, language_id, section_id, status, entry_date, workaddress, groups, feuser_id")
+		"0" => array("showitem" => "hidden;;1;;1-1-1, salutation_id, firstname, name, street, compl, zip, city, canton_id, country_id, phone, mobile, fax, email, language_id, section_id, status, entry_date, comments, workaddress, groups, feuser_id")
 	),
 	"palettes" => array (
 		"1" => array("showitem" => "starttime, endtime")

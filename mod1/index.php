@@ -436,9 +436,9 @@ class mr_astp_module1 extends t3lib_SCbase {
     function createListView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
-        $groups = array('Auditval' => array('mit_aktiv', 'mit_passiv', 'mit_ehren', 'mit_iv', 'mit_studi',
-                                            'rom_aktiv', 'rom_passiv', 'rom_ehren', 'rom_iv', 'rom_studi',
-                                            'ost_aktiv', 'ost_passiv', 'ost_ehren', 'ost_iv', 'ost_studi', 
+        $groups = array('Auditval' => array('mit_aktiv', 'mit_passiv', 'mit_ehren', 'mit_studi',
+                                            'rom_aktiv', 'rom_passiv', 'rom_ehren', 'rom_studi',
+                                            'ost_aktiv', 'ost_passiv', 'ost_ehren', 'ost_studi', 
                                             ),
                         'Swica' => array('swica_general'),
                        );
@@ -468,11 +468,6 @@ class mr_astp_module1 extends t3lib_SCbase {
                     $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 3);
                     $sortings = array();
                     break;
-                case 'mit_iv':
-                    $selects = array('group_auditval' => 1);
-                    $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 4);
-                    $sortings = array();
-                    break;
                 case 'mit_studi':
                     $selects = array('group_auditval' => 1);
                     $filters = array('tx_mrastp_person|section_id' => 1, 'tx_mrastp_person|status' => 5);
@@ -493,11 +488,6 @@ class mr_astp_module1 extends t3lib_SCbase {
                     $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 3);
                     $sortings = array();
                     break;
-                case 'rom_iv':
-                    $selects = array('group_auditval' => 1);
-                    $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 4);
-                    $sortings = array();
-                    break;
                 case 'rom_studi':
                     $selects = array('group_auditval' => 1);
                     $filters = array('tx_mrastp_person|section_id' => 3, 'tx_mrastp_person|status' => 5);
@@ -516,11 +506,6 @@ class mr_astp_module1 extends t3lib_SCbase {
                 case 'ost_ehren':
                     $selects = array('group_auditval' => 1);
                     $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 3);
-                    $sortings = array();
-                    break;
-                case 'ost_iv':
-                    $selects = array('group_auditval' => 1);
-                    $filters = array('tx_mrastp_person|section_id' => 2, 'tx_mrastp_person|status' => 4);
                     $sortings = array();
                     break;
                 case 'ost_studi':

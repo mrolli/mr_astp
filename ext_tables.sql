@@ -32,6 +32,7 @@ CREATE TABLE tx_mrastp_person (
 	workaddress blob NOT NULL,
 	groups int(11) DEFAULT '0' NOT NULL,
 	feuser_id int(11) DEFAULT '0' NOT NULL,
+    comments text NOT NULL,
 
 	PRIMARY KEY (uid),
 	KEY parent (pid),

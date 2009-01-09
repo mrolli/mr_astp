@@ -257,7 +257,7 @@ class tx_mrastp_pi3 extends tslib_pibase {
 	    if (!file_exists($filename)) {
 	        touch($filename);
             $rubriken = array();
-            foreach ($this->config[$fields] as $item) {
+            foreach ($this->config['fields'] as $item) {
                 $rubriken[] = $item[1];
             }
 	        file_put_contents($filename, implode(';', $rubriken));

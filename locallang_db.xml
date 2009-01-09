@@ -29,6 +29,7 @@
 			<label index="tx_mrastp_person.entry_date">Entry Date</label>
 			<label index="tx_mrastp_person.workaddress">Work Addresses</label>
 			<label index="tx_mrastp_person.groups">Work Groups</label>
+            <label index="tx_mrastp_person.comments">Comment</label>
 			<label index="tx_mrastp_canton">Cantons</label>
 			<label index="tx_mrastp_canton.abbrevation">Abbrevation</label>
 			<label index="tx_mrastp_canton.canton_label">Canton</label>
@@ -105,6 +106,7 @@
 			<label index="tx_mrastp_person.entry_date">Date d'entrée astp</label>
 			<label index="tx_mrastp_person.workaddress">Addresses de travail</label>
 			<label index="tx_mrastp_person.groups">Groupe travail</label>
+            <label index="tx_mrastp_person.comments">Annotation</label>
 			<label index="tx_mrastp_canton">Canton</label>
 			<label index="tx_mrastp_canton.abbrevation">Abrévation</label>
 			<label index="tx_mrastp_canton.canton_label">Canton</label>
@@ -178,6 +180,7 @@
 			<label index="tx_mrastp_person.entry_date">Eintrittsdatum</label>
 			<label index="tx_mrastp_person.workaddress">Arbeitsaddressen</label>
 			<label index="tx_mrastp_person.groups">Arbeitsgruppen</label>
+            <label index="tx_mrastp_person.comments">Kommentar</label>
 			<label index="tx_mrastp_canton">Kanton</label>
 			<label index="tx_mrastp_canton.abbrevation">Abkürzung</label>
             <label index="tx_mrastp_canton.label_de">Kanton</label>
