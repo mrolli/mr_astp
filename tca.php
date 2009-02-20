@@ -99,8 +99,8 @@ $TCA["tx_mrastp_person"] = array (
 			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_person.zip",
 			"config" => Array (
 				"type" => "input",
-				"size" => "6",
-				"max" => "6",
+				"size" => "8",
+				"max" => "8",
 				"eval" => "required,trim",
 			)
 		),
@@ -689,8 +689,8 @@ $TCA["tx_mrastp_workaddress"] = array (
 			"label" => "LLL:EXT:mr_astp/locallang_db.xml:tx_mrastp_workaddress.zip",
 			"config" => Array (
 				"type" => "input",
-				"size" => "6",
-				"max" => "6",
+				"size" => "8",
+				"max" => "8",
 				"eval" => "required,trim",
 			)
 		),
