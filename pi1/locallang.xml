@@ -25,22 +25,22 @@
             <label index="canton">Canton</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
-			<label index="plugin_name.pi1">astp Listes d'addresses</label>
+			<label index="plugin_name.pi1">astp Listes d'adresses</label>
 			<label index="pi1_title">Offres d'Emploi</label>
 			<label index="pi1_plus_wiz_description">(Déscription)</label>
 			<label index="mr_astp.pi_flexform.sheet_general">General</label>
             <label index="mr_astp.pi_flexform.what_to_display">Quoi montrer? </label>
-			<label index="mr_astp.pi_flexform.addresslists">Listes d'addresses</label>
+			<label index="mr_astp.pi_flexform.addresslists">Listes d'adresses</label>
             <label index="name">Nom</label>
             <label index="services">Prestations</label>
             <label index="audience">Cible</label>
             <label index="languages">Languages</label>
-            <label index="address">Addresse</label>
+            <label index="address">Adresse</label>
             <label index="contact">Contact</label>
             <label index="function">Fonction</label>
             <label index="phone">Téléphone</label>
-            <label index="email">Courielle</label>
-            <label index="no_addresses_found">Acune addresse trouvé.</label>
+            <label index="email">Courriel</label>
+            <label index="no_addresses_found">Acune adresse trouvé.</label>
             <label index="first_letter_of_name">Première lettre du nom</label>
             <label index="canton">Canton</label>
 		</languageKey>

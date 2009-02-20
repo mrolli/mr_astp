@@ -94,15 +94,15 @@
             <label index="reports">Rapports</label>
             <label index="custom_reports">Rapports individuels</label>
             <label index="backups">Backup</label>
-            <label index="massmailer">Courielle à tous</label>
+            <label index="massmailer">Courriel à tous</label>
             <label index="members_view">Liste de membres</label>
             <label index="groups_view">Liste de groupes</label>
-            <label index="workaddresses">Addresses travail</label>
-            <label index="workaddress_view">Liste d'addresses travail</label>
+            <label index="workaddresses">Adresses travail</label>
+            <label index="workaddress_view">Liste d'adresses travail</label>
             <label index="lists_view">Listes pour télécharger</label>
             <label index="new_record">Créer un nouvel enregistrement</label>
             <label index="members_found">Membres trouvés</label>
-            <label index="addresses_found">Addresses trouvées</label>
+            <label index="adresses_found">Adresses trouvées</label>
             <label index="lists">Listes</label>
             <label index="view">Regarder</label>
             <label index="download">Télécharger</label>
@@ -128,9 +128,9 @@
             <label index="output_sorting">Triage</label>
             <label index="sorting_field">Bloc pour trier</label>
             <label index="group_language">Langue</label>
-            <label index="group_private">Address privé</label>
+            <label index="group_private">Adress privé</label>
             <label index="group_private_com">Comm. privé</label>
-            <label index="group_work">Address travail</label>
+            <label index="group_work">Adress travail</label>
             <label index="group_work_com">Comm. travail</label>
             <label index="group_section">Section</label>
             <label index="group_status">State</label>
@@ -151,11 +151,11 @@
             <label index="work_mobile">A:Mobile</label>
             <label index="work_email">A:Email</label>
             <label index="email_subject">Subject</label>
-            <label index="email_bodytext">Texte de Courielle</label>
+            <label index="email_bodytext">Texte de Courriel</label>
             <label index="email_attachment">Attachment</label>
             <label index="email_fromtext">Nom d'envoyeur</label>
-            <label index="email_fromemail">Addresse courielle d'envoyeur</label>
-            <label index="email_testemail">Addresse courielle pour un test</label>
+            <label index="email_fromemail">Adresse courriel d'envoyeur</label>
+            <label index="email_testemail">Adresse courriel pour un test</label>
             <label index="email_senttest">Testnachricht verschickt. Bitte kontrollieren und wenn ok, die DATEI NOCH EINMAL AUSWÄHLEN unten Häkchen für definitiven Versand wählen.</label>
         </languageKey>
         <languageKey index="de" type="array">
@@ -177,7 +177,7 @@
             <label index="lists_view">Downloadbare Listen</label>
             <label index="new_record">Neuen Datensatz erstellen</label>
             <label index="members_found">Gefundene Mitglieder</label>
-            <label index="addresses_found">Gefundene Addressen</label>
+            <label index="addresses_found">Gefundene Adressen</label>
             <label index="lists">Listen</label>
             <label index="view">Anschauen</label>
             <label index="download">Herunterladen</label>

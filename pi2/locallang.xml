@@ -423,7 +423,7 @@ If you wish to accept our invitation and confirm your registration, please follo
             <label index="save_changes">Daten speichern</label>
             <label index="change_data">Daten ändern</label>
             <label index="new_workaddress">Neue Arbeitsadresse erfassen</label>
-            <label index="delete_workaddress">Diese Arbeitsaddresse löschen</label>
+            <label index="delete_workaddress">Diese Arbeitsadresse löschen</label>
             <label index="workaddresses">Arbeitsadressen</label>
             <label index="changed">geändert.</label>
 
@@ -455,7 +455,7 @@ If you wish to accept our invitation and confirm your registration, please follo
             <label index="name_practice">Arbeitsname:</label>
             <label index="name_supplement">Namenszusatz:</label>
             <label index="address1">Adresse 1:</label>
-            <label index="address2">Addresse 2:</label>
+            <label index="address2">Adresse 2:</label>
             <label index="zip">PLZ:</label>
             <label index="city">Stadt:</label>
             <label index="country_id">Land:</label>

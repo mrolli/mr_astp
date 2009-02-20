@@ -152,6 +152,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
     		    $where = 'name LIKE \'A%\'';
     		    break;
     		case 'alle':
+            case 'tous':
     		    $where = '1=1';
     		    break;
     		default:
@@ -469,7 +470,8 @@ class tx_mrastp_pi1 extends tslib_pibase {
     }
 
     private function helperMembersAlphabet($show) {
-        $items = array('alle', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+        $items = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+        array_unshift($items, ($this->conf['lang'] == 'de' ? 'alle' : 'tous'));
         $links = array();
     $content = '<table class="contenttable fancytable"><tr>';
         foreach ($items as $item) {
@@ -489,7 +491,7 @@ class tx_mrastp_pi1 extends tslib_pibase {
 
             $content = '<table class="contenttable fancytable"><tr>';
             $tdclass = ($canton_id == -1) ? ' class="selected"' : '';
-            $content.= '<td ' . $tdclass . '><b>' . $this->pi_linkTP_keepPIvars('alle', $overrulePIvars=array('canton_id' => -1)) . '</b></td>';
+            $content.= '<td ' . $tdclass . '><b>' . $this->pi_linkTP_keepPIvars(($this->conf['lang']== 'de' ? 'alle' : 'tous'), $overrulePIvars=array('canton_id' => -1)) . '</b></td>';
             while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
                 if (strlen($row['abbrevation']) > 1 && $row['abbrevation'] !== 'FL') {
                     $tdclass = ($canton_id == $row['uid']) ? ' class="selected"' : '';
