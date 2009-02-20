@@ -874,6 +874,7 @@ class mr_astp_module1 extends t3lib_SCbase {
         if($select == '') {
             $select = 'tx_mrastp_person.firstname, tx_mrastp_person.name';
         }
+        $select = $select . ', language_id, salutation_id';
         foreach ($sortings as $field) {
             if(!empty($field)) {
                 $field = $this->fkDecode($field);
@@ -914,6 +915,18 @@ class mr_astp_module1 extends t3lib_SCbase {
             }
         }
         while ($row = $TYPO3_DB->sql_fetch_assoc($result)) {
+            if (isset($row['salutation_label'])) {
+                switch($row['language_id']) {
+                    case 1:
+                        $row['salutation_label'] = ($row['salutation_id'] == 1) ? 'Herr' : 'Frau';
+                        break;
+                    case 2:
+                        $row['salutation_label'] = ($row['salutation_id'] == 1) ? 'Monsieur' : 'Madame';
+                        break;
+                }
+            }
+            unset($row['langauge_id']);
+            unset($row['salutation_id']);
             $tableRows[] = $row;
         }
         return $tableRows;
