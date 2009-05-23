@@ -181,14 +181,14 @@ class tx_mrastp_pi3 extends tslib_pibase {
     	        foreach($item as $value) {
     	            $content.= '<td>' . $value . '</td>';
     	        }
-    	        $content.='<td style="width: 20px; text-align: center">' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/edit2.gif" title="' . $this->pi_getLL('editItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'edit', 'dataStore' => $this->config['store'], 'item' => $i)) . '</td>';
-    	        $content.='<td style="width: 20px; text-align: center">' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/delete_record.gif" title="' . $this->pi_getLL('deleteItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'delete', 'dataStore' => $this->config['store'], 'item' => $i)) . '</td>';  
+    	        $content.='<td style="width: 20px; text-align: center">' . $this->createLink('<img src="' . substr(t3lib_extMgm::extRelPath('mr_astp'),2) . '/icons/edit2.gif" title="' . $this->pi_getLL('editItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'edit', 'dataStore' => $this->config['store'], 'item' => $i)) . '</td>';
+    	        $content.='<td style="width: 20px; text-align: center">' . $this->createLink('<img src="' . substr(t3lib_extMgm::extRelPath('mr_astp'),2) . '/icons/delete_record.gif" title="' . $this->pi_getLL('deleteItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'delete', 'dataStore' => $this->config['store'], 'item' => $i)) . '</td>';  
     	        $content.= '</tr>';
             }
 	    }
 	    $content.= '</table></div>';
-	    $content.= '<p>' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/new_record.gif" title="' . $this->pi_getLL('newItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'add', 'dataStore' => $this->config['store'])) . '</p>';
-	    $content.= '<p>' . $this->createLink('<img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/icon_xls.gif" title="' . $this->pi_getLL('export_xls') . '" />', $GLOBALS['TSFE']->id, array('action' => 'export',  'dataStore' => $this->config['store'],'format' => 'xls')) . '</p>';
+	    $content.= '<p>' . $this->createLink('<img src="' . substr(t3lib_extMgm::extRelPath('mr_astp'),2) . '/icons/new_record.gif" title="' . $this->pi_getLL('newItem') . '" />', $GLOBALS['TSFE']->id, array('action' => 'add', 'dataStore' => $this->config['store'])) . '</p>';
+	    $content.= '<p>' . $this->createLink('<img src="' . substr(t3lib_extMgm::extRelPath('mr_astp'),2) . '/icons/icon_xls.gif" title="' . $this->pi_getLL('export_xls') . '" />', $GLOBALS['TSFE']->id, array('action' => 'export',  'dataStore' => $this->config['store'],'format' => 'xls')) . '</p>';
 	    return $content;
 	}
 	

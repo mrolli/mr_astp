@@ -405,7 +405,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
         $content.= '<tr><td>' . $this->pi_getLL('section_id') . '</td><td>' . $person->findParentRow('Mrastp_Db_Table_Section')->$label['section'] . '</td></tr>';
         $content.= '<tr><td>' . $this->pi_getLL('status') . '</td><td>' . $person->findParentRow('Mrastp_Db_Table_Status')->$label['status'] . '</td></tr>';
         $content.= '<tr><td>' . $this->pi_getLL('entry_date') . '</td><td>' . date('d.m.Y', $person->entry_date) . '</td></tr>';
-        $content.= '<tr><td><a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=editPersonal' . '"><img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/edit2.gif" title="' . $this->pi_getLL('change_data') . '" /></a></td></tr>';
+        $content.= '<tr><td><a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=editPersonal' . '"><img src="' . substr(t3lib_extMgm::extRelPath('mr_astp'),2) . '/icons/edit2.gif" title="' . $this->pi_getLL('change_data') . '" /></a></td></tr>';
         $content.= '</table>';
         $content.= '</div>';
         $content.= '<h3>' . $this->pi_getLL('online_account') . '</h3>';
@@ -414,7 +414,7 @@ class tx_mrastp_pi2 extends tslib_pibase {
             $content.= '<table cellspacing="5">';
             $content.= '<tr><td>' . $this->pi_getLL('username') . '</td><td>' . $feuser->username . '</td></tr>';
             $content.= '<tr><td>' . $this->pi_getLL('password') . '</td><td>********</td></tr>';
-            $content.= '<tr><td><a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=editAccount' . '"><img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/edit2.gif" title="' . $this->pi_getLL('change_data') . '" /></a></td></tr>';
+            $content.= '<tr><td><a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=editAccount' . '"><img src="' . substr(t3lib_extMgm::extRelPath('mr_astp'), 2) . '/icons/edit2.gif" title="' . $this->pi_getLL('change_data') . '" /></a></td></tr>';
             $content.= '</table>';
             $content.= '</div>';
         }
@@ -424,13 +424,13 @@ class tx_mrastp_pi2 extends tslib_pibase {
         if (count($workaddresses) > 0) {
             foreach ($workaddresses as $workaddress) {
                 $this->_logger->debug('feuser (' . $feuser->uid . ') (person ' . $person->uid . ') owns workaddress ' . $workaddress->uid);
-                $content.= '<tr><td><a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=editWorkaddress&tx_mrastp_pi2[uid]=' . $workaddress->uid . '"><img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/edit2.gif" title="' . $this->pi_getLL('change_data') . '" /></a>';
-                $content.= '&nbsp;&nbsp;<a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=deleteWorkaddress&tx_mrastp_pi2[uid]=' . $workaddress->uid . '"><img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/delete_record.gif" title="' . $this->pi_getLL('delete_workaddress') . '" /></a></td>';
+                $content.= '<tr><td><a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=editWorkaddress&tx_mrastp_pi2[uid]=' . $workaddress->uid . '"><img src="' . substr(t3lib_extMgm::extRelPath('mr_astp'),2) . '/icons/edit2.gif" title="' . $this->pi_getLL('change_data') . '" /></a>';
+                $content.= '&nbsp;&nbsp;<a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=deleteWorkaddress&tx_mrastp_pi2[uid]=' . $workaddress->uid . '"><img src="' . substr(t3lib_extMgm::extRelPath('mr_astp'),2) . '/icons/delete_record.gif" title="' . $this->pi_getLL('delete_workaddress') . '" /></a></td>';
             	$content.= '<td>&nbsp;' . $workaddress->name_practice . ', ' . $workaddresses->supplement . '</td><td>' . $workaddress->address1 . ', ' . $workaddress->zip . ' ' . $workaddress->city . '</td></tr>';
             	
             }
         }
-        $content.= '<tr><td colspan="2"><a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=newWorkaddress' . '"><img src="' . t3lib_extMgm::extRelPath('mr_astp') . '/icons/new_record.gif" title="' . $this->pi_getLL('new_workaddress') . '" /></a></td></tr>';
+        $content.= '<tr><td colspan="2"><a href="' . $this->conf['siteUrl'] . 'index.php?id=' . $this->conf['editPID'] . '&tx_mrastp_pi2[action]=newWorkaddress' . '"><img src="' . substr(t3lib_extMgm::extRelPath('mr_astp'),2) . '/icons/new_record.gif" title="' . $this->pi_getLL('new_workaddress') . '" /></a></td></tr>';
         $content.= '</table>';
         $content.= '</div>';
         return $content;

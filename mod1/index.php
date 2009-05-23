@@ -326,7 +326,7 @@ class mr_astp_module1 extends t3lib_SCbase {
     function createGroupView() {
         global $LANG, $TYPO3_DB, $BE_USER, $TCA, $BACK_PATH;
 
-        $params='&edit[tx_mrastp_group][' . $his->id . ']=new';
+        $params='&edit[tx_mrastp_group][' . $this->id . ']=new';
         $content = '<a href="#" onclick="'.
                         htmlspecialchars(t3lib_BEfunc::editOnClick($params, '/' . TYPO3_mainDir, '')).'">';
         $content.='<img'.t3lib_iconWorks::skinImg($this->doc->backPath,'gfx/new_record.gif','width="11" height="12"').' title="'.$LANG->getLL('new_record',1).'" class="absmiddle" alt="" /> ' . $LANG->getLL('new_record') . '</a>';
